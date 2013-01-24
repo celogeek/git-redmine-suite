@@ -1,0 +1,29 @@
+#!/usr/bin/env perl
+use feature 'say';
+use strict;
+use warnings;
+{
+    package MyOpts;
+    use Moo;
+    use MooX::Options;
+    option 'id' => (
+        is       => 'ro',
+        required => 1,
+        doc      => 'id of the task',
+        format   => 'i',
+    );
+    1;
+};
+
+use Redmine::API;
+my $r = Redmine::API->new(
+    'auth_key' => '554c3f4934bcffcc7b9c889d042a321209256c1f',
+    'base_url' => 'http://redmine.intranet.weborama.com',
+);
+
+my $opt = MyOpts->new_with_options;
+my $id = $opt->id;
+my $resp = $r->issues->issue->get($id);
+my $content = $resp->content->{issue};
+say "Task #", $id, " (", $content->{tracker}->{name},")", " : ", $content->{subject};
+
