@@ -23,12 +23,12 @@ function help {
 TASK="$1"
 PR="$2"
 
-if [ "x$PR" == "x" ]
+if [ "x$TASK" == "x" ] || [ "x$PR" == "x" ]
 then
     help
 fi
 
-BRNAME="review-task-${PR}-${TASK}"
+BRNAME="review-task-${TASK}-${PR}"
 TASK_TITLE=$(redmine_get_title $TASK)
 SECTION="review.task-$TASK"
 
@@ -39,7 +39,7 @@ set -x
 
 git fetch -ap
 git fetch --tags -p
-git co devel
+git checkout devel
 git checkout -b "$BRNAME" "$PR"
 git config --remove-section "$SECTION" 2> /dev/null || true
 git config --add "${SECTION}.id" "$TASK"

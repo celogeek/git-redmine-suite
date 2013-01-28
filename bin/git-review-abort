@@ -1,0 +1,31 @@
+#!/bin/bash
+
+set -e
+
+source /usr/local/share/Weborama-Git-Review/helpers/redmine-checkconf
+
+function help {
+    echo "git review abort TASK_NUMBER"
+    exit 1
+}
+
+TASK="$1"
+
+if [ "x$TASK" == "x" ]
+then
+    help
+fi
+
+SECTION="review.task-$TASK"
+TASK=$(git config "${SECTION}.id")
+TASK_TITLE=$(git config "${SECTION}.title")
+PR=$(git config "${SECTION}.pr")
+BRNAME="review-task-${TASK}-${PR}"
+
+echo "Aborting the review of task #$TASK - PR:$PR ..."
+echo "    * $TASK_TITLE"
+
+set -x
+git checkout devel
+git br -D "$BRNAME"
+git config --remove-section "$SECTION"
