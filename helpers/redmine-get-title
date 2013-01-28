@@ -12,16 +12,35 @@ use warnings;
         doc      => 'id of the task',
         format   => 'i',
     );
+    option 'auth_key' => (
+        is => 'ro',
+        format => 's',
+        required => 1,
+        doc => 'your auth key',
+    );
+    option 'server_url' => (
+        is => 'ro',
+        format => 's',
+        required => 1,
+        doc => 'the redmine url of the server',
+    );
+    option 'trace' => (
+        is => 'ro',
+        default => sub { 0 },
+        doc => 'debug mode',
+    );
     1;
 };
 
+my $opt = MyOpts->new_with_options;
+
 use Redmine::API;
 my $r = Redmine::API->new(
-    'auth_key' => '554c3f4934bcffcc7b9c889d042a321209256c1f',
-    'base_url' => 'http://redmine.intranet.weborama.com',
+    'auth_key' => $opt->auth_key,
+    'base_url' => $opt->server_url,
+    'trace' => $opt->trace,
 );
 
-my $opt = MyOpts->new_with_options;
 my $id = $opt->id;
 my $resp = $r->issues->issue->get($id);
 my $content = $resp->content->{issue};

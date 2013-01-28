@@ -1,0 +1,48 @@
+#!/bin/bash
+
+set -e
+
+source /usr/local/share/Weborama-Git-Review/helpers/redmine-checkconf
+
+function redmine_get_title
+{
+    /usr/local/share/Weborama-Git-Review/helpers/redmine-get-title --id="$1" --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL" 2> /dev/null
+    if [ $? -ne 0 ]
+    then
+        echo "Can't fetch the task $1. This task exist ? Your server is properly configurated ?" 1>&2
+        exit 1
+    fi
+}
+
+
+function help {
+    echo "git review start TASK_NUMBER PULL_REQUEST"
+    exit 1
+}
+
+TASK="$1"
+PR="$2"
+
+if [ "x$PR" == "x" ]
+then
+    help
+fi
+
+BRNAME="review-task-${PR}-${TASK}"
+TASK_TITLE=$(redmine_get_title $TASK)
+SECTION="review.task-$TASK"
+
+echo "Starting the review of task #$TASK - PR:$PR ..."
+echo "    * $TASK_TITLE"
+
+set -x
+
+git fetch -ap
+git fetch --tags -p
+git co devel
+git checkout -b "$BRNAME" "$PR"
+git config --remove-section "$SECTION" 2> /dev/null || true
+git config --add "${SECTION}.id" "$TASK"
+git config --add "${SECTION}.title" "$TASK_TITLE"
+git config --add "${SECTION}.pr" "$PR"
+

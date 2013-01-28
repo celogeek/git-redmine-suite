@@ -1,0 +1,21 @@
+#!/bin/bash
+
+REDMINE_AUTHKEY=$(git config redmine.authkey)
+REDMINE_URL=$(git config redmine.url)
+
+function redmine_help
+{
+    cat <<__EOF__
+Please configure your redmine instance :
+    git config --global --add redmine.authkey YOUR_AUTH_KEY
+    git config --global --add redmine.url THE_REDMINE_URL_SERVER
+__EOF__
+    exit 1
+}
+
+if [ "x$REDMINE_AUTHKEY" == "x" ] || [ "x$REDMINE_URL" == "x" ]
+then
+    redmine_help
+fi
+
+export REDMINE_AUTHKEY REDMINE_URL
