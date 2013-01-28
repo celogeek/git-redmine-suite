@@ -6,12 +6,6 @@ use warnings;
     package MyOpts;
     use Moo;
     use MooX::Options;
-    option 'id' => (
-        is       => 'ro',
-        required => 1,
-        doc      => 'id of the task',
-        format   => 'i',
-    );
     option 'auth_key' => (
         is => 'ro',
         format => 's',
@@ -41,11 +35,9 @@ my $r = Redmine::API->new(
     'trace' => $opt->trace,
 );
 
-my $id = $opt->id;
 my $resp = $r->issue_statuses->list->all();
 my $statuses = $resp->content->{issue_statuses};
-say "Statuses ids :";
-use Carp; use Data::Dumper;
+say "Available statuses ids :";
 for my $status(@$statuses) {
     say sprintf("    %3d : %s", $status->{id}, $status->{name});
 }

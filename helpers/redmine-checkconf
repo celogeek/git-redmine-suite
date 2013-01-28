@@ -2,6 +2,8 @@
 
 REDMINE_AUTHKEY=$(git config redmine.authkey)
 REDMINE_URL=$(git config redmine.url)
+REDMINE_REVIEW_IN_PROGRESS=$(git config redmine.statuses.reviewinprogress)
+REDMINE_REVIEW_FINISH=$(git config redmine.statuses.reviewfinish)
 
 function redmine_help
 {
@@ -9,13 +11,31 @@ function redmine_help
 Please configure your redmine instance :
     git config --global --add redmine.authkey YOUR_AUTH_KEY
     git config --global --add redmine.url THE_REDMINE_URL_SERVER
+    git config --global --add redmine.statuses.reviewinprogress ID
+    git config --global --add redmine.statuses.reviewfinish ID
+
 __EOF__
-    exit 1
+}
+
+function redmine_help_with_statuses
+{
+    redmine_help
+    /usr/local/share/Weborama-Git-Review/helpers/redmine-get-statuses-ids --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL"
+    echo ""
 }
 
 if [ "x$REDMINE_AUTHKEY" == "x" ] || [ "x$REDMINE_URL" == "x" ]
 then
     redmine_help
+    exit 1
 fi
 
 export REDMINE_AUTHKEY REDMINE_URL
+
+if [ "x$REDMINE_REVIEW_IN_PROGRESS" == "x" ] || [ "x$REDMINE_REVIEW_FINISH" == "x" ]
+then
+    redmine_help_with_statuses
+    exit 1
+fi
+
+export REDMINE_REVIEW_IN_PROGRESS REDMINE_REVIEW_FINISH
