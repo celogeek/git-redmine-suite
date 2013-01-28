@@ -3,6 +3,7 @@
 set -e
 
 source /usr/local/share/Weborama-Git-Review/helpers/redmine-checkconf
+source /usr/local/share/Weborama-Git-Review/helpers/redmine-statuses
 
 function help {
     echo "git review abort TASK_NUMBER"
@@ -29,3 +30,4 @@ set -x
 git checkout devel
 git br -D "$BRNAME"
 git config --remove-section "$SECTION"
+redmine-set-status $REDMINE_REVIEW_TODO

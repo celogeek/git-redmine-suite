@@ -1,0 +1,12 @@
+#!/bin/bash
+
+function redmine_set_status
+{
+    /usr/local/share/Weborama-Git-Review/helpers/redmine-set-status-id --id="$1" --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL" 2> /dev/null
+    if [ $? -ne 0 ]
+    then
+        echo "Can't change the redmine status to $1 ..."
+        exit 1
+    fi
+}
+
