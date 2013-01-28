@@ -46,9 +46,9 @@ git config --remove-section "$SECTION" 2> /dev/null || true
 git config --add "${SECTION}.id" "$TASK"
 git config --add "${SECTION}.title" "$TASK_TITLE"
 git config --add "${SECTION}.pr" "$PR"
-redmine_set_status $TASK $REDMINE_REVIEW_IN_PROGRESS
 
 set +x
+redmine_set_status $TASK $REDMINE_REVIEW_IN_PROGRESS
 
 cat <<__EOF__
 You can squash / rebase ... 

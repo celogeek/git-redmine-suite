@@ -1,0 +1,54 @@
+#!/bin/bash
+
+set -e
+
+source /usr/local/share/Weborama-Git-Review/helpers/redmine-checkconf
+source /usr/local/share/Weborama-Git-Review/helpers/redmine-statuses
+
+function help {
+    echo "git review finish TASK_NUMBER"
+    exit 1
+}
+
+function get_change_log
+{
+    for i in Changes changes Changelog ChangeLog
+    do
+        [ -e "$i" ] && echo "$i" && break
+    done
+}
+
+TASK="$1"
+
+if [ "x$TASK" == "x" ]
+then
+    help
+fi
+
+SECTION="review.task-$TASK"
+TASK=$(git config "${SECTION}.id")
+TASK_TITLE=$(git config "${SECTION}.title")
+PR=$(git config "${SECTION}.pr")
+BRNAME="review-task-${TASK}-${PR}"
+CHANGELOG=$(get_change_log)
+
+echo "Finishing the review of task #$TASK - PR:$PR ..."
+echo "    * $TASK_TITLE"
+
+set -x
+cd "$(readlink -f "$(dirname "$(git rev-parse --git-dir)")")"
+git checkout devel
+git merge --no-ff "$BRNAME"
+git br -d "$BRNAME"
+echo "    $TASK_TITLE" > "$CHANGELOG".new
+echo "" >> "$CHANGELOG".new
+cat "$CHANGELOG" >> "$CHANGELOG".new
+mv "$CHANGELOG".new "$CHANGELOG"
+vim "$CHANGELOG"
+git add "$CHANGELOG"
+git commit -m "reflect changes" "$CHANGELOG"
+git config --remove-section "$SECTION"
+git push origin :"$PR"
+git push origin devel
+set +x
+redmine_set_status $TASK $REDMINE_REVIEW_FINISH
