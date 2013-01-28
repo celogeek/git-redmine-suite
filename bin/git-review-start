@@ -46,3 +46,10 @@ git config --add "${SECTION}.id" "$TASK"
 git config --add "${SECTION}.title" "$TASK_TITLE"
 git config --add "${SECTION}.pr" "$PR"
 
+set +x
+
+cat <<__EOF__
+You can squash / rebase ... 
+but please keep the name $BRNAME 
+for your branch before further action with git review
+__EOF__
