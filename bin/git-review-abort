@@ -30,4 +30,4 @@ set -x
 git checkout devel
 git br -D "$BRNAME"
 git config --remove-section "$SECTION"
-redmine-set-status $REDMINE_REVIEW_TODO
+redmine_set_status $REDMINE_REVIEW_TODO
