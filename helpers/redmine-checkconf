@@ -14,32 +14,41 @@ function redmine_help
 Please configure your redmine instance :
     git config --global --add redmine.authkey YOUR_AUTH_KEY
     git config --global --add redmine.url THE_REDMINE_URL_SERVER
-    git config --global --add redmine.statuses.review.todo ID
-    git config --global --add redmine.statuses.review.inprogress ID
-    git config --global --add redmine.statuses.review.finish ID
-    git config --global --add redmine.user.id ID
-    git config --add redmine.project PROJECT_SLUG
 
 __EOF__
 }
 
 function redmine_help_with_statuses
 {
-    redmine_help
+    cat <<__EOF__
+Please configure your redmine instance :
+    git config --global --add redmine.statuses.review.todo ID
+    git config --global --add redmine.statuses.review.inprogress ID
+    git config --global --add redmine.statuses.review.finish ID
+
+__EOF__
     /usr/local/share/Weborama-Git-Review/helpers/redmine-get-statuses-ids --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL"
     echo ""
 }
 
 function redmine_help_with_current_user_id
 {
-    redmine_help
+    cat <<__EOF__
+Please configure your redmine instance :
+    git config --global --add redmine.user.id ID
+
+__EOF__
     /usr/local/share/Weborama-Git-Review/helpers/redmine-get-current-user-id --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL"
     echo ""
 }
 
 function redmine_help_with_project_slug
 {
-    redmine_help
+    cat <<__EOF__
+Please configure your redmine instance :
+    git config --add redmine.project PROJECT_SLUG
+
+__EOF__
     /usr/local/share/Weborama-Git-Review/helpers/redmine-get-project-slug --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL"
     echo ""
 }
