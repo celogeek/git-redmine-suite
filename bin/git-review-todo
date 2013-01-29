@@ -1,0 +1,8 @@
+#!/bin/bash
+
+source /usr/local/share/Weborama-Git-Review/helpers/redmine-checkconf
+
+set -e
+
+echo "The review todo for this project is :"
+/usr/local/share/Weborama-Git-Review/helpers/redmine-get-tasks --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL" --project="$REDMINE_PROJECT" --assigned_to_id="$REDMINE_USER_ID" --status_id="$REDMINE_REVIEW_TODO"

@@ -58,7 +58,6 @@ my $status_id = $opt->status_id;
 my $assigned_to_id = $opt->assigned_to_id;
 my $resp = $r->issues->list->all(status_id => $status_id, assigned_to_id => $assigned_to_id);
 my $content = $resp->content->{issues};
-say "To be code reviewed : ";
 for my $issue(@$content) {
     say sprintf("    Task #%-6d : %s [%s] - %s/issues/%d", @$issue{qw/id subject/}, $issue->{author}->{name}, $opt->server_url, $issue->{id});
 
