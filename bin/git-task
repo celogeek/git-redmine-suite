@@ -1,0 +1,14 @@
+#!/bin/bash
+
+set -e
+
+MODULE="/usr/local/bin/git-task-$1"
+shift
+
+if [ -x "$MODULE" ]
+then
+    exec $MODULE $*
+else
+    echo "The file $MODULE is not present. Check your command"
+    exit 1
+fi

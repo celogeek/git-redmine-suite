@@ -7,6 +7,8 @@ REDMINE_REVIEW_IN_PROGRESS=$(git config redmine.statuses.review.inprogress)
 REDMINE_REVIEW_FINISH=$(git config redmine.statuses.review.finish)
 REDMINE_USER_ID=$(git config redmine.user.id)
 REDMINE_PROJECT=$(git config redmine.project)
+REDMINE_TASK_ASSIGNED=$(git config redmine.statuses.task.assigned)
+REDMINE_TASK_INPROGRESS=$(git config redmine.statuses.task.inprogress)
 
 function redmine_help
 {
@@ -25,6 +27,7 @@ Please configure your redmine instance :
     git config --global --add redmine.statuses.review.todo ID
     git config --global --add redmine.statuses.review.inprogress ID
     git config --global --add redmine.statuses.review.finish ID
+    git config --global --add redmine.statuses.task.assigned ID
 
 __EOF__
     /usr/local/share/Weborama-Git-Review/helpers/redmine-get-statuses-ids --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL"
@@ -61,13 +64,13 @@ fi
 
 export REDMINE_AUTHKEY REDMINE_URL
 
-if [ "x$REDMINE_REVIEW_TODO" == "x" ] || [ "x$REDMINE_REVIEW_IN_PROGRESS" == "x" ] || [ "x$REDMINE_REVIEW_FINISH" == "x" ]
+if [ "x$REDMINE_REVIEW_TODO" == "x" ] || [ "x$REDMINE_REVIEW_IN_PROGRESS" == "x" ] || [ "x$REDMINE_REVIEW_FINISH" == "x" ] || [ "x$REDMINE_TASK_ASSIGNED" == "x" ] || [ "x$REDMINE_TASK_INPROGRESS" == "x" ]
 then
     redmine_help_with_statuses
     exit 1
 fi
 
-export REDMINE_REVIEW_TODO REDMINE_REVIEW_IN_PROGRESS REDMINE_REVIEW_FINISH
+export REDMINE_REVIEW_TODO REDMINE_REVIEW_IN_PROGRESS REDMINE_REVIEW_FINISH REDMINE_TASK_ASSIGNED REDMINE_TASK_INPROGRESS
 
 if [ "x$REDMINE_USER_ID" == "x" ]
 then
