@@ -48,7 +48,7 @@ vim "$CHANGELOG"
 git add "$CHANGELOG"
 git commit -m "reflect changes" "$CHANGELOG"
 git config --remove-section "$SECTION"
-git push origin :"$PR"
 git push origin devel
+git push origin :tags/"$PR" || true
 set +x
 redmine_set_status $TASK $REDMINE_REVIEW_FINISH
