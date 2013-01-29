@@ -1,0 +1,65 @@
+#!/usr/bin/env perl
+use feature 'say';
+use strict;
+use warnings;
+{
+    package MyOpts;
+    use Moo;
+    use MooX::Options;
+    option 'project' => (
+        is => 'ro',
+        format => 's',
+        required => 1,
+        doc => 'the id or slug of the project to check',
+    );
+    option 'status_id' => (
+        is => 'ro',
+        format => 'i',
+        required => 1,
+        doc => 'status id of the review todo',
+    );
+    option 'assigned_to_id' => (
+        is => 'ro',
+        format => 'i',
+        required => 1,
+        doc => 'assigned_to id of the review todo',
+    );
+    option 'auth_key' => (
+        is => 'ro',
+        format => 's',
+        required => 1,
+        doc => 'your auth key',
+    );
+    option 'server_url' => (
+        is => 'ro',
+        format => 's',
+        required => 1,
+        doc => 'the redmine url of the server',
+    );
+    option 'trace' => (
+        is => 'ro',
+        default => sub { 0 },
+        doc => 'debug mode',
+    );
+    1;
+};
+
+my $opt = MyOpts->new_with_options;
+my $project = $opt->project;
+
+use Redmine::API;
+my $r = Redmine::API->new(
+    'auth_key' => $opt->auth_key,
+    'base_url' => $opt->server_url . '/projects/' . $project,
+    'trace' => $opt->trace,
+);
+
+my $status_id = $opt->status_id;
+my $assigned_to_id = $opt->assigned_to_id;
+my $resp = $r->issues->list->all(status_id => $status_id, assigned_to_id => $assigned_to_id);
+my $content = $resp->content->{issues};
+say "To be code reviewed : ";
+for my $issue(@$content) {
+    say sprintf("    Task #%-6d : %s [%s] - %s/issues/%d", @$issue{qw/id subject/}, $issue->{author}->{name}, $opt->server_url, $issue->{id});
+
+}

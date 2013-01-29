@@ -5,6 +5,8 @@ REDMINE_URL=$(git config redmine.url)
 REDMINE_REVIEW_TODO=$(git config redmine.statuses.review.todo)
 REDMINE_REVIEW_IN_PROGRESS=$(git config redmine.statuses.review.inprogress)
 REDMINE_REVIEW_FINISH=$(git config redmine.statuses.review.finish)
+REDMINE_USER_ID=$(git config redmine.user.id)
+REDMINE_PROJECT=$(git config redmine.project)
 
 function redmine_help
 {
@@ -15,6 +17,8 @@ Please configure your redmine instance :
     git config --global --add redmine.statuses.review.todo ID
     git config --global --add redmine.statuses.review.inprogress ID
     git config --global --add redmine.statuses.review.finish ID
+    git config --global --add redmine.user.id ID
+    git config --add redmine.project PROJECT_SLUG
 
 __EOF__
 }
@@ -23,6 +27,13 @@ function redmine_help_with_statuses
 {
     redmine_help
     /usr/local/share/Weborama-Git-Review/helpers/redmine-get-statuses-ids --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL"
+    echo ""
+}
+
+function redmine_help_with_current_user_id
+{
+    redmine_help
+    /usr/local/share/Weborama-Git-Review/helpers/redmine-get-current-user-id --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL"
     echo ""
 }
 
@@ -41,3 +52,8 @@ then
 fi
 
 export REDMINE_REVIEW_TODO REDMINE_REVIEW_IN_PROGRESS REDMINE_REVIEW_FINISH
+
+if [ "x$REDMINE_USER_ID" == "x" ]
+then
+    redmine_help_with_current_user_id
+fi
