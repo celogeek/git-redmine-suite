@@ -37,6 +37,13 @@ function redmine_help_with_current_user_id
     echo ""
 }
 
+function redmine_help_with_project_slug
+{
+    redmine_help
+    /usr/local/share/Weborama-Git-Review/helpers/redmine-get-project-slug --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL"
+    echo ""
+}
+
 if [ "x$REDMINE_AUTHKEY" == "x" ] || [ "x$REDMINE_URL" == "x" ]
 then
     redmine_help
@@ -57,3 +64,12 @@ if [ "x$REDMINE_USER_ID" == "x" ]
 then
     redmine_help_with_current_user_id
 fi
+
+export REDMINE_USER_ID
+
+if [ "x$REDMINE_PROJECT" == "x" ]
+then
+    redmine_help_with_project_slug
+fi
+
+export REDMINE_PROJECT
