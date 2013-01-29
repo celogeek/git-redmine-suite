@@ -1,9 +1,9 @@
 #!/bin/bash
 
-set -e
-
 source /usr/local/share/Weborama-Git-Review/helpers/redmine-checkconf
 source /usr/local/share/Weborama-Git-Review/helpers/redmine-statuses
+
+set -e
 
 function help {
     echo "git review abort TASK_NUMBER"
