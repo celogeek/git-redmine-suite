@@ -1,0 +1,69 @@
+#!/bin/bash
+
+source /usr/local/share/Weborama-Git-Review/helpers/redmine-checkconf
+source /usr/local/share/Weborama-Git-Review/helpers/redmine-statuses
+
+set -e
+
+function redmine_get_title
+{
+    /usr/local/share/Weborama-Git-Review/helpers/redmine-get-title --id="$1" --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL" 2> /dev/null
+    if [ $? -ne 0 ]
+    then
+        echo "Can't fetch the task $1. This task exist ? Your server is properly configurated ?" 1>&2
+        exit 1
+    fi
+}
+
+
+function help {
+    echo "git task start TASK_NUMBER"
+    exit 1
+}
+
+TASK="$1"
+
+if [ "x$TASK" == "x" ]
+then
+    help
+fi
+
+set +e
+TASK_TITLE=$(git config task.$TASK.title)
+BRNAME=$(git config task.$TASK.branch)
+set -e
+
+if [ "x$BRNAME" != "x" ]
+then
+    echo "Continue the task $TASK ..."
+    set -x
+    git checkout $BRNAME
+    git pull origin $BRNAME
+    set +x
+    redmine_set_status $TASK $REDMINE_TASK_INPROGRESS
+    exit 0
+fi
+
+TASK_TITLE=$(redmine_get_title $TASK)
+SLUG_TITLE=$(/usr/local/share/Weborama-Git-Review/helpers/slug --this "$TASK_TITLE")
+BRNAME="$SLUG_TITLE"
+
+echo "Starting the task #$TASK ..."
+echo "    * $TASK_TITLE"
+echo ""
+
+echo "Creation local branch $BRNAME ..."
+
+set -x
+
+git fetch -ap
+git fetch --tags -p
+git checkout -b "$BRNAME" origin/devel
+git push origin -u $BRNAME
+
+git config --add "task.$TASK.title" "$TASK_TITLE"
+git config --add "task.$TASK.branch" "$BRNAME"
+
+set +x
+redmine_set_status $TASK $REDMINE_TASK_INPROGRESS
+

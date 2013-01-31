@@ -1,0 +1,18 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+use feature 'say';
+{
+    package MyOpt;
+    use Moo;
+    use MooX::Options;
+    option 'this' => ( is => 'ro', format => 's', required => 1, doc => 'String to slug');
+    1;
+}
+
+my $opt = MyOpt->new_with_options;
+my $slug = $opt->this;
+$slug =~ s/[^a-zA-Z0-9]+/-/g;
+$slug = lc($slug);
+
+say $slug;
