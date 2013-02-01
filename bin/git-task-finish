@@ -1,0 +1,61 @@
+#!/bin/bash
+
+source /usr/local/share/Weborama-Git-Review/helpers/redmine-checkconf
+source /usr/local/share/Weborama-Git-Review/helpers/redmine-statuses
+source /usr/local/share/Weborama-Git-Review/helpers/redmine-title
+source /usr/local/share/Weborama-Git-Review/helpers/redmine-project
+
+set -e
+
+function help {
+    echo "git task finish TASK_NUMBER"
+    exit 1
+}
+
+TASK="$1"
+
+if [ "x$TASK" == "x" ]
+then
+    help
+fi
+
+TASK_TITLE=$(git config task.$TASK.title)
+BRNAME=$(git config task.$TASK.branch)
+PROJECT=$(git config task.$TASK.project)
+set +e
+TASK_FINISH_USER_ID=$(git config redmine.task.finish.user.$PROJECT)
+if [ "x$TASK_FINISH_USER_ID" == "x" ]
+then
+    echo "The user to assigned the task when you have finished a task is not defined"
+    echo ""
+    echo "Configure it like this :"
+    echo "    git config --add redmine.task.finish.user.$PROJECT USER_ID"
+    echo ""
+    redmine_get_project_users "$PROJECT"
+    exit 1
+fi
+
+D=$(date -u +%Y%m%d%H%M%S)
+TAG="pr-$D-$BRNAME"
+
+set -e
+
+echo "Pushing local on origin ..."
+
+set -x
+
+git fetch -ap
+git fetch --tags -p
+git checkout $BRNAME
+git push origin -fu $BRNAME
+git tag "$TAG"
+git push origin tags/"$TAG"
+git checkout devel
+git merge origin/devel
+
+set +x
+
+echo ""
+echo "Updating redmine status ..."
+redmine_set_status $TASK $REDMINE_REVIEW_TODO $TASK_FINISH_USER_ID "PR: $TAG"
+echo ""

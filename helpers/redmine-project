@@ -26,3 +26,9 @@ function redmine_get_all_active_projects
 {
     git config --get-regexp ^task.*.project | cut -d " " -f 2 | sort -u
 }
+
+function redmine_get_project_users
+{
+    /usr/local/share/Weborama-Git-Review/helpers/redmine-get-users-id --project="$1" --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL"
+    echo ""
+}
