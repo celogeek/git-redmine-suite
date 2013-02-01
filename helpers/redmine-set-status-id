@@ -26,7 +26,6 @@ use warnings;
     );
     option 'notes' => (
         is => 'ro',
-        required => 1,
         doc => 'notes for your change',
         format => 's',
     );
@@ -62,6 +61,6 @@ my $r = Redmine::API->new(
 my $id = $opt->id;
 my $status_id = $opt->status_id;
 my $assigned_to_id = $opt->assigned_to_id;
-my $notes = $opt->notes;
+my $notes = $opt->notes // '';
 my $resp = $r->issues->issue->update($id, status_id => $status_id, assigned_to_id => $assigned_to_id, notes => $notes);
 

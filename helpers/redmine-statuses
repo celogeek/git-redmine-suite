@@ -2,7 +2,12 @@
 
 function redmine_set_status
 {
-    /usr/local/share/Weborama-Git-Review/helpers/redmine-set-status-id --id="$1" --status_id="$2" --assigned_to_id="$3" --notes="$4" --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL" 2> /dev/null
+    if [ "x$4" == "x" ]
+    then
+        /usr/local/share/Weborama-Git-Review/helpers/redmine-set-status-id --id="$1" --status_id="$2" --assigned_to_id="$3" --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL" 2> /dev/null
+    else
+        /usr/local/share/Weborama-Git-Review/helpers/redmine-set-status-id --id="$1" --status_id="$2" --assigned_to_id="$3" --notes="$4" --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL" 2> /dev/null
+    fi
     if [ $? -ne 0 ]
     then
         echo "Can't change the redmine status of task $1 with value $2 and assigned_to id $3 ..."
