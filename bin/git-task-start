@@ -40,7 +40,7 @@ then
     git checkout $BRNAME
     git pull origin $BRNAME
     set +x
-    redmine_set_status $TASK $REDMINE_TASK_INPROGRESS
+    redmine_set_status $TASK $REDMINE_TASK_INPROGRESS $REDMINE_USER_ID
     exit 0
 fi
 

@@ -18,6 +18,12 @@ use warnings;
         doc => 'id of the status',
         format => 'i',
     );
+    option 'assigned_to_id' => (
+        is => 'ro',
+        required => 1,
+        doc => 'id of user to assign to',
+        format => 'i',
+    );
     option 'auth_key' => (
         is => 'ro',
         format => 's',
@@ -49,5 +55,6 @@ my $r = Redmine::API->new(
 
 my $id = $opt->id;
 my $status_id = $opt->status_id;
-my $resp = $r->issues->issue->update($id, status_id => $status_id);
+my $assigned_to_id = $opt->assigned_to_id;
+my $resp = $r->issues->issue->update($id, status_id => $status_id, assigned_to_id => $assigned_to_id);
 

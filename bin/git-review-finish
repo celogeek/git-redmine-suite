@@ -51,4 +51,4 @@ git config --remove-section "$SECTION"
 git push origin devel
 git push origin :tags/"$PR" || true
 set +x
-redmine_set_status $TASK $REDMINE_REVIEW_FINISH
+redmine_set_status $TASK $REDMINE_REVIEW_FINISH $REDMINE_REVIEW_FINISH_USER_ID

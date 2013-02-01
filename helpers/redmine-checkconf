@@ -1,14 +1,16 @@
 #!/bin/bash
 
-REDMINE_AUTHKEY=$(git config redmine.authkey)
-REDMINE_URL=$(git config redmine.url)
-REDMINE_REVIEW_TODO=$(git config redmine.statuses.review.todo)
-REDMINE_REVIEW_IN_PROGRESS=$(git config redmine.statuses.review.inprogress)
-REDMINE_REVIEW_FINISH=$(git config redmine.statuses.review.finish)
-REDMINE_USER_ID=$(git config redmine.user.id)
-REDMINE_PROJECT=$(git config redmine.project)
-REDMINE_TASK_ASSIGNED=$(git config redmine.statuses.task.assigned)
-REDMINE_TASK_INPROGRESS=$(git config redmine.statuses.task.inprogress)
+REDMINE_AUTHKEY=                $(git config redmine.authkey)
+REDMINE_URL=                    $(git config redmine.url)
+REDMINE_REVIEW_TODO=            $(git config redmine.statuses.review.todo)
+REDMINE_REVIEW_TODO_USER_ID=    $(git config redmine.user.review.id)
+REDMINE_REVIEW_IN_PROGRESS=     $(git config redmine.statuses.review.inprogress)
+REDMINE_REVIEW_FINISH=          $(git config redmine.statuses.review.finish)
+REDMINE_REVIEW_FINISH_USER_ID=  $(git config redmine.user.review.finish)
+REDMINE_USER_ID=                $(git config redmine.user.id)
+REDMINE_PROJECT=                $(git config redmine.project)
+REDMINE_TASK_TODO=              $(git config redmine.statuses.task.assigned)
+REDMINE_TASK_INPROGRESS=        $(git config redmine.statuses.task.inprogress)
 
 function redmine_help
 {
@@ -64,13 +66,13 @@ fi
 
 export REDMINE_AUTHKEY REDMINE_URL
 
-if [ "x$REDMINE_REVIEW_TODO" == "x" ] || [ "x$REDMINE_REVIEW_IN_PROGRESS" == "x" ] || [ "x$REDMINE_REVIEW_FINISH" == "x" ] || [ "x$REDMINE_TASK_ASSIGNED" == "x" ] || [ "x$REDMINE_TASK_INPROGRESS" == "x" ]
+if [ "x$REDMINE_REVIEW_TODO" == "x" ] || [ "x$REDMINE_REVIEW_IN_PROGRESS" == "x" ] || [ "x$REDMINE_REVIEW_FINISH" == "x" ] || [ "x$REDMINE_TASK_TODO" == "x" ] || [ "x$REDMINE_TASK_INPROGRESS" == "x" ]
 then
     redmine_help_with_statuses
     exit 1
 fi
 
-export REDMINE_REVIEW_TODO REDMINE_REVIEW_IN_PROGRESS REDMINE_REVIEW_FINISH REDMINE_TASK_ASSIGNED REDMINE_TASK_INPROGRESS
+export REDMINE_REVIEW_TODO REDMINE_REVIEW_IN_PROGRESS REDMINE_REVIEW_FINISH REDMINE_TASK_TODO REDMINE_TASK_INPROGRESS
 
 if [ "x$REDMINE_USER_ID" == "x" ]
 then

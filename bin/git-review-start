@@ -48,7 +48,7 @@ git config --add "${SECTION}.title" "$TASK_TITLE"
 git config --add "${SECTION}.pr" "$PR"
 
 set +x
-redmine_set_status $TASK $REDMINE_REVIEW_IN_PROGRESS
+redmine_set_status $TASK $REDMINE_REVIEW_IN_PROGRESS $REDMINE_USER_ID
 
 cat <<__EOF__
 You can squash / rebase ... 
