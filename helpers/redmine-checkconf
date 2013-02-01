@@ -9,8 +9,6 @@ REDMINE_REVIEW_FINISH=          $(git config redmine.statuses.review.finish)
 
 REDMINE_USER_ID=                $(git config redmine.user.id)
 
-REDMINE_PROJECT=                $(git config redmine.project)
-
 REDMINE_TASK_TODO=              $(git config redmine.statuses.task.assigned)
 REDMINE_TASK_IN_PROGRESS=       $(git config redmine.statuses.task.inprogress)
 
@@ -46,17 +44,6 @@ Please configure your redmine instance :
 
 __EOF__
     /usr/local/share/Weborama-Git-Review/helpers/redmine-get-current-user-id --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL"
-    echo ""
-}
-
-function redmine_help_with_project_slug
-{
-    cat <<__EOF__
-Please configure your redmine instance :
-    git config --add redmine.project PROJECT_SLUG
-
-__EOF__
-    /usr/local/share/Weborama-Git-Review/helpers/redmine-get-project-slug --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL"
     echo ""
 }
 

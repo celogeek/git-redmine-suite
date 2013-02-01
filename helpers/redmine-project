@@ -1,0 +1,14 @@
+#!/bin/bash
+
+function redmine_project_slug
+{
+    cat <<__EOF__
+Please configure your projects :
+    git config --add redmine.project.name PROJECT_SLUG
+    git config --add redmine.project.\${PROJECT_SLUG}.finish.task USER_ID
+    git config --add redmine.project.\${PROJECT_SLUG}.finish.review USER_ID
+
+__EOF__
+    /usr/local/share/Weborama-Git-Review/helpers/redmine-get-project-slug --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL"
+    echo ""
+}
