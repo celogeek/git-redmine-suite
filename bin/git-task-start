@@ -2,19 +2,9 @@
 
 source /usr/local/share/Weborama-Git-Review/helpers/redmine-checkconf
 source /usr/local/share/Weborama-Git-Review/helpers/redmine-statuses
+source /usr/local/share/Weborama-Git-Review/helpers/redmine-title
 
 set -e
-
-function redmine_get_title
-{
-    /usr/local/share/Weborama-Git-Review/helpers/redmine-get-title --id="$1" --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL" 2> /dev/null
-    if [ $? -ne 0 ]
-    then
-        echo "Can't fetch the task $1. This task exist ? Your server is properly configurated ?" 1>&2
-        exit 1
-    fi
-}
-
 
 function help {
     echo "git task start TASK_NUMBER"
