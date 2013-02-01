@@ -1,10 +1,9 @@
 #!/bin/bash
 
-function redmine_project_slug
+function redmine_projects_slug
 {
     cat <<__EOF__
 Please configure your projects :
-    git config --add redmine.project.name PROJECT_SLUG
     git config --add redmine.project.\${PROJECT_SLUG}.finish.task USER_ID
     git config --add redmine.project.\${PROJECT_SLUG}.finish.review USER_ID
 
@@ -12,3 +11,15 @@ __EOF__
     /usr/local/share/Weborama-Git-Review/helpers/redmine-get-project-slug --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL"
     echo ""
 }
+
+function redmine_get_project
+{
+    /usr/local/share/Weborama-Git-Review/helpers/redmine-get-project --id="$1" --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL" 2> /dev/null
+    if [ $? -ne 0 ]
+    then
+        echo "Can't fetch the task $1. This task exist ? Your server is properly configurated ?" 1>&2
+        exit 1
+    fi
+}
+
+

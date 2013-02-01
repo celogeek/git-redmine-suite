@@ -1,0 +1,52 @@
+#!/usr/bin/env perl
+use feature 'say';
+use strict;
+use warnings;
+{
+    package MyOpts;
+    use Moo;
+    use MooX::Options;
+    option 'id' => (
+        is       => 'ro',
+        required => 1,
+        doc      => 'id of the task',
+        format   => 'i',
+    );
+    option 'auth_key' => (
+        is => 'ro',
+        format => 's',
+        required => 1,
+        doc => 'your auth key',
+    );
+    option 'server_url' => (
+        is => 'ro',
+        format => 's',
+        required => 1,
+        doc => 'the redmine url of the server',
+    );
+    option 'trace' => (
+        is => 'ro',
+        default => sub { 0 },
+        doc => 'debug mode',
+    );
+    1;
+};
+
+my $opt = MyOpts->new_with_options;
+
+use Redmine::API;
+my $r = Redmine::API->new(
+    'auth_key' => $opt->auth_key,
+    'base_url' => $opt->server_url,
+    'trace' => $opt->trace,
+);
+
+my $id = $opt->id;
+my $resp = $r->issues->issue->get($id);
+my $content = $resp->content->{issue};
+
+my $project_id = $content->{project}->{id};
+
+$resp =$r->projects->project->get($project_id);
+$content = $resp->content->{project};
+say $content->{identifier};
