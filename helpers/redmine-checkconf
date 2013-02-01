@@ -12,7 +12,7 @@ REDMINE_USER_ID=                $(git config redmine.user.id)
 REDMINE_PROJECT=                $(git config redmine.project)
 
 REDMINE_TASK_TODO=              $(git config redmine.statuses.task.assigned)
-REDMINE_TASK_IN_PROGRESS=        $(git config redmine.statuses.task.inprogress)
+REDMINE_TASK_IN_PROGRESS=       $(git config redmine.statuses.task.inprogress)
 
 function redmine_help
 {
