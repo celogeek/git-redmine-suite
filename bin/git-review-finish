@@ -39,7 +39,7 @@ set -x
 cd "$(readlink -f "$(dirname "$(git rev-parse --git-dir)")")"
 git checkout devel
 git merge --no-ff "$BRNAME"
-git br -d "$BRNAME"
+git branch -d "$BRNAME"
 echo "    $TASK_TITLE" > "$CHANGELOG".new
 echo "" >> "$CHANGELOG".new
 cat "$CHANGELOG" >> "$CHANGELOG".new
