@@ -1,0 +1,32 @@
+#!/bin/bash
+
+source /usr/local/share/Weborama-Git-Review/helpers/redmine-checkconf
+source /usr/local/share/Weborama-Git-Review/helpers/redmine-project
+
+if [ "x$HELP" != "x" ]
+then
+    echo "git project add TASK REVIEW"
+    exit 1
+fi
+
+PROJECT=$1
+if [ "x$PROJECT" == "x" ]
+then
+    echo "You have to give a project slug : "
+    echo ""
+    redmine_projects_slug
+    exit 1
+fi
+
+TASK=$2
+REVIEW=$3
+
+if [ "x$TASK" == "x" ] || [ "x$REVIEW" == "x" ]
+then
+    redmine_get_project_users "$PROJECT"
+    exit 1
+fi
+
+git config --add redmine.project.$PROJECT.finish.user.id.task $TASK
+git config --add redmine.project.$PROJECT.finish.user.id.review $REVIEW
+
