@@ -1,0 +1,12 @@
+This project will help you to link your git project to redmine.
+
+The project structure should be :
+
+master - release branch
+devel  - where all integration goes
+redmine-task-ID-SLUD - all synchronized task
+pr-YYYMMDDHHmmSS-SLUG - all the pull request receive when a task is finished
+
+Developers should have the right to push redmine-task-* and pr-*.
+Reviewer should have the right to merge redmine-task-* to devel and remove the pr-*.
+Integrator should have the right to merge devel into master and create a tag 'vVERSION' on each release.
