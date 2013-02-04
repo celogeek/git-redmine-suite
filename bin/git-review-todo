@@ -5,6 +5,12 @@ source /usr/local/share/Weborama-Git-Review/helpers/redmine-project
 
 set -e
 
+if [ "x$HELP" != "x" ]
+then
+    echo "git review todo"
+    exit 1
+fi
+
 for REDMINE_PROJECT in $(redmine_get_all_active_projects)
 do
     echo "Project : $REDMINE_PROJECT"
