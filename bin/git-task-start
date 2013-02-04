@@ -48,7 +48,7 @@ fi
 
 TASK_TITLE=$(redmine_get_title $TASK)
 SLUG_TITLE=$(/usr/local/share/Weborama-Git-Review/helpers/slug --this "$TASK_TITLE")
-BRNAME="$SLUG_TITLE"
+BRNAME="redmine-$SLUG_TITLE"
 PROJECT=$(redmine_get_project $TASK)
 
 echo "Starting the task #$TASK ..."

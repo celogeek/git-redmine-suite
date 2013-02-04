@@ -19,18 +19,13 @@ then
     help
 fi
 
-TASK_TITLE=$(git config task.$TASK.title)
-BRNAME=$(git config task.$TASK.branch)
-PROJECT=$(git config task.$TASK.project)
+TASK_TITLE=$(git config redmine.task.$TASK.title)
+BRNAME=$(git config redmine.task.$TASK.branch)
+PROJECT=$(git config redmine.task.$TASK.project)
 set +e
-TASK_FINISH_USER_ID=$(git config redmine.task.finish.user.$PROJECT)
+TASK_FINISH_USER_ID=$(git config redmine.project.$PROJECT.finish.user.id.task)
 if [ "x$TASK_FINISH_USER_ID" == "x" ]
 then
-    echo "The user to assigned the task when you have finished a task is not defined"
-    echo ""
-    echo "Configure it like this :"
-    echo "    git config --add redmine.task.finish.user.$PROJECT USER_ID"
-    echo ""
     redmine_get_project_users "$PROJECT"
     exit 1
 fi
@@ -46,8 +41,8 @@ set -x
 
 git fetch -ap
 git fetch --tags -p
-git checkout $BRNAME
-git push origin -fu $BRNAME
+git checkout "$BRNAME"
+git push origin "$BRNAME"
 git tag "$TAG"
 git push origin tags/"$TAG"
 git checkout devel
