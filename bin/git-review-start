@@ -20,6 +20,20 @@ then
     help
 fi
 
+BRNAME=$(git config redmine.review.$TASK.branch)
+if [ "x$BRNAME" != "x" ]
+then
+    cat<<__EOF__
+This review is already in progress.
+You have to abort the review before and start it again.
+
+    git review abort $TASK
+    git review start $TASK $PR
+
+__EOF__
+    exit 1
+fi
+
 TASK_TITLE=$(redmine_get_title $TASK)
 SLUG_TITLE=$(/usr/local/share/Weborama-Git-Review/helpers/slug --this "$TASK_TITLE")
 BRNAME="redmine-review-$SLUG_TITLE"
