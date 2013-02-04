@@ -2,7 +2,6 @@
 
 source /usr/local/share/Weborama-Git-Review/helpers/redmine-checkconf
 source /usr/local/share/Weborama-Git-Review/helpers/redmine-statuses
-source /usr/local/share/Weborama-Git-Review/helpers/redmine-title
 source /usr/local/share/Weborama-Git-Review/helpers/redmine-project
 
 set -e
