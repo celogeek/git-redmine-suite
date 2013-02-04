@@ -3,6 +3,7 @@
 source /usr/local/share/Weborama-Git-Review/helpers/redmine-checkconf
 source /usr/local/share/Weborama-Git-Review/helpers/redmine-statuses
 source /usr/local/share/Weborama-Git-Review/helpers/redmine-title
+source /usr/local/share/Weborama-Git-Review/helpers/redmine-project
 
 set -e
 
@@ -19,9 +20,10 @@ then
     help
 fi
 
-BRNAME="review-task-${TASK}-${PR}"
 TASK_TITLE=$(redmine_get_title $TASK)
-SECTION="review.task-$TASK"
+SLUG_TITLE=$(/usr/local/share/Weborama-Git-Review/helpers/slug --this "$TASK_TITLE")
+BRNAME="redmine-review-$SLUG_TITLE"
+PROJECT=$(redmine_get_project $TASK)
 
 echo "Starting the review of task #$TASK - PR:$PR ..."
 echo "    * $TASK_TITLE"
@@ -32,16 +34,22 @@ git fetch -ap
 git fetch --tags -p
 git checkout devel
 git checkout -b "$BRNAME" "$PR"
-git config --remove-section "$SECTION" 2> /dev/null || true
-git config --add "${SECTION}.id" "$TASK"
-git config --add "${SECTION}.title" "$TASK_TITLE"
-git config --add "${SECTION}.pr" "$PR"
+git config --add "redmine.review.$TASK.pr" "$PR"
+git config --add "redmine.review.$TASK.title" "$TASK_TITLE"
+git config --add "redmine.review.$TASK.branch" "$BRNAME"
+git config --add "redmine.review.$TASK.project" "$PROJECT"
 
 set +x
 redmine_set_status $TASK $REDMINE_REVIEW_IN_PROGRESS $REDMINE_USER_ID
 
 cat <<__EOF__
+
 You can squash / rebase ... 
 but please keep the name $BRNAME 
 for your branch before further action with git review
+
+To start a review (example):
+    git rebase origin/devel
+    git diff origin/devel..
+
 __EOF__
