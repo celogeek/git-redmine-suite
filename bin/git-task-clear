@@ -1,0 +1,34 @@
+#!/bin/bash
+
+source /usr/local/share/Weborama-Git-Review/helpers/redmine-checkconf
+source /usr/local/share/Weborama-Git-Review/helpers/redmine-statuses
+source /usr/local/share/Weborama-Git-Review/helpers/redmine-title
+source /usr/local/share/Weborama-Git-Review/helpers/redmine-project
+
+set -e
+
+function help {
+    echo "git task clear TASK_NUMBER"
+    exit 1
+}
+
+TASK="$1"
+
+if [ "x$TASK" == "x" ]
+then
+    help
+fi
+
+BRNAME=$(git config redmine.task.$TASK.branch)
+
+echo "Cleaning local and remote dev for task $TASK..."
+
+set -x
+
+git fetch -ap
+git fetch --tags -p
+git checkout devel
+git merge origin/devel
+git branch -D "$BRNAME"
+git push origin :"$BRNAME"
+
