@@ -68,7 +68,7 @@ To start a review (example):
     git rebase origin/devel
     git diff origin/devel..
 
-If you want to add fixes and send back the branch to the user:
+If you want to add fixes and send back the branch to the user (if the remote branch is standard):
     git push origin HEAD:redmine-$SLUG_TITLE
     git push origin :tags/$PR
     git review abort $TASK
