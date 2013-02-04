@@ -20,7 +20,9 @@ then
     help
 fi
 
+set +e
 BRNAME=$(git config redmine.review.$TASK.branch)
+set -e
 if [ "x$BRNAME" != "x" ]
 then
     cat<<__EOF__
@@ -65,5 +67,10 @@ for your branch before further action with git review
 To start a review (example):
     git rebase origin/devel
     git diff origin/devel..
+
+If you want to add fixes and send back the branch to the user:
+    git push origin HEAD:redmine-$SLUG_TITLE
+    git push origin :tags/$PR
+    git review abort $TASK
 
 __EOF__
