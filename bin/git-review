@@ -1,15 +1,14 @@
 #!/bin/bash
 
 MODULE="/usr/local/bin/git-review-$1"
-shift
-
 set -e
 
 if [ -x "$MODULE" ]
 then
+    shift
     exec $MODULE $*
 else
-    if [ "x$MODULE" != "x" ]
+    if [ "x$1" != "x" ]
     then
         echo "The file $MODULE is not present. Check your command"
     fi
