@@ -2,6 +2,7 @@
 
 source /usr/local/share/Weborama-Git-Review/helpers/redmine-checkconf
 source /usr/local/share/Weborama-Git-Review/helpers/redmine-statuses
+source /usr/local/share/Weborama-Git-Review/helpers/redmine-project
 
 set -e
 
@@ -25,21 +26,31 @@ then
     help
 fi
 
-SECTION="review.task-$TASK"
-TASK=$(git config "${SECTION}.id")
-TASK_TITLE=$(git config "${SECTION}.title")
-PR=$(git config "${SECTION}.pr")
-BRNAME="review-task-${TASK}-${PR}"
+TASK_TITLE=$(git config "redmine.review.$TASK.title")
+PR=$(git config "redmine.review.$TASK.pr")
+BRNAME=$(git config "redmine.review.$TASK.branch")
+PROJECT=$(git config "redmine.review.$TASK.project")
 CHANGELOG=$(get_change_log)
+
+set +e
+REVIEW_FINISH_USER_ID=$(git config redmine.project.$PROJECT.finish.user.id.review)
+if [ "x$TASK_FINISH_USER_ID" == "x" ]
+then
+    redmine_get_project_users "$PROJECT"
+    exit 1
+fi
 
 echo "Finishing the review of task #$TASK - PR:$PR ..."
 echo "    * $TASK_TITLE"
+echo ""
 
 set -x
-cd "$(readlink -f "$(dirname "$(git rev-parse --git-dir)")")"
+git fetch -ap
+git fetch --tags -p
 git checkout devel
+git merge origin/devel
 git merge --no-ff "$BRNAME"
-git branch -d "$BRNAME"
+git branch -D "$BRNAME"
 echo "    $TASK_TITLE" > "$CHANGELOG".new
 echo "" >> "$CHANGELOG".new
 cat "$CHANGELOG" >> "$CHANGELOG".new
@@ -47,8 +58,11 @@ mv "$CHANGELOG".new "$CHANGELOG"
 vim "$CHANGELOG"
 git add "$CHANGELOG"
 git commit -m "reflect changes" "$CHANGELOG"
-git config --remove-section "$SECTION"
+git config --remove-section "redmine.review.$TASK"
 git push origin devel
-git push origin :tags/"$PR" || true
+git push origin :tags/"$PR"
 set +x
-redmine_set_status $TASK $REDMINE_REVIEW_FINISH $REDMINE_REVIEW_FINISH_USER_ID
+echo ""
+echo "Updating redmine status ..."
+redmine_set_status $TASK $REDMINE_REVIEW_FINISH $REVIEW_FINISH_USER_ID
+echo ""
