@@ -18,7 +18,7 @@ function redmine_get_project
 
 function redmine_get_all_active_projects
 {
-    git config --get-regexp ^task.*.project | cut -d " " -f 2 | sort -u
+    git config --get-regexp ^redmine.project | cut -d "." -f 3 | sort -u
 }
 
 function redmine_get_project_users
