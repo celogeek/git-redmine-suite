@@ -5,7 +5,7 @@ cd "$(readlink -f "$(dirname "$(git rev-parse --git-dir)")")"
 REDMINE_AUTHKEY=$(git config redmine.authkey)
 REDMINE_URL=$(git config redmine.url)
 
-REDMINE_REVIEW_TODO=$(git config redmine.statuses.review.todo)
+REDMINE_REVIEW_TODO=$(git config redmine.statuses.review.assigned)
 REDMINE_REVIEW_IN_PROGRESS=$(git config redmine.statuses.review.inprogress)
 REDMINE_REVIEW_FINISH=$(git config redmine.statuses.review.finish)
 
@@ -28,10 +28,11 @@ function redmine_help_with_statuses
 {
     cat <<__EOF__
 Please configure your redmine instance :
-    git config --global --add redmine.statuses.review.todo ID
+    git config --global --add redmine.statuses.review.assigned ID
     git config --global --add redmine.statuses.review.inprogress ID
     git config --global --add redmine.statuses.review.finish ID
     git config --global --add redmine.statuses.task.assigned ID
+    git config --global --add redmine.statuses.task.inprogress ID
 
 __EOF__
     /usr/local/share/Weborama-Git-Review/helpers/redmine-get-statuses-ids --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL"
