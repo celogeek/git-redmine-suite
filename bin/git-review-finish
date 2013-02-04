@@ -13,10 +13,12 @@ function help {
 
 function get_change_log
 {
+    C="Changes"
     for i in Changes changes Changelog ChangeLog
     do
-        [ -e "$i" ] && echo "$i" && break
+        [ -e "$i" ] && C="$i" && break
     done
+    echo $C
 }
 
 TASK="$1"
@@ -34,7 +36,7 @@ CHANGELOG=$(get_change_log)
 
 set +e
 REVIEW_FINISH_USER_ID=$(git config redmine.project.$PROJECT.finish.user.id.review)
-if [ "x$TASK_FINISH_USER_ID" == "x" ]
+if [ "x$REVIEW_FINISH_USER_ID" == "x" ]
 then
     redmine_get_project_users "$PROJECT"
     exit 1
