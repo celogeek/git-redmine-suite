@@ -1,9 +1,9 @@
 #!/bin/bash
 
-set -e
-
 MODULE="/usr/local/bin/git-task-$1"
 shift
+
+set -e
 
 if [ -x "$MODULE" ]
 then
