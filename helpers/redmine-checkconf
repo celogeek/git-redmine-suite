@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd "$(readlink -f "$(dirname "$(git rev-parse --git-dir)")")"
+cd "$(dirname "$(git rev-parse --git-dir)")"
 
 REDMINE_AUTHKEY=$(git config redmine.authkey)
 REDMINE_URL=$(git config redmine.url)
