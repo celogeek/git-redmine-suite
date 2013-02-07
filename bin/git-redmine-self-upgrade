@@ -1,5 +1,11 @@
 #!/bin/bash
 
+if [ "x$HELP" != "x" ]
+then
+    echo "git redmine self-upgrade"
+    exit 1
+fi
+
 set -e
 
 echo "Self-Upgrading git redmine ..."
