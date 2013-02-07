@@ -41,6 +41,7 @@ then
     redmine_get_project_users "$PROJECT"
     exit 1
 fi
+set -e
 
 echo "Finishing the review of task #$TASK - PR:$PR ..."
 echo "    * $TASK_TITLE"
@@ -52,7 +53,6 @@ git fetch --tags -p
 git checkout devel
 git merge origin/devel
 git merge --no-ff "$BRNAME"
-git branch -D "$BRNAME"
 echo "    $TASK_TITLE" > "$CHANGELOG".new
 echo "" >> "$CHANGELOG".new
 cat "$CHANGELOG" >> "$CHANGELOG".new
@@ -60,9 +60,10 @@ mv "$CHANGELOG".new "$CHANGELOG"
 vim "$CHANGELOG"
 git add "$CHANGELOG"
 git commit -m "reflect changes" "$CHANGELOG"
-git config --remove-section "redmine.review.$TASK"
 git push origin devel
 git push origin :tags/"$PR"
+git branch -D "$BRNAME"
+git config --remove-section "redmine.review.$TASK"
 set +x
 echo ""
 echo "Updating redmine status ..."
