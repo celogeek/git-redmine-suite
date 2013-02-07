@@ -62,6 +62,7 @@ git add "$CHANGELOG"
 git commit -m "reflect changes" "$CHANGELOG"
 git push origin devel
 git push origin :tags/"$PR"
+git tag -d "$PR"
 git branch -D "$BRNAME"
 git config --remove-section "redmine.review.$TASK"
 set +x
