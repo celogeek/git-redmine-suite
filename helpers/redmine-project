@@ -27,6 +27,8 @@ function redmine_get_project_users
     then
         CONFIG_ADD="--add "
         PROJECT_ADD="add "
+    else
+        PROJECT_ADD="change "
     fi
 
     cat <<__EOF__
