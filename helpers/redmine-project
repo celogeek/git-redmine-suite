@@ -27,6 +27,8 @@ function redmine_get_project_users
 Please configure your project "$1" for task finish and review :
     git config --add redmine.project.$1.finish.user.id.task USER_ID
     git config --add redmine.project.$1.finish.user.id.review USER_ID
+or
+    git project add TASK_USER_ID REVIEW_USER_ID
 
 __EOF__
     /usr/local/share/Weborama-Git-Review/helpers/redmine-get-users-id --project="$1" --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL"
