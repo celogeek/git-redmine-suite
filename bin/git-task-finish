@@ -51,5 +51,16 @@ set +x
 
 echo ""
 echo "Updating redmine status ..."
-redmine_set_status $TASK $REDMINE_REVIEW_TODO $TASK_FINISH_USER_ID "PR: $TAG"
+
+REMOTE_URL=$(git config remote.origin.url)
+
+redmine_set_status $TASK $REDMINE_REVIEW_TODO $TASK_FINISH_USER_ID "
+* REMOTE : $REMOTE_URL
+* PR: $TAG
+
+You can start a review with :
+<pre>
+git review start $TASK $TAG
+</pre>
+"
 echo ""
