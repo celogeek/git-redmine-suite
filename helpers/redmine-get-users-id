@@ -37,16 +37,15 @@ my $opt = MyOpts->new_with_options;
 use Redmine::API;
 my $r = Redmine::API->new(
     'auth_key' => $opt->auth_key,
-    'base_url' => $opt->server_url . '/projects/' . $opt->project,
+    'base_url' => $opt->server_url,
     'trace' => $opt->trace,
 );
 
-my $resp = $r->memberships->list->all();
-my $content = $resp->content->{memberships};
+my $resp = $r->projects->project->get($opt->project, include => 'members');
+my $content = $resp->content->{project}->{members} // [];
 say "The list of users for the project '", $opt->project, "' : ";
 use utf8;
 for my $member(@$content) {
-    next if !exists $member->{user};
-    utf8::encode($member->{user}->{name});
-    say sprintf("    %-5d - %-30s [%s]", $member->{user}->{id}, $member->{user}->{name}, join(', ', map {utf8::encode($_->{name}); $_->{name}} @{$member->{roles}}));
+    utf8::encode($member->{name});
+    say sprintf("    %-5d - %-30s", $member->{id}, $member->{name});
 }
