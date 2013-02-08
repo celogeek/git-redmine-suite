@@ -1,9 +1,9 @@
 #!/bin/bash
 
-source /usr/local/share/Weborama-Git-Review/helpers/redmine-checkconf
-source /usr/local/share/Weborama-Git-Review/helpers/redmine-statuses
-source /usr/local/share/Weborama-Git-Review/helpers/redmine-title
-source /usr/local/share/Weborama-Git-Review/helpers/redmine-project
+source /usr/local/share/Git-Redmine-Suite/helpers/redmine-checkconf
+source /usr/local/share/Git-Redmine-Suite/helpers/redmine-statuses
+source /usr/local/share/Git-Redmine-Suite/helpers/redmine-title
+source /usr/local/share/Git-Redmine-Suite/helpers/redmine-project
 
 set -e
 

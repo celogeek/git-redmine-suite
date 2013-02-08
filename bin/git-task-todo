@@ -1,7 +1,7 @@
 #!/bin/bash
 
-source /usr/local/share/Weborama-Git-Review/helpers/redmine-checkconf
-source /usr/local/share/Weborama-Git-Review/helpers/redmine-project
+source /usr/local/share/Git-Redmine-Suite/helpers/redmine-checkconf
+source /usr/local/share/Git-Redmine-Suite/helpers/redmine-project
 
 set -e
 
@@ -16,10 +16,10 @@ do
     echo "Project : $REDMINE_PROJECT"
     echo ""
     echo "Your todo list :"
-    /usr/local/share/Weborama-Git-Review/helpers/redmine-get-tasks --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL" --project="$REDMINE_PROJECT" --assigned_to_id="$REDMINE_USER_ID" --status_id="$REDMINE_TASK_TODO"
+    /usr/local/share/Git-Redmine-Suite/helpers/redmine-get-tasks --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL" --project="$REDMINE_PROJECT" --assigned_to_id="$REDMINE_USER_ID" --status_id="$REDMINE_TASK_TODO"
     echo ""
     echo "The task in progress :"
-    /usr/local/share/Weborama-Git-Review/helpers/redmine-get-tasks --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL" --project="$REDMINE_PROJECT" --assigned_to_id="$REDMINE_USER_ID" --status_id="$REDMINE_TASK_IN_PROGRESS"
+    /usr/local/share/Git-Redmine-Suite/helpers/redmine-get-tasks --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL" --project="$REDMINE_PROJECT" --assigned_to_id="$REDMINE_USER_ID" --status_id="$REDMINE_TASK_IN_PROGRESS"
     echo ""
     echo "*********************************************************************"
     echo ""

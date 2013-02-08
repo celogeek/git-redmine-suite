@@ -1,9 +1,9 @@
 #!/bin/bash
 
-source /usr/local/share/Weborama-Git-Review/helpers/redmine-checkconf
-source /usr/local/share/Weborama-Git-Review/helpers/redmine-statuses
-source /usr/local/share/Weborama-Git-Review/helpers/redmine-title
-source /usr/local/share/Weborama-Git-Review/helpers/redmine-project
+source /usr/local/share/Git-Redmine-Suite/helpers/redmine-checkconf
+source /usr/local/share/Git-Redmine-Suite/helpers/redmine-statuses
+source /usr/local/share/Git-Redmine-Suite/helpers/redmine-title
+source /usr/local/share/Git-Redmine-Suite/helpers/redmine-project
 
 set -e
 
@@ -37,7 +37,7 @@ __EOF__
 fi
 
 TASK_TITLE=$(redmine_get_title $TASK)
-SLUG_TITLE=$(/usr/local/share/Weborama-Git-Review/helpers/slug --this "$TASK_TITLE")
+SLUG_TITLE=$(/usr/local/share/Git-Redmine-Suite/helpers/slug --this "$TASK_TITLE")
 BRNAME="redmine-review-$SLUG_TITLE"
 PROJECT=$(redmine_get_project $TASK)
 

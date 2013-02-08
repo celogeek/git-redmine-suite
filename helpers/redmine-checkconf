@@ -35,7 +35,7 @@ Please configure your redmine instance :
     git config --global --add redmine.statuses.task.inprogress ID
 
 __EOF__
-    /usr/local/share/Weborama-Git-Review/helpers/redmine-get-statuses-ids --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL"
+    /usr/local/share/Git-Redmine-Suite/helpers/redmine-get-statuses-ids --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL"
     echo ""
 }
 
@@ -46,7 +46,7 @@ Please configure your redmine instance :
     git config --global --add redmine.user.id ID
 
 __EOF__
-    /usr/local/share/Weborama-Git-Review/helpers/redmine-get-current-user-id --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL"
+    /usr/local/share/Git-Redmine-Suite/helpers/redmine-get-current-user-id --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL"
     echo ""
 }
 

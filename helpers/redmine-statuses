@@ -4,9 +4,9 @@ function redmine_set_status
 {
     if [ "x$4" == "x" ]
     then
-        /usr/local/share/Weborama-Git-Review/helpers/redmine-set-status-id --id="$1" --status_id="$2" --assigned_to_id="$3" --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL" 2> /dev/null
+        /usr/local/share/Git-Redmine-Suite/helpers/redmine-set-status-id --id="$1" --status_id="$2" --assigned_to_id="$3" --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL" 2> /dev/null
     else
-        /usr/local/share/Weborama-Git-Review/helpers/redmine-set-status-id --id="$1" --status_id="$2" --assigned_to_id="$3" --notes="$4" --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL" 2> /dev/null
+        /usr/local/share/Git-Redmine-Suite/helpers/redmine-set-status-id --id="$1" --status_id="$2" --assigned_to_id="$3" --notes="$4" --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL" 2> /dev/null
     fi
     if [ $? -ne 0 ]
     then

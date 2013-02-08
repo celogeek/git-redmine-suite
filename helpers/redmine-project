@@ -2,13 +2,13 @@
 
 function redmine_projects_slug
 {
-    /usr/local/share/Weborama-Git-Review/helpers/redmine-get-project-slug --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL"
+    /usr/local/share/Git-Redmine-Suite/helpers/redmine-get-project-slug --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL"
     echo ""
 }
 
 function redmine_get_project
 {
-    /usr/local/share/Weborama-Git-Review/helpers/redmine-get-project --id="$1" --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL" 2> /dev/null
+    /usr/local/share/Git-Redmine-Suite/helpers/redmine-get-project --id="$1" --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL" 2> /dev/null
     if [ $? -ne 0 ]
     then
         echo "Can't fetch the task $1. This task exist ? Your server is properly configurated ?" 1>&2
@@ -39,6 +39,6 @@ or
     git project ${PROJECT_ADD}$1 TASK_USER_ID REVIEW_USER_ID
 
 __EOF__
-    /usr/local/share/Weborama-Git-Review/helpers/redmine-get-users-id --project="$1" --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL"
+    /usr/local/share/Git-Redmine-Suite/helpers/redmine-get-users-id --project="$1" --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL"
     echo ""
 }
