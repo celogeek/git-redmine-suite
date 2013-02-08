@@ -11,3 +11,20 @@ pr-YYYMMDDHHmmSS-SLUG - all the pull request receive when a task is finished
 Developers should have the right to push redmine-task-* and pr-*.
 Reviewer should have the right to read redmine-task-* (and write on it), push redmine-review-task-* to devel and remove the pr-*.
 Integrator should have the right to merge devel into master and create a tag 'vVERSION' on each release.
+
+To view the members of a project, you will need to apply this patch :
+diff --git a/app/views/projects/show.api.rsb b/app/views/projects/show.api.rsb
+index a6f26f8..81b4581 100644
+--- a/app/views/projects/show.api.rsb
++++ b/app/views/projects/show.api.rsb
+@@ -22,4 +22,10 @@ api.project do
+       api.issue_category(:id => category.id, :name => category.name)
+     end
+   end if include_in_api_response?('issue_categories')
++
++  api.array :members do
++    @project.members.each do |member|
++       api.member(:id => member.id, :name => member.user.name)
++    end
++  end if include_in_api_response?('members')
+ end
