@@ -18,6 +18,10 @@ use warnings;
         required => 1,
         doc => 'the redmine url of the server',
     );
+    option 'id_only' => (
+        is => 'ro',
+        doc => 'return only the id instead of full description',
+    );
     option 'trace' => (
         is => 'ro',
         default => sub { 0 },
@@ -37,5 +41,9 @@ my $r = Redmine::API->new(
 
 my $resp = $r->current->list->all();
 my $content = $resp->content->{user};
-say "Your user information : ";
-say sprintf("    %s %s - ID: %d", @$content{qw/firstname lastname id/});
+if ($opt->id_only) {
+    say sprintf("%d", @$content{id});
+} else {
+    say "Your user information : ";
+    say sprintf("    %s %s - ID: %d", @$content{qw/firstname lastname id/});
+}
