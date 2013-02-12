@@ -5,7 +5,7 @@ source /usr/local/share/Git-Redmine-Suite/helpers/redmine-project
 
 if [ "x$HELP" != "x" ]
 then
-    echo "git project change TASK REVIEW"
+    echo "git project change PROJECT TASK REVIEW"
     exit 1
 fi
 
