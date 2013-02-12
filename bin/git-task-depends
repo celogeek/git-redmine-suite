@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set +e
 
 function help {
     echo "git task depends TASK_NUMBER TASK_DEP_1 TASK_DEP_2 ..."
@@ -15,11 +15,6 @@ if [ "x$TASK" == "x" ]
 then
     help
 fi
-
-
-
-set -e
-
 
 echo "Set deps for task $TASK to $DEPS"
 git config redmine.task.${TASK}.depends "$DEPS" || git config --add redmine.task.${TASK}.depends "$DEPS"
