@@ -29,6 +29,9 @@ use warnings;
         default => sub { 0 },
         doc => 'debug mode',
     );
+    option 'with_status' => (
+        is => 'ro',
+    );
     1;
 };
 
@@ -44,5 +47,10 @@ my $r = Redmine::API->new(
 my $id = $opt->id;
 my $resp = $r->issues->issue->get($id);
 my $content = $resp->content->{issue};
-say "Task #", $id, " (", $content->{tracker}->{name},")", " : ", $content->{subject};
+my $status = $content->{status}->{name};
+if ($opt->with_status) {
+    say "(",$status,") - Task #",$id, " (", $content->{tracker}->{name},")", " : ", $content->{subject};
+} else {
+    say "Task #", $id, " (", $content->{tracker}->{name},")", " : ", $content->{subject};
+}
 
