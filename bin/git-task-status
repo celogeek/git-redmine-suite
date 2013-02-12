@@ -1,0 +1,21 @@
+#!/bin/bash
+
+source /usr/local/share/Git-Redmine-Suite/helpers/redmine-checkconf
+source /usr/local/share/Git-Redmine-Suite/helpers/redmine-tasks
+
+set -e
+
+if [ "x$HELP" != "x" ]
+then
+    echo "git task todo"
+    exit 1
+fi
+
+echo "The status of your local tasks : "
+for TASK in $(redmine_get_all_local_tasks)
+do
+    echo -n "    "
+    /usr/local/share/Git-Redmine-Suite/helpers/redmine-get-title --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL" --id="$TASK" --with-status
+done
+echo ""
+
