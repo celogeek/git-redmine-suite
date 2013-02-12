@@ -82,5 +82,6 @@ You have 2 choice. Or you take control of this branch :
 Or you get that branch and continue the devel :
 
     git reset --hard "origin/$BRNAME"
+    git push -u origin "$BRNAME"
 
 __EOF__
