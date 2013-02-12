@@ -70,3 +70,12 @@ echo ""
 echo "Updating redmine status ..."
 redmine_set_status $TASK $REDMINE_REVIEW_FINISH $REVIEW_FINISH_USER_ID
 echo ""
+
+echo "Removing old pr ..."
+set +e
+for tag in $(git tag | grep pr.*redmine-task-$TASK-)
+do
+    git push origin :tags/"$tag"
+    git tag -d "$tag"
+done
+
