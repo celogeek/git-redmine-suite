@@ -19,7 +19,7 @@ then
     help
 fi
 
-BRNAME=$(git config "redmine.task.$TASK.branch")
+BRNAME=$(git config "redmine.task.${TASK}.branch")
 
 echo "Cleaning local and remote dev for task $TASK..."
 
@@ -32,3 +32,11 @@ git merge origin/devel
 git branch -D "$BRNAME"
 git push origin :"$BRNAME"
 git config --remove-section "redmine.task.$TASK"
+
+set +e
+for tag in $(git tag | grep pr.*redmine-task-$TASK-)
+do
+    git push origin :tags/"$tag"
+    git tag -d "$tag"
+done
+
