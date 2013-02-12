@@ -40,7 +40,7 @@ then
     cat <<__EOF__
 
 To update your branch :
-    git rebase origin devel
+    git rebase origin/devel
     #fix conflict, then
     git push origin -f $BRNAME
 
