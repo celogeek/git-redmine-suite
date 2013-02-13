@@ -53,7 +53,7 @@ echo ""
 echo "Updating redmine status ..."
 
 REMOTE_URL=$(git config remote.origin.url)
-DEPS=$((git config redmine.task.$TASK.depends || true) | perl -pe 's/(\d+)/#$1/g')
+DEPS=$((git config redmine.task.$TASK.depends || true) | perl -pe 's/(\d+)/#$1/g')
 MSG_DEPS=""
 if [ "x$DEPS" != "x" ]
 then
