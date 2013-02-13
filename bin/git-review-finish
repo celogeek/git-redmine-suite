@@ -55,6 +55,7 @@ git merge origin/devel
 git merge --no-ff "$BRNAME"
 echo "    $TASK_TITLE" > "$CHANGELOG".new
 echo "" >> "$CHANGELOG".new
+touch "$CHANGELOG"
 cat "$CHANGELOG" >> "$CHANGELOG".new
 mv "$CHANGELOG".new "$CHANGELOG"
 vim "$CHANGELOG"
