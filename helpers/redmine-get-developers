@@ -1,0 +1,61 @@
+#!/usr/bin/perl
+use feature 'say';
+use strict;
+use warnings;
+{
+    package MyOpts;
+    use Moo;
+    use MooX::Options;
+    option 'id' => (
+        is       => 'ro',
+        required => 1,
+        doc      => 'id of the task',
+        format   => 'i',
+    );
+    option 'auth_key' => (
+        is => 'ro',
+        format => 's',
+        required => 1,
+        doc => 'your auth key',
+    );
+    option 'server_url' => (
+        is => 'ro',
+        format => 's',
+        required => 1,
+        doc => 'the redmine url of the server',
+    );
+    option 'trace' => (
+        is => 'ro',
+        default => sub { 0 },
+        doc => 'debug mode',
+    );
+    option 'status_id' => (
+        is => 'ro',
+        required => 1,
+        format => 'i',
+        doc => 'list the user who set the status to this value'
+    );
+    1;
+};
+
+my $opt = MyOpts->new_with_options;
+
+use Redmine::API;
+my $r = Redmine::API->new(
+    'auth_key' => $opt->auth_key,
+    'base_url' => $opt->server_url,
+    'trace' => $opt->trace,
+);
+
+my $id = $opt->id;
+my $resp = $r->issues->issue->get($id, include => 'journals');
+my $content = $resp->content->{issue}->{journals};
+my %res;
+for my $journal(@$content) {
+    my $keep = 0;
+    for my $details(@{$journal->{details}}) {
+        $keep = 1, last if ($details->{name} eq 'status_id' && $details->{new_value} eq $opt->status_id);
+    }
+    $res{$journal->{user}->{name}} = 1 if $keep;
+}
+say join(', ', keys %res);
