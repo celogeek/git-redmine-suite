@@ -3,7 +3,7 @@
 set +e
 
 function help {
-    echo "git task depends TASK_NUMBER TASK_DEP_1 TASK_DEP_2 ..."
+    echo "git redmine task depends TASK_NUMBER TASK_DEP_1 TASK_DEP_2 ..."
     exit 1
 }
 

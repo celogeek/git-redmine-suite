@@ -8,7 +8,7 @@ source /usr/local/share/Git-Redmine-Suite/helpers/redmine-project
 set -e
 
 function help {
-    echo "git task start TASK_NUMBER"
+    echo "git redmine task start TASK_NUMBER"
     exit 1
 }
 

@@ -7,7 +7,7 @@ set -e
 
 if [ "x$HELP" != "x" ]
 then
-    echo "git task todo"
+    echo "git redmine task todo"
     exit 1
 fi
 

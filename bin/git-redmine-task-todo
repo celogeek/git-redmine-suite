@@ -7,7 +7,7 @@ set -e
 
 if [ "x$HELP" != "x" ]
 then
-    echo "git task status"
+    echo "git redmine task status"
     exit 1
 fi
 
