@@ -6,4 +6,4 @@ sudo rm -rf /usr/local/share/Weborama-Git-Review /usr/local/share/Git-Redmine-Su
 sudo mkdir -p /usr/local/share/Git-Redmine-Suite/helpers/
 sudo cp -av helpers/* /usr/local/share/Git-Redmine-Suite/helpers/
 sudo cp -av bin/* /usr/local/bin/
-sudo chmod +x /usr/local/share/Git-Redmine-Suite/helpers/* /usr/local/bin/git-review /usr/local/bin/git-review-* /usr/local/bin/git-task /usr/local/bin/git-task-* /usr/local/bin/git-project /usr/local/bin/git-project-* /usr/local/bin/git-redmine /usr/local/bin/git-redmine-*
+sudo chmod +x /usr/local/share/Git-Redmine-Suite/helpers/* /usr/local/bin/git-redmine /usr/local/bin/git-redmine-*
