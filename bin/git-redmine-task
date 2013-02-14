@@ -1,6 +1,6 @@
 #!/bin/bash
 
-MODULE="/usr/local/bin/git-task-$1"
+MODULE="/usr/local/bin/git-redmine-task-$1"
 set -e
 
 if [ -x "$MODULE" ]
@@ -18,7 +18,7 @@ else
         echo "The available command : "
         echo ""
         set +e
-        for MODULE in /usr/local/bin/git-task-*
+        for MODULE in /usr/local/bin/git-redmine-task-*
         do
             HELP=1 $MODULE
         done
