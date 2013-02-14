@@ -66,7 +66,7 @@ redmine_set_status $TASK $REDMINE_REVIEW_TODO $TASK_FINISH_USER_ID "
 
 You can start a review with :
 <pre>
-git review start $TASK $TAG
+git redmine review start $TASK $TAG
 </pre>
 
 $MSG_DEPS

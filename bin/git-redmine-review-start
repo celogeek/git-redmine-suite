@@ -8,7 +8,7 @@ source /usr/local/share/Git-Redmine-Suite/helpers/redmine-project
 set -e
 
 function help {
-    echo "git review start TASK_NUMBER PULL_REQUEST"
+    echo "git redmine review start TASK_NUMBER PULL_REQUEST"
     exit 1
 }
 
@@ -29,8 +29,8 @@ then
 This review is already in progress.
 You have to abort the review before and start it again.
 
-    git review abort $TASK
-    git review start $TASK $PR
+    git redmine review abort $TASK
+    git redmine review start $TASK $PR
 
 __EOF__
     exit 1
@@ -62,7 +62,7 @@ cat <<__EOF__
 
 You can squash / rebase ... 
 but please keep the name $BRNAME 
-for your branch before further action with git review
+for your branch before further action with git redmine review
 
 To start a review (example):
     git rebase origin/devel
@@ -71,6 +71,6 @@ To start a review (example):
 If you want to add fixes and send back the branch to the user (if the remote branch is standard):
     git push origin HEAD:redmine-$SLUG_TITLE
     git push origin :tags/$PR
-    git review abort $TASK
+    git redmine review abort $TASK
 
 __EOF__

@@ -6,7 +6,7 @@ source /usr/local/share/Git-Redmine-Suite/helpers/redmine-statuses
 set -e
 
 function help {
-    echo "git review abort TASK_NUMBER"
+    echo "git redmine review abort TASK_NUMBER"
     exit 1
 }
 
