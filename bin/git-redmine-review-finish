@@ -3,6 +3,7 @@
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-checkconf
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-statuses
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-project
+source /usr/local/share/Git-Redmine-Suite/helpers/redmine-tasks
 
 set -e
 
@@ -29,6 +30,7 @@ then
 fi
 
 TASK_TITLE=$(git config "redmine.review.$TASK.title")
+TASK_DEV=$(redmine_get_developers "$TASK")
 PR=$(git config "redmine.review.$TASK.pr")
 BRNAME=$(git config "redmine.review.$TASK.branch")
 PROJECT=$(git config "redmine.review.$TASK.project")
@@ -53,7 +55,7 @@ git fetch --tags -p
 git checkout devel
 git merge origin/devel
 git merge --no-ff "$BRNAME"
-echo "    $TASK_TITLE" > "$CHANGELOG".new
+echo "    $TASK_TITLE ($TASK_DEV)" > "$CHANGELOG".new
 echo "" >> "$CHANGELOG".new
 touch "$CHANGELOG"
 cat "$CHANGELOG" >> "$CHANGELOG".new
