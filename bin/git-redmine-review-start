@@ -5,10 +5,7 @@ function help {
     exit 1
 }
 
-TASK="$1"
-PR="$2"
-
-if [ "x$TASK" == "x" ] || [ "x$PR" == "x" ]
+if [ "x$HELP" != "x" ]
 then
     help
 fi
@@ -19,6 +16,14 @@ source /usr/local/share/Git-Redmine-Suite/helpers/redmine-checkconf
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-statuses
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-title
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-project
+
+TASK="$1"
+PR="$2"
+
+if [ "x$TASK" == "x" ] || [ "x$PR" == "x" ]
+then
+    help
+fi
 
 set +e
 BRNAME=$(git config redmine.review.$TASK.branch)

@@ -1,11 +1,18 @@
 #!/bin/bash
 
-set +e
+set -e
 
 function help {
     echo "git redmine task depends TASK_NUMBER TASK_DEP_1 TASK_DEP_2 ..."
     exit 1
 }
+
+if [ "x$HELP" != "x" ]
+then
+    help
+fi
+
+source /usr/local/share/Git-Redmine-Suite/helpers/redmine-checkconf
 
 TASK="$1"
 shift
