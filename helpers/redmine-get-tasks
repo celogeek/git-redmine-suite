@@ -2,6 +2,7 @@
 use feature 'say';
 use strict;
 use warnings;
+use Encode;
 {
     package MyOpts;
     use Moo;
@@ -56,9 +57,52 @@ my $r = Redmine::API->new(
 
 my $status_id = $opt->status_id;
 my $assigned_to_id = $opt->assigned_to_id;
+my %tasks;
+my %parent;
+
 my $resp = $r->issues->list->all(status_id => $status_id, assigned_to_id => $assigned_to_id, limit => 1000);
 my $content = $resp->content->{issues};
 for my $issue(@$content) {
-    say sprintf("    Task #%-6d : %s [%s] - %s/issues/%d", @$issue{qw/id subject/}, $issue->{author}->{name}, $opt->server_url, $issue->{id});
-
+    my $task_id = $issue->{id};
+    my $parent_id = $issue->{parent} ? $issue->{parent}->{id} : 0;
+    $parent{$parent_id} //= [];
+    push @{$parent{$parent_id}}, $task_id;
+    $tasks{$task_id} = sprintf("Task #%-6d : %s [%s] - %s/issues/%d", @$issue{qw/id subject/}, $issue->{author}->{name}, $opt->server_url, $issue->{id});
 }
+
+$r = Redmine::API->new(
+    'auth_key' => $opt->auth_key,
+    'base_url' => $opt->server_url,
+    'trace' => $opt->trace,
+);
+
+my $redoit = 1;
+while($redoit) {
+    $redoit = 0;
+    for my $parent_id (keys %parent) {
+        next if !$parent_id || exists $tasks{$parent_id};
+        $redoit = 1;
+        $resp = $r->issues->issue->get($parent_id);
+        my $issue = $resp->content->{issue};
+        $tasks{$parent_id} = sprintf("Task #%-6d : %s [%s]", @$issue{qw/id subject/}, $issue->{author}->{name});
+        my $parent_parent_id = $issue->{parent} ? $issue->{parent}->{id} : 0;
+        $parent{$parent_parent_id} //= [];
+        push @{$parent{$parent_parent_id}}, $parent_id + 0;
+    }
+}
+
+sub display_tree {
+    my %p = @_;
+    my $tab = ("    " x ($p{level} + 1));
+    my $arrow = $p{level} ? Encode::encode("utf8", "\x{21B3}") : " ";
+    for my $task_id(@{$p{parent}{$p{parent_id}}}) {
+        say $tab . $arrow . " " . $p{tasks}{$task_id};
+        if ($p{parent}{$task_id}) {
+            display_tree(%p, level => $p{level} + 1, parent_id => $task_id);
+            #say "";
+        }
+        say "" if !$p{level};
+    }
+}
+
+display_tree(parent => \%parent, tasks => \%tasks, level => 0, parent_id => 0);
