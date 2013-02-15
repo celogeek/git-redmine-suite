@@ -12,10 +12,10 @@ then
     help
 fi
 
+set -e
+
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-checkconf
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-statuses
-
-set -e
 
 TASK_TITLE=$(git config "redmine.review.$TASK.title")
 BRNAME=$(git config "redmine.review.$TASK.branch")

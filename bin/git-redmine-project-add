@@ -6,10 +6,10 @@ then
     exit 1
 fi
 
+set -e
+
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-checkconf
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-project
-
-set -e
 
 PROJECT=$1
 if [ "x$PROJECT" == "x" ]
