@@ -2,7 +2,7 @@
 
 if [ "x$HELP" != "x" ]
 then
-    echo "git redmine review todo"
+    echo "git redmine review pending"
     exit 1
 fi
 

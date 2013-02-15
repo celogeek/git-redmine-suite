@@ -2,7 +2,7 @@
 
 if [ "x$HELP" != "x" ]
 then
-    echo "git redmine task status"
+    echo "git redmine task pending"
     exit 1
 fi
 

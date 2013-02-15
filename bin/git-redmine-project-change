@@ -2,7 +2,7 @@
 
 if [ "x$HELP" != "x" ]
 then
-    echo "git redmine project change PROJECT FINISH_TASK FINISH_REVIEW"
+    echo "git redmine project change PROJECT TASK_FINISHED_USER_ID REVIEW_FINISHED_USER_ID"
     exit 1
 fi
 
