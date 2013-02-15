@@ -1,7 +1,19 @@
 #!/bin/bash
 
 function help {
-    echo "git redmine review start TASK_NUMBER PULL_REQUEST"
+    TASK="$1"
+    PR="$2"
+    if [ "x$TASK" == "x" ] || [ "x$PR" == "x" ]
+    then
+        echo "git redmine review start TASK_NUMBER PULL_REQUEST"
+    else
+        echo "This PR has been found in the task : $PR"
+        echo ""
+        echo "If it is ok, start the review with :"
+        echo ""
+        echo "    git redmine review start $TASK $PR"
+        echo ""
+    fi
     exit 1
 }
 
@@ -16,9 +28,15 @@ source /usr/local/share/Git-Redmine-Suite/helpers/redmine-checkconf
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-statuses
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-title
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-project
+source /usr/local/share/Git-Redmine-Suite/helpers/redmine-review
 
 TASK="$1"
 PR="$2"
+
+if [ "x$TASK" != "x" ] && [ "x$PR" == "x" ]
+then
+    help "$TASK" "$(redmine_get_pr "$TASK")"
+fi
 
 if [ "x$TASK" == "x" ] || [ "x$PR" == "x" ]
 then

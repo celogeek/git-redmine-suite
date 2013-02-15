@@ -1,0 +1,53 @@
+#!/usr/bin/perl
+use feature 'say';
+use strict;
+use warnings;
+{
+    package MyOpts;
+    use Moo;
+    use MooX::Options;
+    option 'id' => (
+        is       => 'ro',
+        required => 1,
+        doc      => 'id of the task',
+        format   => 'i',
+    );
+    option 'auth_key' => (
+        is => 'ro',
+        format => 's',
+        required => 1,
+        doc => 'your auth key',
+    );
+    option 'server_url' => (
+        is => 'ro',
+        format => 's',
+        required => 1,
+        doc => 'the redmine url of the server',
+    );
+    option 'trace' => (
+        is => 'ro',
+        default => sub { 0 },
+        doc => 'debug mode',
+    );
+    1;
+};
+
+my $opt = MyOpts->new_with_options;
+
+use Redmine::API;
+my $r = Redmine::API->new(
+    'auth_key' => $opt->auth_key,
+    'base_url' => $opt->server_url,
+    'trace' => $opt->trace,
+);
+
+my $id = $opt->id;
+my $resp = $r->issues->issue->get($id, include => 'journals');
+my @journals = sort { $b->{created_on} cmp $a->{created_on} } @{$resp->content->{issue}->{journals}};
+
+for my $journal(@journals) {
+    if (defined $journal->{notes} && $journal->{notes} =~ m/git redmine review start $id (.*)$/m) {
+        say $1;
+        last;
+    }
+}

@@ -1,0 +1,6 @@
+#!/bin/bash
+function redmine_get_pr
+{
+    /usr/local/share/Git-Redmine-Suite/helpers/redmine-get-pr --id="$1" --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL"
+}
+
