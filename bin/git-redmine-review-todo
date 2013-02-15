@@ -1,15 +1,15 @@
 #!/bin/bash
 
-source /usr/local/share/Git-Redmine-Suite/helpers/redmine-checkconf
-source /usr/local/share/Git-Redmine-Suite/helpers/redmine-project
-
-set -e
-
 if [ "x$HELP" != "x" ]
 then
     echo "git redmine review todo"
     exit 1
 fi
+
+source /usr/local/share/Git-Redmine-Suite/helpers/redmine-checkconf
+source /usr/local/share/Git-Redmine-Suite/helpers/redmine-project
+
+set -e
 
 for REDMINE_PROJECT in $(redmine_get_all_active_projects)
 do

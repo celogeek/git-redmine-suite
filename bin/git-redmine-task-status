@@ -1,15 +1,15 @@
 #!/bin/bash
 
-source /usr/local/share/Git-Redmine-Suite/helpers/redmine-checkconf
-source /usr/local/share/Git-Redmine-Suite/helpers/redmine-tasks
-
-set -e
-
 if [ "x$HELP" != "x" ]
 then
     echo "git redmine task todo"
     exit 1
 fi
+
+source /usr/local/share/Git-Redmine-Suite/helpers/redmine-checkconf
+source /usr/local/share/Git-Redmine-Suite/helpers/redmine-tasks
+
+set -e
 
 echo "The status of your local tasks : "
 for TASK in $(redmine_get_all_local_tasks)

@@ -1,13 +1,15 @@
 #!/bin/bash
 
-source /usr/local/share/Git-Redmine-Suite/helpers/redmine-checkconf
-source /usr/local/share/Git-Redmine-Suite/helpers/redmine-project
-
 if [ "x$HELP" != "x" ]
 then
     echo "git redmine project change PROJECT TASK REVIEW"
     exit 1
 fi
+
+source /usr/local/share/Git-Redmine-Suite/helpers/redmine-checkconf
+source /usr/local/share/Git-Redmine-Suite/helpers/redmine-project
+
+set -e
 
 PROJECT=$1
 if [ "x$PROJECT" == "x" ]

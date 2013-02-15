@@ -1,12 +1,5 @@
 #!/bin/bash
 
-source /usr/local/share/Git-Redmine-Suite/helpers/redmine-checkconf
-source /usr/local/share/Git-Redmine-Suite/helpers/redmine-statuses
-source /usr/local/share/Git-Redmine-Suite/helpers/redmine-project
-source /usr/local/share/Git-Redmine-Suite/helpers/redmine-tasks
-
-set -e
-
 function help {
     echo "git redmine review finish TASK_NUMBER"
     exit 1
@@ -28,6 +21,13 @@ if [ "x$TASK" == "x" ]
 then
     help
 fi
+
+source /usr/local/share/Git-Redmine-Suite/helpers/redmine-checkconf
+source /usr/local/share/Git-Redmine-Suite/helpers/redmine-statuses
+source /usr/local/share/Git-Redmine-Suite/helpers/redmine-project
+source /usr/local/share/Git-Redmine-Suite/helpers/redmine-tasks
+
+set -e
 
 TASK_TITLE=$(git config "redmine.review.$TASK.title")
 TASK_DEV=$(redmine_get_developers "$TASK")

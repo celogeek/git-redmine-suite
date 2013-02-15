@@ -1,10 +1,5 @@
 #!/bin/bash
 
-source /usr/local/share/Git-Redmine-Suite/helpers/redmine-checkconf
-source /usr/local/share/Git-Redmine-Suite/helpers/redmine-statuses
-
-set -e
-
 function help {
     echo "git redmine review abort TASK_NUMBER"
     exit 1
@@ -16,6 +11,11 @@ if [ "x$TASK" == "x" ]
 then
     help
 fi
+
+source /usr/local/share/Git-Redmine-Suite/helpers/redmine-checkconf
+source /usr/local/share/Git-Redmine-Suite/helpers/redmine-statuses
+
+set -e
 
 TASK_TITLE=$(git config "redmine.review.$TASK.title")
 BRNAME=$(git config "redmine.review.$TASK.branch")
