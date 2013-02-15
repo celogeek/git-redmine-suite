@@ -3,6 +3,9 @@ use feature 'say';
 use strict;
 use warnings;
 use Encode;
+
+my $TRIANGLE = Encode::encode('utf8', "\x{25B8}");
+
 {
     package MyOpts;
     use Moo;
@@ -67,7 +70,7 @@ for my $issue(@$content) {
     my $parent_id = $issue->{parent} ? $issue->{parent}->{id} : 0;
     $parent{$parent_id} //= [];
     push @{$parent{$parent_id}}, $task_id;
-    $tasks{$task_id} = sprintf("Task #%-6d : %s [%s] - %s/issues/%d", @$issue{qw/id subject/}, $issue->{author}->{name}, $opt->server_url, $issue->{id});
+    $tasks{$task_id} = sprintf("%s (#%d)", $issue->{subject}, $issue->{id});
 }
 
 $r = Redmine::API->new(
@@ -84,7 +87,7 @@ while($redoit) {
         $redoit = 1;
         $resp = $r->issues->issue->get($parent_id);
         my $issue = $resp->content->{issue};
-        $tasks{$parent_id} = sprintf("Task #%-6d : %s [%s]", @$issue{qw/id subject/}, $issue->{author}->{name});
+        $tasks{$parent_id} = $issue->{subject};
         my $parent_parent_id = $issue->{parent} ? $issue->{parent}->{id} : 0;
         $parent{$parent_parent_id} //= [];
         push @{$parent{$parent_parent_id}}, $parent_id + 0;
@@ -93,13 +96,11 @@ while($redoit) {
 
 sub display_tree {
     my %p = @_;
-    my $tab = ("    " x ($p{level} + 1));
-    my $arrow = $p{level} ? Encode::encode("utf8", "\x{21B3}") : " ";
+    my $tab = "  " x ($p{level});
     for my $task_id(@{$p{parent}{$p{parent_id}}}) {
-        say $tab . $arrow . " " . $p{tasks}{$task_id};
+        say "  " . $tab. $TRIANGLE . " " . $p{tasks}{$task_id};
         if ($p{parent}{$task_id}) {
             display_tree(%p, level => $p{level} + 1, parent_id => $task_id);
-            #say "";
         }
         say "" if !$p{level};
     }
