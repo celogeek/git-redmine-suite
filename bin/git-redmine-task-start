@@ -44,7 +44,18 @@ then
     git fetch -ap
     git fetch --tags -p
     git checkout $BRNAME
+    git pull origin $BRNAME || cat <<__EOF__
+
+The branch has been rebased. If you have change :
+
+    git rebase origin/$BRNAME
+
+Or if you just want to continue
+
     git reset --hard origin/$BRNAME
+
+__EOF__
+
     cat <<__EOF__
 
 To update your branch :
@@ -53,6 +64,7 @@ To update your branch :
     git push origin -f $BRNAME
 
 __EOF__
+
     exit 0
 fi
 
