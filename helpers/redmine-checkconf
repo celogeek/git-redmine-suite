@@ -4,6 +4,8 @@ GIT_DIR=$(git rev-parse --git-dir)
 
 cd "$(dirname "$GIT_DIR")"
 
+set +e
+
 REDMINE_AUTHKEY=$(git config redmine.authkey)
 REDMINE_URL=$(git config redmine.url)
 
@@ -15,6 +17,8 @@ REDMINE_USER_ID=$(git config redmine.user.id)
 
 REDMINE_TASK_TODO=$(git config redmine.statuses.task.assigned)
 REDMINE_TASK_IN_PROGRESS=$(git config redmine.statuses.task.inprogress)
+
+set -e
 
 function redmine_help
 {
