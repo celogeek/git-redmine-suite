@@ -96,7 +96,11 @@ To start a review (example):
 
 If you want to add fixes and send back the branch to the user (if the remote branch is standard):
     git push origin HEAD:redmine-$SLUG_TITLE
-    git push origin :tags/$PR
+or if you have rebase on origin/devel
+    git push -f origin HEAD:redmine-$SLUG_TITLE
+then
     git redmine review abort $TASK
+
+Then go to redmine and reassign the task to the developer
 
 __EOF__
