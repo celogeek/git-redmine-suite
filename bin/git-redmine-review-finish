@@ -63,7 +63,6 @@ git checkout devel
 git merge origin/devel
 git merge --no-ff "$BRNAME"
 echo "    $TASK_TITLE ($TASK_DEV)" > "$CHANGELOG".new
-echo "" >> "$CHANGELOG".new
 touch "$CHANGELOG"
 cat "$CHANGELOG" >> "$CHANGELOG".new
 mv "$CHANGELOG".new "$CHANGELOG"
@@ -83,7 +82,7 @@ echo ""
 
 echo "Removing old pr ..."
 set -x
-for tag in $(git tag | grep pr.*redmine-task-$TASK-)
+for tag in $(git tag | grep pr-.*-redmine-.*-$TASK-)
 do
     git push origin :tags/"$tag"
     git tag -d "$tag"
