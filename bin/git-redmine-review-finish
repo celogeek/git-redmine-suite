@@ -34,6 +34,8 @@ then
     help
 fi
 
+redmine_check_task "$TASK" "$REDMINE_REVIEW_IN_PROGRESS"
+
 TASK_TITLE=$(git config "redmine.review.$TASK.title")
 TASK_DEV=$(redmine_get_developers "$TASK")
 PR=$(git config "redmine.review.$TASK.pr")

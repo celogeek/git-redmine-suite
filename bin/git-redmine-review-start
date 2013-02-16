@@ -29,6 +29,7 @@ source /usr/local/share/Git-Redmine-Suite/helpers/redmine-statuses
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-title
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-project
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-review
+source /usr/local/share/Git-Redmine-Suite/helpers/redmine-tasks
 
 TASK="$1"
 PR="$2"
@@ -42,6 +43,8 @@ if [ "x$TASK" == "x" ] || [ "x$PR" == "x" ]
 then
     help
 fi
+
+redmine_check_task "$TASK" "$REDMINE_REVIEW_TODO"
 
 set +e
 BRNAME=$(git config redmine.review.$TASK.branch)
