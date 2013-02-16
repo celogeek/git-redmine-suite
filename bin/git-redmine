@@ -1,6 +1,6 @@
 #!/bin/bash
 
-MODULE="/usr/local/bin/git-redmine-$1"
+MODULE="$0-$1"
 set -e
 
 if [ -x "$MODULE" ]
@@ -16,7 +16,7 @@ else
     echo "The available command : "
     echo ""
     set +e
-    for MODULE in /usr/local/bin/git-redmine-*
+    for MODULE in $0-*
     do
         HELP=1 $MODULE
     done
