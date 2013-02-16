@@ -69,10 +69,10 @@ my $assigned_to = $issue->{assigned_to} ? $issue->{assigned_to}->{name} : 'nobod
 my $status = $issue->{status}->{name};
 if (!$is_valid) {
     say <<__EOF__
-    This task has not the right status in redmine.
-    It is assigned to "$assigned_to" and as the status "$status".
+This task has not the right status in redmine.
+It is assigned to "$assigned_to" and as the status "$status".
 
-    Please check that the task is assigned properly, and has the expected status.
+Please check that the task is assigned properly, and has the expected status.
 __EOF__
     ;
     exit 1;
