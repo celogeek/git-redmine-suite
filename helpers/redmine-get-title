@@ -48,9 +48,10 @@ my $id = $opt->id;
 my $resp = $r->issues->issue->get($id);
 my $content = $resp->content->{issue};
 my $status = $content->{status}->{name};
+my $title =join("", $content->{tracker}->{name}, " #", $id, " : ", $content->{subject});
 if ($opt->with_status) {
-    say "(",$status,") - Task #",$id, " (", $content->{tracker}->{name},")", " : ", $content->{subject};
+    say "(",$status,") - ", $title;
 } else {
-    say "Task #", $id, " (", $content->{tracker}->{name},")", " : ", $content->{subject};
+    say $title;
 }
 
