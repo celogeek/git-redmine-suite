@@ -8,18 +8,21 @@ then
     shift
     exec $MODULE $*
 else
-    if [ "x$1" != "x" ]
+    if [ "x$HELP" == "x" ]
     then
-        echo "The file $MODULE is not present. Check your command"
+        if [ "x$1" != "x" ]
+        then
+            echo "The file $MODULE is not present. Check your command"
+        fi
+        echo ""
+        echo "The available command : "
+        echo ""
+        set +e
+        for MODULE in $0-*
+        do
+            HELP=1 $MODULE
+        done
+        echo ""
     fi
-    echo ""
-    echo "The available command : "
-    echo ""
-    set +e
-    for MODULE in $0-*
-    do
-        HELP=1 $MODULE
-    done
-    echo ""
     exit 1
 fi
