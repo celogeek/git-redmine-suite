@@ -44,7 +44,7 @@ then
     git fetch -ap
     git fetch --tags -p
     git checkout $BRNAME
-    git pull origin $BRNAME
+    git reset --hard origin/$BRNAME
     cat <<__EOF__
 
 To update your branch :
