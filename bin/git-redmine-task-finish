@@ -15,6 +15,7 @@ set -e
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-checkconf
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-statuses
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-project
+source /usr/local/share/Git-Redmine-Suite/helpers/redmine-tasks
 
 TASK="$1"
 
@@ -22,6 +23,8 @@ if [ "x$TASK" == "x" ]
 then
     help
 fi
+
+redmine_check_task "$TASK" "$REDMINE_TASK_IN_PROGRESS"
 
 TASK_TITLE=$(git config redmine.task.$TASK.title)
 BRNAME=$(git config redmine.task.$TASK.branch)
