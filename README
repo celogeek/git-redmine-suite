@@ -24,7 +24,7 @@ index a6f26f8..81b4581 100644
 +
 +  api.array :members do
 +    @project.members.each do |member|
-+       api.member(:id => member.id, :name => member.user.name)
++       api.member(:id => member.user.id, :name => member.user.name)
 +    end
 +  end if include_in_api_response?('members')
  end
