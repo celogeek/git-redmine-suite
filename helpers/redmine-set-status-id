@@ -29,6 +29,11 @@ use warnings;
         doc => 'notes for your change',
         format => 's',
     );
+    option 'progress' => (
+        is => 'ro',
+        doc => 'your progress ratio',
+        format => 'i',
+    );
     option 'auth_key' => (
         is => 'ro',
         format => 's',
@@ -61,6 +66,11 @@ my $r = Redmine::API->new(
 my $id = $opt->id;
 my $status_id = $opt->status_id;
 my $assigned_to_id = $opt->assigned_to_id;
-my $notes = $opt->notes // '';
-my $resp = $r->issues->issue->update($id, status_id => $status_id, assigned_to_id => $assigned_to_id, notes => $notes);
+my %update = (
+    status_id => $status_id, assigned_to_id => $assigned_to_id
+);
+$update{notes} = $opt->notes if $opt->notes;
+$update{done_ratio} = $opt->progress if $opt->progress && $opt->progress >= 0 && $opt->progress <= 100;
+
+my $resp = $r->issues->issue->update($id, %update);
 
