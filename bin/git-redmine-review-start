@@ -103,4 +103,10 @@ then
 
 Then go to redmine and reassign the task to the developer
 
+To finish the review:
+
+    git redmine review finish $TASK
+
+And don't forget to run your tests before !
+
 __EOF__
