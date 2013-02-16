@@ -44,15 +44,8 @@ then
     git fetch -ap
     git fetch --tags -p
     git checkout $BRNAME
-    git pull origin $BRNAME || cat <<__EOF__
-
-The branch has been rebased. If you have change :
-
-    git rebase origin/$BRNAME
-
-Or if you just want to continue
-
-    git reset --hard origin/$BRNAME
+    git rebase origin/$BRNAME || cat <<__EOF__
+Fix the conflict, and finish the rebase or remote branch
 
 __EOF__
 
