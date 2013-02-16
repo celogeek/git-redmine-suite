@@ -1,0 +1,15 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use feature 'say';
+use Version::Next qw/next_version/;
+{
+    package MyOpt;
+    use Moo;
+    use MooX::Options;
+    option 'version' => ( is => 'ro', format => 's', required => 1, doc => 'Version to increment');
+    1;
+}
+
+my $opt = MyOpt->new_with_options;
+say next_version($opt->version);
