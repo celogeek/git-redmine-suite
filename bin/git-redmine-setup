@@ -56,7 +56,7 @@ case $1 in
         git config --global --add redmine.statuses.task.inprogress 2
         git config --global --add redmine.statuses.review.assigned 3
         git config --global --add redmine.statuses.review.inprogress 4
-        git config --global --add redmine.statuses.review.finish 5
+        git config --global --add redmine.statuses.review.finish 7
     ;;
     *)
         echo "git redmine setup PROFILE AUTH_KEY"
