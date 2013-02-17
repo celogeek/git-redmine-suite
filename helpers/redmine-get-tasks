@@ -45,6 +45,10 @@ my $TRIANGLE = Encode::encode('utf8', "\x{25B8}");
         default => sub { 0 },
         doc => 'debug mode',
     );
+    option 'ids_only' => (
+        is => 'ro',
+        doc => 'only show the list of ids',
+    );
     1;
 };
 
@@ -71,6 +75,11 @@ for my $issue(@$content) {
     $parent{$parent_id} //= [];
     push @{$parent{$parent_id}}, $task_id;
     $tasks{$task_id} = sprintf("%s (#%d)", $issue->{subject}, $issue->{id});
+}
+
+if ($opt->ids_only) {
+    say join(" ", sort { $a <=> $b } keys %tasks);
+    exit 0;
 }
 
 $r = Redmine::API->new(

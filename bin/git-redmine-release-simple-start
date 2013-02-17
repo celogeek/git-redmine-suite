@@ -14,9 +14,42 @@ fi
 set -e
 
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-checkconf
+source /usr/local/share/Git-Redmine-Suite/helpers/redmine-project
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-tasks
 
 declare -a TASKS=($*)
+
+if [ ${#TASKS[@]} -eq 0 ]
+then
+    echo "Please list the tasks you want to release :"
+    TASKS=""
+    for REDMINE_PROJECT in $(redmine_get_all_active_projects)
+    do
+        echo "[$REDMINE_PROJECT]"
+        echo ""
+        /usr/local/share/Git-Redmine-Suite/helpers/redmine-get-tasks --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL" --project="$REDMINE_PROJECT" --assigned_to_id="$REDMINE_USER_ID" --status_id="$REDMINE_RELEASE_TODO"
+        ADD_TASKS=$(/usr/local/share/Git-Redmine-Suite/helpers/redmine-get-tasks --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL" --project="$REDMINE_PROJECT" --assigned_to_id="$REDMINE_USER_ID" --status_id="$REDMINE_RELEASE_TODO" --ids_only)
+        if [ "x$ADD_TASKS" != "x" ]
+        then
+            if [ "x$TASKS" == "x" ]
+            then
+                TASKS="$ADD_TASKS"
+            else
+                TASKS="$TASKS $ADD_TASKS"
+            fi
+        fi
+    done
+    if [ "x$TASKS" != "x" ]
+    then
+        echo ""
+        echo "If you want to release everything, you can run :"
+        echo ""
+        echo "    $CURRENT_GIT_COMMAND $TASKS"
+        echo ""
+    fi
+
+    exit 1
+fi
 
 for TASK in ${TASKS[@]}
 do
