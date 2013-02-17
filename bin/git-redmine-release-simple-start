@@ -69,6 +69,11 @@ do
     redmine_check_task "$TASK" "$REDMINE_RELEASE_TODO"
 done
 
+set -x
+git fetch -ap
+git fetch --tags -p
+set +x
+
 if [ "x$V" == "x" ]
 then
     V=$(/usr/local/share/Git-Redmine-Suite/helpers/next_version --version=$(((git tag | grep ^v) || echo "v0.00") | /usr/bin/perl -pe 's/^v//' | sort -n | tail -n1))
@@ -80,8 +85,6 @@ echo ""
 BRNAME="redmine-release-v$V"
 
 set -x
-git fetch -ap
-git fetch --tags -p
 git checkout -b "$BRNAME" origin/devel
 
 git config "redmine.release.simple.version" "$V"
