@@ -1,8 +1,9 @@
 #!/bin/bash
 
+source /usr/local/share/Git-Redmine-Suite/helpers/current_git_command
 if [ "x$HELP" != "x" ]
 then
-    echo "git redmine project setup PROJECT TASK_FINISHED_USER_ID REVIEW_FINISHED_USER_ID RELEASE_FINISHED_USER_ID"
+    echo "$CURRENT_GIT_COMMAND PROJECT TASK_FINISHED_USER_ID REVIEW_FINISHED_USER_ID RELEASE_FINISHED_USER_ID"
     exit 1
 fi
 

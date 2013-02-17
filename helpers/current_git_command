@@ -1,0 +1,4 @@
+#!/bin/bash
+CURRENT_GIT_COMMAND=$(basename "$0" | /usr/bin/perl -pe 's/\-/ /g')
+export CURRENT_GIT_COMMAND
+

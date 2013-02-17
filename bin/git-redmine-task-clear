@@ -1,7 +1,8 @@
 #!/bin/bash
 
+source /usr/local/share/Git-Redmine-Suite/helpers/current_git_command
 function help {
-    echo "git redmine task clear TASK_NUMBER"
+    echo "$CURRENT_GIT_COMMAND TASK_NUMBER"
     exit 1
 }
 

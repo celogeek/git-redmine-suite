@@ -1,8 +1,9 @@
 #!/bin/bash
 
+source /usr/local/share/Git-Redmine-Suite/helpers/current_git_command
 if [ "x$HELP" != "x" ]
 then
-    echo "git redmine setup global PROFILE AUTH_KEY"
+    echo "$CURRENT_GIT_COMMAND PROFILE AUTH_KEY"
     exit 1
 fi
 
@@ -49,7 +50,7 @@ case $1 in
         git config --global redmine.statuses.release.finish 5
     ;;
     *)
-        echo "git redmine setup global PROFILE AUTH_KEY"
+        echo "$CURRENT_GIT_COMMAND PROFILE AUTH_KEY"
         echo ""
         echo "Profiles :"
         echo ""
