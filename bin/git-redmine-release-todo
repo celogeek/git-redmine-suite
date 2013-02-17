@@ -1,0 +1,21 @@
+#!/bin/bash
+
+source /usr/local/share/Git-Redmine-Suite/helpers/current_git_command
+if [ "x$HELP" != "x" ]
+then
+    echo "$CURRENT_GIT_COMMAND"
+    exit 1
+fi
+
+set -e
+
+source /usr/local/share/Git-Redmine-Suite/helpers/redmine-checkconf
+source /usr/local/share/Git-Redmine-Suite/helpers/redmine-project
+
+for REDMINE_PROJECT in $(redmine_get_all_active_projects)
+do
+    echo "[$REDMINE_PROJECT]"
+    echo ""
+    /usr/local/share/Git-Redmine-Suite/helpers/redmine-get-tasks --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL" --project="$REDMINE_PROJECT" --assigned_to_id="$REDMINE_USER_ID" --status_id="$REDMINE_RELEASE_TODO"
+done
+
