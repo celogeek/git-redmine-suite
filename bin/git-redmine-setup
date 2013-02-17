@@ -9,7 +9,7 @@ fi
 set -e
 case $1 in
     weborama)
-        REDMINE_URL="http://redmine.intranet.weborama.com"
+        REDMINE_URL="https://redmine.extranet.weborama.com"
         REDMINE_AUTHKEY="$2"
         if [ "x$REDMINE_AUTHKEY" == "x" ]
         then
@@ -31,7 +31,8 @@ case $1 in
         git config --global --add redmine.statuses.task.inprogress 7
         git config --global --add redmine.statuses.review.assigned 14
         git config --global --add redmine.statuses.review.inprogress 27
-        git config --global --add redmine.statuses.review.finish 10
+        git config --global --add redmine.statuses.release.assigned 10
+        git config --global --add redmine.statuses.release.inprogress 26
     ;;
     celogeek)
         REDMINE_URL="https://tasks.celogeek.com"
@@ -56,15 +57,16 @@ case $1 in
         git config --global --add redmine.statuses.task.inprogress 2
         git config --global --add redmine.statuses.review.assigned 3
         git config --global --add redmine.statuses.review.inprogress 4
-        git config --global --add redmine.statuses.review.finish 7
+        git config --global --add redmine.statuses.release.assigned 7
+        git config --global --add redmine.statuses.release.inprogress 5
     ;;
     *)
         echo "git redmine setup PROFILE AUTH_KEY"
         echo ""
         echo "Profiles :"
         echo ""
-        echo "    * weborama"
         echo "    * celogeek"
+        echo "    * weborama"
         echo ""
     ;;
 esac

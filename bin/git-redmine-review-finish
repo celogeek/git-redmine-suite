@@ -77,7 +77,7 @@ git config --remove-section "redmine.review.$TASK"
 set +x
 echo ""
 echo "Updating redmine status ..."
-redmine_set_status $TASK $REDMINE_REVIEW_FINISH $REVIEW_FINISH_USER_ID
+redmine_set_status $TASK $REDMINE_RELEASE_TODO $REVIEW_FINISH_USER_ID
 echo ""
 
 echo "Removing old pr ..."

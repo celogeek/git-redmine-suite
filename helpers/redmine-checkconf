@@ -9,14 +9,16 @@ set +e
 REDMINE_AUTHKEY=$(git config redmine.authkey)
 REDMINE_URL=$(git config redmine.url)
 
-REDMINE_REVIEW_TODO=$(git config redmine.statuses.review.assigned)
-REDMINE_REVIEW_IN_PROGRESS=$(git config redmine.statuses.review.inprogress)
-REDMINE_REVIEW_FINISH=$(git config redmine.statuses.review.finish)
-
 REDMINE_USER_ID=$(git config redmine.user.id)
 
 REDMINE_TASK_TODO=$(git config redmine.statuses.task.assigned)
 REDMINE_TASK_IN_PROGRESS=$(git config redmine.statuses.task.inprogress)
+
+REDMINE_REVIEW_TODO=$(git config redmine.statuses.review.assigned)
+REDMINE_REVIEW_IN_PROGRESS=$(git config redmine.statuses.review.inprogress)
+
+REDMINE_RELEASE_TODO=$(git config redmine.statuses.release.assigned)
+REDMINE_RELEASE_FINISH=$(git config redmine.statuses.release.finish)
 
 set -e
 
@@ -34,11 +36,12 @@ function redmine_help_with_statuses
 {
     cat <<__EOF__
 Please configure your redmine instance :
-    git config --global --add redmine.statuses.review.assigned ID
-    git config --global --add redmine.statuses.review.inprogress ID
-    git config --global --add redmine.statuses.review.finish ID
     git config --global --add redmine.statuses.task.assigned ID
     git config --global --add redmine.statuses.task.inprogress ID
+    git config --global --add redmine.statuses.review.assigned ID
+    git config --global --add redmine.statuses.review.inprogress ID
+    git config --global --add redmine.statuses.release.assigned ID
+    git config --global --add redmine.statuses.release.finish ID
 
 __EOF__
     /usr/local/share/Git-Redmine-Suite/helpers/redmine-get-statuses-ids --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL"
@@ -64,13 +67,17 @@ fi
 
 export REDMINE_AUTHKEY REDMINE_URL
 
-if [ "x$REDMINE_REVIEW_TODO" == "x" ] || [ "x$REDMINE_REVIEW_IN_PROGRESS" == "x" ] || [ "x$REDMINE_REVIEW_FINISH" == "x" ] || [ "x$REDMINE_TASK_TODO" == "x" ] || [ "x$REDMINE_TASK_IN_PROGRESS" == "x" ]
+if 
+    [ "x$REDMINE_TASK_TODO" == "x"    ] || [ "x$REDMINE_TASK_IN_PROGRESS" == "x"    ] ||
+    [ "x$REDMINE_REVIEW_TODO" == "x"  ] || [ "x$REDMINE_REVIEW_IN_PROGRESS" == "x"  ] ||
+    [ "x$REDMINE_RELEASE_TODO" == "x" ] || [ "x$REDMINE_RELEASE_FINISH" == "x" ]
 then
     redmine_help_with_statuses
     exit 1
 fi
-
-export REDMINE_REVIEW_TODO REDMINE_REVIEW_IN_PROGRESS REDMINE_REVIEW_FINISH REDMINE_TASK_TODO REDMINE_TASK_IN_PROGRESS
+export REDMINE_TASK_TODO REDMINE_TASK_IN_PROGRESS
+export REDMINE_REVIEW_TODO REDMINE_REVIEW_IN_PROGRESS
+export REDMINE_RELEASE_TODO REDMINE_RELEASE_FINISH
 
 if [ "x$REDMINE_USER_ID" == "x" ]
 then
