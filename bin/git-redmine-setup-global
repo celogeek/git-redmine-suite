@@ -49,7 +49,7 @@ case $1 in
         git config --global redmine.statuses.release.finish 5
     ;;
     *)
-        echo "git redmine setup PROFILE AUTH_KEY"
+        echo "git redmine setup global PROFILE AUTH_KEY"
         echo ""
         echo "Profiles :"
         echo ""
