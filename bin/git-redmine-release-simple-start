@@ -1,0 +1,26 @@
+#!/bin/bash
+
+function help {
+    echo "git redmine release simple start TASK_1 TASK_2 ..."
+    exit 1
+}
+
+if [ "x$HELP" != "x" ]
+then
+    help
+fi
+
+set -e
+
+source /usr/local/share/Git-Redmine-Suite/helpers/redmine-checkconf
+source /usr/local/share/Git-Redmine-Suite/helpers/redmine-tasks
+
+declare -a TASKS=($*)
+
+echo ${#TASKS[@]}
+
+for TASK in ${TASKS[@]}
+do
+    echo "Check redmine status $TASK ..."
+    redmine_check_task "$TASK" "$REDMINE_RELEASE_TODO"
+done
