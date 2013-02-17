@@ -32,7 +32,7 @@ case $1 in
         git config --global --add redmine.statuses.review.assigned 14
         git config --global --add redmine.statuses.review.inprogress 27
         git config --global --add redmine.statuses.release.assigned 10
-        git config --global --add redmine.statuses.release.inprogress 26
+        git config --global --add redmine.statuses.release.finish 26
     ;;
     celogeek)
         REDMINE_URL="https://tasks.celogeek.com"
@@ -58,7 +58,7 @@ case $1 in
         git config --global --add redmine.statuses.review.assigned 3
         git config --global --add redmine.statuses.review.inprogress 4
         git config --global --add redmine.statuses.release.assigned 7
-        git config --global --add redmine.statuses.release.inprogress 5
+        git config --global --add redmine.statuses.release.finish 5
     ;;
     *)
         echo "git redmine setup PROFILE AUTH_KEY"
