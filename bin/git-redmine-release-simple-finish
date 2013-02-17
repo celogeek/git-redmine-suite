@@ -1,0 +1,35 @@
+#!/bin/bash
+
+source /usr/local/share/Git-Redmine-Suite/helpers/current_git_command
+function help {
+    echo "$CURRENT_GIT_COMMAND"
+    exit 1
+}
+
+if [ "x$HELP" != "x" ]
+then
+    help
+fi
+
+set -e
+
+source /usr/local/share/Git-Redmine-Suite/helpers/redmine-checkconf
+source /usr/local/share/Git-Redmine-Suite/helpers/redmine-project
+source /usr/local/share/Git-Redmine-Suite/helpers/redmine-tasks
+
+if ! git config "redmine.release.simple.version" > /dev/null
+then
+    echo "Your have no release in progress"
+    echo ""
+    exit 1
+fi
+
+
+declare -a TASKS=($(git config redmine.release.simple.tasks))
+
+for TASK in ${TASKS[@]}
+do
+    echo "Check redmine status $TASK ..."
+    redmine_check_task "$TASK" "$REDMINE_RELEASE_TODO"
+done
+
