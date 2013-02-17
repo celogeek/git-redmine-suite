@@ -17,8 +17,6 @@ source /usr/local/share/Git-Redmine-Suite/helpers/redmine-tasks
 
 declare -a TASKS=($*)
 
-echo ${#TASKS[@]}
-
 for TASK in ${TASKS[@]}
 do
     echo "Check redmine status $TASK ..."
