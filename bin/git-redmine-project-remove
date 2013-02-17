@@ -1,0 +1,28 @@
+#!/bin/bash
+
+function help_project_remove
+{
+    echo "git redmine project remove PROJECT"
+    exit 1
+}
+
+if [ "x$HELP" != "x" ]
+then
+    help_project_remove
+fi
+
+set -e
+
+source /usr/local/share/Git-Redmine-Suite/helpers/redmine-checkconf
+
+PROJECT=$1
+
+if [ "x$PROJECT" == "x" ]
+then
+    help_project_remove
+fi
+
+echo "Remove project $PROJECT ..."
+git config --remove-section redmine.project."$PROJECT".finish.user.id
+echo ""
+
