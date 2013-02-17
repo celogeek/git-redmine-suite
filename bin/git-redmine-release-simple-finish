@@ -63,12 +63,16 @@ git br -d $BRNAME
 git config --remove-section redmine.release.simple
 set +x
 
+REMOTE_URL=$(git config remote.origin.url)
 for TASK in ${TASKS[@]}
 do
     echo "Update redmine status $TASK ..."
     PROJECT=$(redmine_get_project $TASK)
     RELEASE_FINISH_USER_ID=$(git config redmine.project.$PROJECT.finish.user.id.release)
-    redmine_set_status $TASK $REDMINE_RELEASE_FINISH $RELEASE_FINISH_USER_ID "Released with v$V"
+    redmine_set_status $TASK $REDMINE_RELEASE_FINISH $RELEASE_FINISH_USER_ID "
+* REMOTE : $REMOTE_URL
+* RELEASED : v$V
+"
 done
 
 
