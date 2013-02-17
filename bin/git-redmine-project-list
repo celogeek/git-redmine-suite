@@ -1,0 +1,17 @@
+#!/bin/bash
+if [ "x$HELP" != "x" ]
+then
+    echo "git redmine project list"
+    exit 1
+fi
+
+set -e
+
+source /usr/local/share/Git-Redmine-Suite/helpers/redmine-checkconf
+
+echo "You have subscribe to these projects :"
+for P in $(git config --get-regex ^redmine.project | cut -d '.' -f 3 | sort -u)
+do
+    echo "    * $P"
+done
+echo ""
