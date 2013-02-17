@@ -18,3 +18,14 @@ function redmine_check_task
 {
     /usr/local/share/Git-Redmine-Suite/helpers/redmine-check-task --id="$1" --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL" --status_ids="$2" --assigned_to="$REDMINE_USER_ID"
 }
+
+function get_change_log
+{
+    C="Changes"
+    for i in Changes changes Changelog ChangeLog
+    do
+        [ -e "$i" ] && C="$i" && break
+    done
+    echo $C
+}
+
