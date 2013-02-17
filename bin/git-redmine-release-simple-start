@@ -85,7 +85,7 @@ git fetch --tags -p
 git checkout -b "$BRNAME" origin/devel
 
 git config "redmine.release.simple.version" "$V"
-git config "redmine.release.simple.tasks" "${TASKS[@]}"
+git config "redmine.release.simple.tasks" "$(echo ${TASKS[@]})"
 git config "redmine.release.simple.branch" "$BRNAME"
 
 CHANGELOG=$(get_change_log)
