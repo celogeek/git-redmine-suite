@@ -24,6 +24,14 @@ then
     exit 1
 fi
 
+set +e
+RELEASE_FINISH_USER_ID=$(git config redmine.project.$PROJECT.finish.user.id.task)
+if [ "x$RELEASE_FINISH_USER_ID" == "x" ]
+then
+    redmine_get_project_users "$PROJECT"
+    exit 1
+fi
+set -e
 
 declare -a TASKS=($(git config redmine.release.simple.tasks))
 
@@ -32,4 +40,33 @@ do
     echo "Check redmine status $TASK ..."
     redmine_check_task "$TASK" "$REDMINE_RELEASE_TODO"
 done
+
+V=$(git config redmine.release.simple.version)
+BRNAME=$(git config redmine.release.simple.branch)
+
+echo "Finish release v$V ..."
+
+set -x
+git fetch -ap
+git fetch --tags -p
+git co devel
+git merge origin/devel
+git merge --no-ff "$BRNAME"
+git push origin devel
+git co master
+git merge origin/master
+git merge --no-ff "$BRNAME"
+git tag -m "release v$V: $(echo ${TASKS[@]})" "v$V"
+git push origin master
+git push origin "tags/v$V"
+git br -d $BRNAME
+git config --remove-section redmine.release.simple
+set +x
+
+for TASK in ${TASKS[@]}
+do
+    echo "Update redmine status $TASK ..."
+    redmine_set_status $TASK $REDMINE_RELEASE_FINISH $RELEASE_FINISH_USER_ID
+done
+
 
