@@ -2,7 +2,7 @@
 
 if [ "x$HELP" != "x" ]
 then
-    echo "git redmine project change PROJECT TASK_FINISHED_USER_ID REVIEW_FINISHED_USER_ID"
+    echo "git redmine project add PROJECT TASK_FINISHED_USER_ID REVIEW_FINISHED_USER_ID RELEASE_FINISHED_USER_ID"
     exit 1
 fi
 
@@ -22,13 +22,15 @@ fi
 
 TASK=$2
 REVIEW=$3
+RELEASE=$4
 
 if [ "x$TASK" == "x" ] || [ "x$REVIEW" == "x" ]
 then
-    PROJECT_CHANGE=1 redmine_get_project_users "$PROJECT"
+    redmine_get_project_users "$PROJECT"
     exit 1
 fi
 
 git config redmine.project.$PROJECT.finish.user.id.task $TASK
 git config redmine.project.$PROJECT.finish.user.id.review $REVIEW
+git config redmine.project.$PROJECT.finish.user.id.release $RELEASE
 
