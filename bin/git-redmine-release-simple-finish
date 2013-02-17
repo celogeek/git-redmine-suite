@@ -16,6 +16,7 @@ set -e
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-checkconf
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-project
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-tasks
+source /usr/local/share/Git-Redmine-Suite/helpers/redmine-statuses
 
 if ! git config "redmine.release.simple.version" > /dev/null
 then
@@ -24,21 +25,20 @@ then
     exit 1
 fi
 
-set +e
-RELEASE_FINISH_USER_ID=$(git config redmine.project.$PROJECT.finish.user.id.task)
-if [ "x$RELEASE_FINISH_USER_ID" == "x" ]
-then
-    redmine_get_project_users "$PROJECT"
-    exit 1
-fi
-set -e
-
 declare -a TASKS=($(git config redmine.release.simple.tasks))
 
 for TASK in ${TASKS[@]}
 do
     echo "Check redmine status $TASK ..."
     redmine_check_task "$TASK" "$REDMINE_RELEASE_TODO"
+
+    PROJECT=$(redmine_get_project $TASK)
+    if ! git config redmine.project.$PROJECT.finish.user.id.release > /dev/null
+    then
+        redmine_get_project_users "$PROJECT"
+        exit 1
+    fi
+
 done
 
 V=$(git config redmine.release.simple.version)
@@ -66,6 +66,8 @@ set +x
 for TASK in ${TASKS[@]}
 do
     echo "Update redmine status $TASK ..."
+    PROJECT=$(redmine_get_project $TASK)
+    RELEASE_FINISH_USER_ID=$(git config redmine.project.$PROJECT.finish.user.id.release)
     redmine_set_status $TASK $REDMINE_RELEASE_FINISH $RELEASE_FINISH_USER_ID
 done
 
