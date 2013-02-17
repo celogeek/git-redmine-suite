@@ -82,9 +82,9 @@ set -x
 git fetch -ap
 git fetch --tags -p
 git checkout -b "$BRNAME" origin/devel
-git config --add "redmine.task.$TASK.title" "$TASK_TITLE"
-git config --add "redmine.task.$TASK.branch" "$BRNAME"
-git config --add "redmine.task.$TASK.project" "$PROJECT"
+git config "redmine.task.$TASK.title" "$TASK_TITLE"
+git config "redmine.task.$TASK.branch" "$BRNAME"
+git config "redmine.task.$TASK.project" "$PROJECT"
 set +x
 git push origin -u $BRNAME || cat <<__EOF__
 The remote branch $BRNAME already exist !

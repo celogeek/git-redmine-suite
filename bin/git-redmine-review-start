@@ -76,10 +76,10 @@ git fetch -ap
 git fetch --tags -p
 git checkout devel
 git checkout -b "$BRNAME" "$PR"
-git config --add "redmine.review.$TASK.pr" "$PR"
-git config --add "redmine.review.$TASK.title" "$TASK_TITLE"
-git config --add "redmine.review.$TASK.branch" "$BRNAME"
-git config --add "redmine.review.$TASK.project" "$PROJECT"
+git config "redmine.review.$TASK.pr" "$PR"
+git config "redmine.review.$TASK.title" "$TASK_TITLE"
+git config "redmine.review.$TASK.branch" "$BRNAME"
+git config "redmine.review.$TASK.project" "$PROJECT"
 
 set +x
 redmine_set_status $TASK $REDMINE_REVIEW_IN_PROGRESS $REDMINE_USER_ID

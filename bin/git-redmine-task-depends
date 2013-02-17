@@ -24,4 +24,4 @@ then
 fi
 
 echo "Set deps for task $TASK to $DEPS"
-git config redmine.task.${TASK}.depends "$DEPS" || git config --add redmine.task.${TASK}.depends "$DEPS"
+git config redmine.task.${TASK}.depends "$DEPS"

@@ -26,8 +26,8 @@ function redmine_help
 {
     cat <<__EOF__
 Please configure your redmine instance :
-    git config --global --add redmine.authkey YOUR_AUTH_KEY
-    git config --global --add redmine.url THE_REDMINE_URL_SERVER
+    git config --global redmine.authkey YOUR_AUTH_KEY
+    git config --global redmine.url THE_REDMINE_URL_SERVER
 
 __EOF__
 }
@@ -36,12 +36,12 @@ function redmine_help_with_statuses
 {
     cat <<__EOF__
 Please configure your redmine instance :
-    git config --global --add redmine.statuses.task.assigned ID
-    git config --global --add redmine.statuses.task.inprogress ID
-    git config --global --add redmine.statuses.review.assigned ID
-    git config --global --add redmine.statuses.review.inprogress ID
-    git config --global --add redmine.statuses.release.assigned ID
-    git config --global --add redmine.statuses.release.finish ID
+    git config --global redmine.statuses.task.assigned ID
+    git config --global redmine.statuses.task.inprogress ID
+    git config --global redmine.statuses.review.assigned ID
+    git config --global redmine.statuses.review.inprogress ID
+    git config --global redmine.statuses.release.assigned ID
+    git config --global redmine.statuses.release.finish ID
 
 __EOF__
     /usr/local/share/Git-Redmine-Suite/helpers/redmine-get-statuses-ids --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL"
@@ -52,7 +52,7 @@ function redmine_help_with_current_user_id
 {
     cat <<__EOF__
 Please configure your redmine instance :
-    git config --global --add redmine.user.id ID
+    git config --global redmine.user.id ID
 
 __EOF__
     /usr/local/share/Git-Redmine-Suite/helpers/redmine-get-current-user-id --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL"

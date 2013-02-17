@@ -18,21 +18,15 @@ case $1 in
             exit 1
         fi
         set -x
-        set +e
-        git config --global --remove-section "redmine"
-        git config --global --remove-section "redmine.user"
-        git config --global --remove-section "redmine.statuses.task"
-        git config --global --remove-section "redmine.statuses.review"
-        set -e
-        git config --global --add redmine.url "$REDMINE_URL"
-        git config --global --add redmine.authkey "$REDMINE_AUTHKEY"
-        git config --global --add redmine.user.id $(/usr/local/share/Git-Redmine-Suite/helpers/redmine-get-current-user-id --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL" --id_only)
-        git config --global --add redmine.statuses.task.assigned 2
-        git config --global --add redmine.statuses.task.inprogress 7
-        git config --global --add redmine.statuses.review.assigned 14
-        git config --global --add redmine.statuses.review.inprogress 27
-        git config --global --add redmine.statuses.release.assigned 10
-        git config --global --add redmine.statuses.release.finish 26
+        git config --global redmine.url "$REDMINE_URL"
+        git config --global redmine.authkey "$REDMINE_AUTHKEY"
+        git config --global redmine.user.id $(/usr/local/share/Git-Redmine-Suite/helpers/redmine-get-current-user-id --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL" --id_only)
+        git config --global redmine.statuses.task.assigned 2
+        git config --global redmine.statuses.task.inprogress 7
+        git config --global redmine.statuses.review.assigned 14
+        git config --global redmine.statuses.review.inprogress 27
+        git config --global redmine.statuses.release.assigned 10
+        git config --global redmine.statuses.release.finish 26
     ;;
     celogeek)
         REDMINE_URL="https://tasks.celogeek.com"
@@ -44,21 +38,15 @@ case $1 in
             exit 1
         fi
         set -x
-        set +e
-        git config --global --remove-section "redmine"
-        git config --global --remove-section "redmine.user"
-        git config --global --remove-section "redmine.statuses.task"
-        git config --global --remove-section "redmine.statuses.review"
-        set -e
-        git config --global --add redmine.url "$REDMINE_URL"
-        git config --global --add redmine.authkey "$REDMINE_AUTHKEY"
-        git config --global --add redmine.user.id $(/usr/local/share/Git-Redmine-Suite/helpers/redmine-get-current-user-id --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL" --id_only)
-        git config --global --add redmine.statuses.task.assigned 1
-        git config --global --add redmine.statuses.task.inprogress 2
-        git config --global --add redmine.statuses.review.assigned 3
-        git config --global --add redmine.statuses.review.inprogress 4
-        git config --global --add redmine.statuses.release.assigned 7
-        git config --global --add redmine.statuses.release.finish 5
+        git config --global redmine.url "$REDMINE_URL"
+        git config --global redmine.authkey "$REDMINE_AUTHKEY"
+        git config --global redmine.user.id $(/usr/local/share/Git-Redmine-Suite/helpers/redmine-get-current-user-id --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL" --id_only)
+        git config --global redmine.statuses.task.assigned 1
+        git config --global redmine.statuses.task.inprogress 2
+        git config --global redmine.statuses.review.assigned 3
+        git config --global redmine.statuses.review.inprogress 4
+        git config --global redmine.statuses.release.assigned 7
+        git config --global redmine.statuses.release.finish 5
     ;;
     *)
         echo "git redmine setup PROFILE AUTH_KEY"
