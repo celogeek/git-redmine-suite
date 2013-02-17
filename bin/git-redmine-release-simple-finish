@@ -68,7 +68,7 @@ do
     echo "Update redmine status $TASK ..."
     PROJECT=$(redmine_get_project $TASK)
     RELEASE_FINISH_USER_ID=$(git config redmine.project.$PROJECT.finish.user.id.release)
-    redmine_set_status $TASK $REDMINE_RELEASE_FINISH $RELEASE_FINISH_USER_ID
+    redmine_set_status $TASK $REDMINE_RELEASE_FINISH $RELEASE_FINISH_USER_ID "Released with v$V"
 done
 
 
