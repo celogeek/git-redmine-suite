@@ -17,6 +17,18 @@ source /usr/local/share/Git-Redmine-Suite/helpers/redmine-checkconf
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-project
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-tasks
 
+if git config "redmine.release.simple.version" > /dev/null
+then
+    echo "Your already has start a release !"
+    echo "Please abort it or finish it :"
+    echo ""
+    echo "    git redmine release simple abort"
+    echo "    git redmine release simple finish"
+    echo ""
+    exit 1
+fi
+
+
 declare -a TASKS=($*)
 
 if [ ${#TASKS[@]} -eq 0 ]
@@ -64,4 +76,40 @@ fi
 
 echo "Start release v$V..."
 echo ""
+
+BRNAME="redmine-release-v$V"
+
+set -x
+git fetch -ap
+git fetch --tags -p
+git checkout -b "$BRNAME" origin/devel
+
+git config "redmine.release.simple.version" "$V"
+git config "redmine.release.simple.tasks" "${TASKS[@]}"
+git config "redmine.release.simple.branch" "$BRNAME"
+
+CHANGELOG=$(get_change_log)
+touch "$CHANGELOG"
+
+/usr/local/share/Git-Redmine-Suite/helpers/tag_version --version="v$V" > "$CHANGELOG".new
+cat "$CHANGELOG" >> "$CHANGELOG".new
+mv "$CHANGELOG".new "$CHANGELOG"
+vim "$CHANGELOG"
+git add "$CHANGELOG"
+git ci -m "Add version in Changes"
+
+set +x
+cat <<__EOF__
+Please edit all the file you need and commit it before finish the release.
+Don't forget to run the tests !
+
+You can finish with :
+
+git redmine release simple finish
+
+or you can abort :
+
+git redmine release simple abort
+
+__EOF__
 
