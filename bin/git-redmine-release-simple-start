@@ -2,7 +2,7 @@
 
 source /usr/local/share/Git-Redmine-Suite/helpers/current_git_command
 function help {
-    echo "$CURRENT_GIT_COMMAND TASK_1 TASK_2 ..."
+    echo "[V=X.XX] $CURRENT_GIT_COMMAND TASK_1 TASK_2 ..."
     exit 1
 }
 
