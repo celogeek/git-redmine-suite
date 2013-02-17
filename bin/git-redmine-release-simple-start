@@ -56,3 +56,12 @@ do
     echo "Check redmine status $TASK ..."
     redmine_check_task "$TASK" "$REDMINE_RELEASE_TODO"
 done
+
+if [ "x$V" == "x" ]
+then
+    V=$(/usr/local/share/Git-Redmine-Suite/helpers/next_version --version=$(((git tag | grep ^v) || echo "v0.00") | /usr/bin/perl -pe 's/^v//' | sort -n | tail -n1))
+fi
+
+echo "Start release v$V..."
+echo ""
+
