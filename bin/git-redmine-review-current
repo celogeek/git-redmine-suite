@@ -16,6 +16,6 @@ for REDMINE_PROJECT in $(redmine_get_all_active_projects)
 do
     echo "[$REDMINE_PROJECT]"
     echo ""
-    /usr/local/share/Git-Redmine-Suite/helpers/redmine-get-tasks --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL" --project="$REDMINE_PROJECT" --assigned_to_id="$REDMINE_USER_ID" --status_id="$REDMINE_REVIEW_TODO"
+    /usr/local/share/Git-Redmine-Suite/helpers/redmine-get-tasks --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL" --project="$REDMINE_PROJECT" --assigned_to_id="$REDMINE_USER_ID" --status_id="$REDMINE_REVIEW_IN_PROGRESS"
 done
 
