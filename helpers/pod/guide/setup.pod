@@ -1,0 +1,154 @@
+=head1 SETUP GUIDE
+
+Welcome to the setup guide.
+
+This guide lead you to :
+
+ * understand the link between redmine and your git repositories
+ * setup git redmine
+ * manager redmine project in your git repository
+
+=head1 EXPLANATION
+
+Redmine is composed of projects. Each project can have multiple git repositories.
+
+For example, you have project TEST with :
+
+ * ORM
+ * Collect
+ * Compute
+ * ...
+
+Each git repository may have a different reviewers.
+
+If you have a task in redmine that lead to change multiple git repositories, you have to create one subtask per git repository.
+
+Each start/finish will update the task in redmine.
+
+=head1 REDMINE GLOBAL AUTO SETUP
+
+You can use a profile to setup your redmine.
+
+This will setup all keys for you, in git config --global.
+
+The command :
+
+ * git redmine setup global
+
+This will list you the profile available. Now only "weborama" and "celogeek" is present.
+
+To complete the auto setup :
+
+ * git redmine setup global weborama AUTH_KEY
+
+The AUTH_KEY can be found in your account in redmine. Under "API access key", click on "Show", copy paste the key.
+
+=head1 REDMINE LOCAL AUTO SETUP
+
+You can also setup your auth key for one git project only.
+
+It the same as "global", but with "local".
+
+ * git redmine setup local weborama AUTH_KEY
+
+=head1 REDMINE MANUEL SETUP
+
+The best way to know what you have to do, is to run a command.
+
+ * git redmine task pending
+
+The first is to setup the "auth_key" and the "url" of the server :
+
+ * git config --global redmine.authkey YOUR_AUTH_KEY
+ * git config --global redmine.url THE_REDMINE_URL_SERVER
+
+Warning, to use a "HTTPS" url in redmine you MUST have a VALID CERTIFICAT !
+
+If you are looking for one, you can get one freely on L<https://www.startssl.com/>.
+
+Then run the command again to file the next step :
+
+ * git redmine task pending
+
+You have to setup the ids of statuses. It will allow the tools to setup the status of the task properl :
+
+ * git config --global redmine.statuses.task.assigned ID
+ * => The ID of the status when a task is assigned to you.
+
+ * git config --global redmine.statuses.task.inprogress ID
+ * => The ID of the status when you are working on a task.
+
+ * git config --global redmine.statuses.review.assigned ID
+ * => The ID of the status when a task need a review by you.
+
+ * git config --global redmine.statuses.review.inprogress ID
+ * => The ID of the status when a task is currently review by you.
+
+ * git config --global redmine.statuses.release.assigned ID
+ * => The ID of the status when a task has to be released by you.
+
+ * git config --global redmine.statuses.release.finish ID
+ * => The ID of the status when a task has been released.
+
+You can then run the command again :
+
+ * git redmine task pending
+
+You need to tell which ID is you. They is only one possibility. It will be display above.
+
+ * git config --global redmine.user.id ID
+
+The command should work now.
+
+ * git redmine task pending
+
+But display nothing. This is normal you have to setup project for that.
+
+=head1 PROJECT SETUP
+
+To have the correct reviewer setup, and to be able to list the pending or current tasks, you need to setup at least one project.
+
+ * git redmine project setup
+
+This command list you all the project you are members in redmine.
+
+Take the "slug" you want (between the ID and the title).
+
+ * git redmine project setup test
+
+This will list you the ID of the members of this project.
+
+Then you need to setup :
+
+ * a reviewer
+ * an integrator
+ * a releaser
+
+If you are only a simple "developer" you don't care about the "integrator" and "releaser" id. You will never have to use it.
+In that case you can put again the same ID. It is not important.
+
+In my case I have :
+ * The list of users for the project 'test' : 
+ * 1     - Celogeek San   
+
+So I setup :
+
+ * git redmine project setup test 1 1 1
+
+Now the task pending should appear if you have some task assigned to you :
+
+ * git redmine task pending
+
+=head1 MANAGE PROJECT
+
+You can also list and remove a project.
+
+ * git redmine project list
+ * git redmine project remove PROJECT
+
+=head1 AUTHORS
+
+ * Vincent Bachelier (vincent@weborama.com)
+ * Celogeek (me@celogeek.com)
+
+=cut
