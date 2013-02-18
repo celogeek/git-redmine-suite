@@ -10,7 +10,7 @@ fi
 set -e
 case $1 in
     weborama)
-        REDMINE_URL="https://redmine.extranet.weborama.com"
+        REDMINE_URL="http://redmine.intranet.weborama.com"
         REDMINE_AUTHKEY="$2"
         if [ "x$REDMINE_AUTHKEY" == "x" ]
         then
