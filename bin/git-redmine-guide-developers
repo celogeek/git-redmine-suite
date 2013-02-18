@@ -1,0 +1,9 @@
+#!/bin/bash
+source /usr/local/share/Git-Redmine-Suite/helpers/current_git_command
+if [ "x$HELP" != "x" ]
+then
+    echo $CURRENT_GIT_COMMAND
+    exit 1
+fi
+
+man /usr/local/share/Git-Redmine-Suite/helpers/pod/guide/developers.man
