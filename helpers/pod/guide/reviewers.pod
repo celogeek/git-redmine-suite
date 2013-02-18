@@ -1,10 +1,11 @@
-=head1 DEVELOPERS GUIDE
+=head1 REVIEWERS GUIDE
 
-Welcome to the developers guide.
+Welcome to the REVIEWERS guide.
 
 This guide lead you to :
 
- * manage your task
+ * review the tasks
+ * merge into devel
 
 First of all, you have to follow the "setup guide" :
 

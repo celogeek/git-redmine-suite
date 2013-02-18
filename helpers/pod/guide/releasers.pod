@@ -1,10 +1,10 @@
-=head1 DEVELOPERS GUIDE
+=head1 RELEASERS GUIDE
 
-Welcome to the developers guide.
+Welcome to the releasers guide.
 
 This guide lead you to :
 
- * manage your task
+ * release tasks
 
 First of all, you have to follow the "setup guide" :
 
