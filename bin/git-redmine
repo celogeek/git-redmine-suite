@@ -13,10 +13,8 @@ else
         if [ "x$1" != "x" ]
         then
             echo "The file $MODULE is not present. Check your command"
+            echo ""
         fi
-        echo ""
-        echo "The available command : "
-        echo ""
         set +e
         for MODULE in $0-*
         do
@@ -27,6 +25,7 @@ else
         source /usr/local/share/Git-Redmine-Suite/helpers/current_git_command
         GROUP=$(echo $CURRENT_GIT_COMMAND | /usr/bin/perl -pe 's/^git redmine (.*)/\U$1/')
 
+        echo ""
         echo "[$GROUP]"
     fi
     exit 1
