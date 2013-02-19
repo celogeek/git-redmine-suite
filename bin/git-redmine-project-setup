@@ -3,7 +3,7 @@
 source /usr/local/share/Git-Redmine-Suite/helpers/current_git_command
 if [ "x$HELP" != "x" ]
 then
-    echo "$CURRENT_GIT_COMMAND PROJECT TASK_FINISHED_USER_ID REVIEW_FINISHED_USER_ID RELEASE_FINISHED_USER_ID"
+    echo "$CURRENT_GIT_COMMAND PROJECT REVIEWER RELEASER INTEGRATOR"
     exit 1
 fi
 
@@ -31,7 +31,9 @@ then
     exit 1
 fi
 
+echo "Setup project $PROJECT with Reviewer: $TASK, Releaser: $REVIEW, Integrator: $RELEASE"
 git config redmine.project.$PROJECT.finish.user.id.task $TASK
 git config redmine.project.$PROJECT.finish.user.id.review $REVIEW
 git config redmine.project.$PROJECT.finish.user.id.release $RELEASE
+echo ""
 
