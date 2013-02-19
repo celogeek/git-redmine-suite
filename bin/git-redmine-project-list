@@ -14,6 +14,6 @@ source /usr/local/share/Git-Redmine-Suite/helpers/redmine-checkconf
 echo "You have subscribe to these projects :"
 for P in $(git config --get-regex ^redmine.project | cut -d '.' -f 3 | sort -u)
 do
-    echo "    * $P"
+    echo "    * $P (Reviewer: $(git config redmine.project.$P.finish.user.id.task), Releaser: $(git config redmine.project.$P.finish.user.id.review), Integrator: $(git config redmine.project.$P.finish.user.id.release))"
 done
 echo ""
