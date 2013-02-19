@@ -70,10 +70,8 @@ do
     redmine_check_task "$TASK" "$REDMINE_RELEASE_TODO,$REDMINE_RELEASE_FINISH"
 done
 
-set -x
 git fetch -ap
 git fetch --tags -p
-set +x
 
 if [ "x$V" == "x" ]
 then
@@ -85,7 +83,6 @@ echo ""
 
 BRNAME="redmine-release-v$V"
 
-set -x
 git checkout devel
 git merge origin/devel
 git checkout -b "$BRNAME"
@@ -118,7 +115,6 @@ then
     git ci -m 'Update version'
 fi
 
-set +x
 git diff origin/master || true
 cat <<__EOF__
 Please edit all the file you need and commit it before finish the release.

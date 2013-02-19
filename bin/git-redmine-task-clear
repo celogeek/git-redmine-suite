@@ -29,8 +29,6 @@ BRNAME=$(git config "redmine.task.${TASK}.branch")
 
 echo "Cleaning local and remote dev for task $TASK..."
 
-set -x
-
 git fetch -ap
 git fetch --tags -p
 git checkout devel

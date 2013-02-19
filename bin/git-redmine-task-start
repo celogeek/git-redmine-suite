@@ -38,18 +38,16 @@ then
     echo "Continue the task $TASK ..."
     echo ""
     echo "Updating redmine status ..."
-    set +x
     redmine_set_status $TASK $REDMINE_TASK_IN_PROGRESS $REDMINE_USER_ID
     echo "Checkout local branch $BRNAME ..."
-    set -x
     git fetch -ap
     git fetch --tags -p
     git checkout $BRNAME
+    git config "redmine.task.current" "$TASK"
     git rebase origin/$BRNAME || cat <<__EOF__
 Fix the conflict, and finish the rebase or remote branch
 
 __EOF__
-    git config "redmine.task.current" "$TASK"
 
     cat <<__EOF__
 
@@ -74,12 +72,9 @@ echo ""
 
 echo "Updating redmine status ..."
 
-set +x
 redmine_set_status $TASK $REDMINE_TASK_IN_PROGRESS $REDMINE_USER_ID
 
 echo "Creation local branch $BRNAME ..."
-
-set -x
 
 git fetch -ap
 git fetch --tags -p
@@ -88,7 +83,6 @@ git config "redmine.task.current" "$TASK"
 git config "redmine.task.$TASK.title" "$TASK_TITLE"
 git config "redmine.task.$TASK.branch" "$BRNAME"
 git config "redmine.task.$TASK.project" "$PROJECT"
-set +x
 git push origin -u $BRNAME || cat <<__EOF__
 The remote branch $BRNAME already exist !
 You have 2 choice. Or you take control of this branch :

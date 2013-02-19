@@ -26,10 +26,8 @@ fi
 
 BRNAME=$(git config redmine.release.simple.branch)
 
-set -x
+echo "Aborting release $BRNAME ..."
 git config --remove-section redmine.release.simple
-git fetch -ap
-git fetch --tags -p
 git checkout devel
 git branch -D $BRNAME
 

@@ -30,11 +30,9 @@ echo "Aborting the review of task #$TASK - PR:$PR ..."
 echo "    * $TASK_TITLE"
 echo ""
 
-set -x
 git checkout devel
 git branch -D "$BRNAME"
 git config --remove-section "redmine.review.$TASK"
-set +x
 
 echo ""
 echo "Updating redmine status ..."

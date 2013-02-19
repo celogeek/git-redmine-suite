@@ -10,8 +10,6 @@ set -e
 
 echo "Self-Upgrading git redmine ..."
 
-set -x
-
 cd /tmp
 rm -rf redmine-suite
 git clone http://git.gitorious.celogeek.com/git/redmine-suite.git

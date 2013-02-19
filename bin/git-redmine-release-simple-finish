@@ -46,7 +46,6 @@ BRNAME=$(git config redmine.release.simple.branch)
 
 echo "Finish release v$V ..."
 
-set -x
 git fetch -ap
 git fetch --tags -p
 git checkout devel
@@ -61,7 +60,6 @@ git push origin master
 git push origin "tags/v$V"
 git branch -d $BRNAME
 git config --remove-section redmine.release.simple
-set +x
 
 REMOTE_URL=$(git config remote.origin.url)
 for TASK in ${TASKS[@]}

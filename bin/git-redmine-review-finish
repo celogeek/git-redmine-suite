@@ -52,12 +52,11 @@ echo "Finishing the review of task #$TASK - PR:$PR ..."
 echo "    * $TASK_TITLE"
 echo ""
 
-set -x
 git fetch -ap
 git fetch --tags -p
 git checkout devel
 git merge origin/devel
-git merge --no-ff "$BRNAME"
+git merge --no-ff "$BRNAME" -m "Merge $BRNAME"
 echo "    * $TASK_TITLE ($TASK_DEV)" > "$CHANGELOG".new
 touch "$CHANGELOG"
 cat "$CHANGELOG" >> "$CHANGELOG".new
@@ -71,14 +70,13 @@ git tag -d "$PR"
 git branch -D "$BRNAME"
 git config --remove-section "redmine.review.$TASK"
 git config --unset "redmine.review.current"
-set +x
+
 echo ""
 echo "Updating redmine status ..."
 redmine_set_status $TASK $REDMINE_RELEASE_TODO $REVIEW_FINISH_USER_ID
 echo ""
 
 echo "Removing old pr ..."
-set -x
 for tag in $(git tag | grep pr-.*-redmine-.*-$TASK-)
 do
     git push origin :tags/"$tag"
