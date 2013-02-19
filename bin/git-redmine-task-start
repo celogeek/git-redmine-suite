@@ -49,6 +49,7 @@ then
 Fix the conflict, and finish the rebase or remote branch
 
 __EOF__
+    git config "redmine.task.current" "$TASK"
 
     cat <<__EOF__
 
