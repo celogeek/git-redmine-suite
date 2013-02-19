@@ -115,7 +115,8 @@ then
     git ci -m 'Update version'
 fi
 
-git diff origin/master || true
+set +x
+git diff origin/master | less
 cat <<__EOF__
 Please edit all the file you need and commit it before finish the release.
 Don't forget to run the tests !

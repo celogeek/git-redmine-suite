@@ -83,7 +83,7 @@ git config "redmine.review.$TASK.project" "$PROJECT"
 redmine_set_status $TASK $REDMINE_REVIEW_IN_PROGRESS $REDMINE_USER_ID
 
 set +e
-git diff origin/devel || true
+git diff origin/devel | less
 
 cat <<__EOF__
 
