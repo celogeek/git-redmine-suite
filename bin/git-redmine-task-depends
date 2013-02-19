@@ -2,7 +2,7 @@
 
 source /usr/local/share/Git-Redmine-Suite/helpers/current_git_command
 function help {
-    echo "$CURRENT_GIT_COMMAND TASK_NUMBER TASK_DEP_1 TASK_DEP_2 ..."
+    echo "$CURRENT_GIT_COMMAND TASK_DEP_1 TASK_DEP_2 ..."
     exit 1
 }
 
@@ -15,11 +15,21 @@ set -e
 
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-checkconf
 
-TASK="$1"
-shift
-DEPS="$@"
+set +e
+
+TASK=$(git config redmine.task.current)
 
 if [ "x$TASK" == "x" ]
+then
+    echo "You have not start any task !"
+    exit 1
+fi
+
+set -e
+
+DEPS="$@"
+
+if [ "x$DEPS" == "x" ]
 then
     help
 fi
