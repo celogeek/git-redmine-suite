@@ -85,6 +85,9 @@ git config "redmine.review.$TASK.project" "$PROJECT"
 set +x
 redmine_set_status $TASK $REDMINE_REVIEW_IN_PROGRESS $REDMINE_USER_ID
 
+set +e
+git diff origin/devel || true
+
 cat <<__EOF__
 
 You can squash / rebase ... 
@@ -112,5 +115,3 @@ And don't forget to run your tests before !
 
 __EOF__
 
-set +e
-git diff origin/devel
