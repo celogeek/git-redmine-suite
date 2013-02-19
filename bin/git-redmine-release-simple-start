@@ -86,7 +86,9 @@ echo ""
 BRNAME="redmine-release-v$V"
 
 set -x
-git checkout -b "$BRNAME" origin/devel
+git checkout devel
+git merge origin/devel
+git checkout -b "$BRNAME"
 
 git config "redmine.release.simple.version" "$V"
 git config "redmine.release.simple.tasks" "$(echo ${TASKS[@]})"
@@ -117,6 +119,7 @@ then
 fi
 
 set +x
+git diff origin/master || true
 cat <<__EOF__
 Please edit all the file you need and commit it before finish the release.
 Don't forget to run the tests !
