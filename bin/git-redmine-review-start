@@ -45,8 +45,6 @@ then
     help
 fi
 
-redmine_check_task "$TASK" "$REDMINE_REVIEW_TODO"
-
 set +e
 BRNAME=$(git config redmine.review.$TASK.branch)
 set -e
@@ -62,6 +60,8 @@ You have to abort the review before and start it again.
 __EOF__
     exit 1
 fi
+
+redmine_check_task "$TASK" "$REDMINE_REVIEW_TODO,$REDMINE_REVIEW_IN_PROGRESS"
 
 TASK_TITLE=$(redmine_get_title $TASK)
 SLUG_TITLE=$(/usr/local/share/Git-Redmine-Suite/helpers/slug --this "$TASK_TITLE")
