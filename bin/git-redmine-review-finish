@@ -2,7 +2,7 @@
 
 source /usr/local/share/Git-Redmine-Suite/helpers/current_git_command
 function help {
-    echo "$CURRENT_GIT_COMMAND TASK_NUMBER"
+    echo "$CURRENT_GIT_COMMAND"
     exit 1
 }
 
@@ -18,12 +18,17 @@ source /usr/local/share/Git-Redmine-Suite/helpers/redmine-statuses
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-project
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-tasks
 
-TASK="$1"
+set +e
+
+TASK=$(git config redmine.review.current)
 
 if [ "x$TASK" == "x" ]
 then
-    help
+    echo "You have not start any review !"
+    exit 1
 fi
+
+set -e
 
 redmine_check_task "$TASK" "$REDMINE_REVIEW_IN_PROGRESS"
 
@@ -65,6 +70,7 @@ git push origin :tags/"$PR"
 git tag -d "$PR"
 git branch -D "$BRNAME"
 git config --remove-section "redmine.review.$TASK"
+git config --unset "redmine.review.current"
 set +x
 echo ""
 echo "Updating redmine status ..."

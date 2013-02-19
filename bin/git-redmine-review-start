@@ -77,6 +77,7 @@ git fetch -ap
 git fetch --tags -p
 git checkout devel
 git checkout -b "$BRNAME" "$PR"
+git config "redmine.review.current" "$TASK"
 git config "redmine.review.$TASK.pr" "$PR"
 git config "redmine.review.$TASK.title" "$TASK_TITLE"
 git config "redmine.review.$TASK.branch" "$BRNAME"

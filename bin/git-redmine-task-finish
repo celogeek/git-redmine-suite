@@ -2,7 +2,7 @@
 
 source /usr/local/share/Git-Redmine-Suite/helpers/current_git_command
 function help {
-    echo "$CURRENT_GIT_COMMAND TASK_NUMBER"
+    echo "$CURRENT_GIT_COMMAND"
     exit 1
 }
 
@@ -18,12 +18,17 @@ source /usr/local/share/Git-Redmine-Suite/helpers/redmine-statuses
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-project
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-tasks
 
-TASK="$1"
+set +e
+
+TASK=$(git config redmine.task.current)
 
 if [ "x$TASK" == "x" ]
 then
-    help
+    echo "You have not start any task !"
+    exit 1
 fi
+
+set -e
 
 redmine_check_task "$TASK" "$REDMINE_TASK_IN_PROGRESS"
 
@@ -55,6 +60,7 @@ git tag "$TAG"
 git push origin tags/"$TAG"
 git checkout devel
 git merge origin/devel
+git config --unset "redmine.task.current"
 
 set +x
 
