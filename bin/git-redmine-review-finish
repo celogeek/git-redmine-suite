@@ -53,7 +53,7 @@ git fetch --tags -p
 git checkout devel
 git merge origin/devel
 git merge --no-ff "$BRNAME"
-echo "    $TASK_TITLE ($TASK_DEV)" > "$CHANGELOG".new
+echo "    * $TASK_TITLE ($TASK_DEV)" > "$CHANGELOG".new
 touch "$CHANGELOG"
 cat "$CHANGELOG" >> "$CHANGELOG".new
 mv "$CHANGELOG".new "$CHANGELOG"

@@ -13,6 +13,6 @@ use DateTime;
 
 my $opt = MyOpt->new_with_options;
 my $d = DateTime->now(time_zone => 'UTC');
-say $opt->version, "      ", $d->ymd('-'), " ", $d->hms(':'), " GMT";
+say $opt->version, "  ", $d->ymd('-'), " ", $d->hms(':'), " GMT";
 say "";
 
