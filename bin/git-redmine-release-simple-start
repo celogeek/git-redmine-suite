@@ -66,7 +66,7 @@ fi
 for TASK in ${TASKS[@]}
 do
     echo "Check redmine status $TASK ..."
-    redmine_check_task "$TASK" "$REDMINE_RELEASE_TODO"
+    redmine_check_task "$TASK" "$REDMINE_RELEASE_TODO,$REDMINE_RELEASE_FINISH"
 done
 
 set -x
