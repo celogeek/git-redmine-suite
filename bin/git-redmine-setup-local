@@ -28,6 +28,10 @@ case $1 in
         git config redmine.statuses.review.inprogress 27
         git config redmine.statuses.release.assigned 10
         git config redmine.statuses.release.finish 26
+        git config alias.release "redmine release simple"
+        git config alias.review "redmine review"
+        git config alias.task "redmine task"
+        git config alias.project "redmine project"
     ;;
     celogeek)
         REDMINE_URL="https://tasks.celogeek.com"
@@ -48,6 +52,10 @@ case $1 in
         git config redmine.statuses.review.inprogress 4
         git config redmine.statuses.release.assigned 7
         git config redmine.statuses.release.finish 5
+        git config alias.release "redmine release simple"
+        git config alias.review "redmine review"
+        git config alias.task "redmine task"
+        git config alias.project "redmine project"
     ;;
     *)
         echo "$CURRENT_GIT_COMMAND PROFILE AUTH_KEY"
