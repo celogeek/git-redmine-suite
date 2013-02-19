@@ -111,3 +111,6 @@ To finish the review:
 And don't forget to run your tests before !
 
 __EOF__
+
+set +e
+git diff origin/devel
