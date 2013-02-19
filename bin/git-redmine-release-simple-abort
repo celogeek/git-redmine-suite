@@ -30,6 +30,6 @@ set -x
 git config --remove-section redmine.release.simple
 git fetch -ap
 git fetch --tags -p
-git co devel
-git br -D $BRNAME
+git checkout devel
+git branch -D $BRNAME
 

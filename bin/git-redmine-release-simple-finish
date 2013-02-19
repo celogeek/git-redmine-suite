@@ -49,17 +49,17 @@ echo "Finish release v$V ..."
 set -x
 git fetch -ap
 git fetch --tags -p
-git co devel
+git checkout devel
 git merge origin/devel
-git merge --no-ff "$BRNAME"
+git merge --no-ff "$BRNAME" -m "Merge $BRNAME"
 git push origin devel
-git co master
+git checkout master
 git merge origin/master
-git merge --no-ff "$BRNAME"
+git merge --no-ff devel -m "Merge $BRNAME"
 git tag -m "release v$V: $(echo ${TASKS[@]})" "v$V"
 git push origin master
 git push origin "tags/v$V"
-git br -d $BRNAME
+git branch -d $BRNAME
 git config --remove-section redmine.release.simple
 set +x
 
