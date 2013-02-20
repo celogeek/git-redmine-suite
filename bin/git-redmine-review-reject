@@ -41,6 +41,7 @@ git fetch --tags -p
 git checkout devel
 git merge origin/devel
 git push origin :tags/"$PR"
+git tag -d "$PR"
 git branch -D "$BRNAME"
 git config --remove-section "redmine.review.$TASK"
 git config --unset "redmine.review.current"
