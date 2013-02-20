@@ -42,6 +42,12 @@ use warnings;
         autosplit => ',',
         doc => 'valid status',
     );
+    option 'message' => (
+        is => 'ro',
+        format => 's',
+        required => 1,
+        doc => 'message if fail',
+    );
     1;
 };
 
@@ -68,12 +74,14 @@ $is_valid = 0 if !$is_status_valid;
 my $assigned_to = $issue->{assigned_to} ? $issue->{assigned_to}->{name} : 'nobody';
 my $status = $issue->{status}->{name};
 if (!$is_valid) {
-    say <<__EOF__
+    my $message = $opt->message;
+    $message = <<__EOF__
 This task has not the right status in redmine.
 It is assigned to "$assigned_to" and as the status "$status".
 
 Please check that the task is assigned properly, and has the expected status.
 __EOF__
-    ;
+    if $message eq 'DEFAULT';
+    say $message;
     exit 1;
 }
