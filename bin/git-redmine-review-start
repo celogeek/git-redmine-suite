@@ -54,7 +54,7 @@ then
 This review is already in progress.
 You have to abort the review before and start it again.
 
-    git redmine review abort $TASK
+    git redmine review abort
     $CURRENT_GIT_COMMAND $TASK $PR
 
 __EOF__
@@ -100,12 +100,13 @@ If you want to add fixes and send back the branch to the user (if the remote bra
 or if you have rebase on origin/devel
     git push -f origin HEAD:redmine-$SLUG_TITLE
 then
-    git redmine review abort $TASK
+    git redmine review reject
 
-Then go to redmine and reassign the task to the developer
+If you want to abort the review
+    git redmine review abort
+
 
 To finish the review:
-
     git redmine review finish
 
 And don't forget to run your tests before !
