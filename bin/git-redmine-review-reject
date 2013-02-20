@@ -30,6 +30,7 @@ set -e
 
 TASK_TITLE=$(git config "redmine.review.$TASK.title")
 BRNAME=$(git config "redmine.review.$TASK.branch")
+PR=$(git config "redmine.review.$TASK.pr")
 
 echo "Rejecting the review of task #$TASK - PR:$PR ..."
 echo "    * $TASK_TITLE"
@@ -41,12 +42,18 @@ git merge origin/devel
 git push origin :tags/"$PR"
 git branch -D "$BRNAME"
 git config --remove-section "redmine.review.$TASK"
+git config --unset "redmine.review.current"
 
 echo ""
 echo "Fetching last developer ..."
 declare -a TASK_DEV=($(redmine_get_developers_id "$TASK"))
 
+F=$(mktemp /tmp/redmine.XXXXXX)
+echo "#Put your redmine message here" > "$F"
+vim "$F"
+
 echo ""
 echo "Updating redmine status ..."
-redmine_set_status $TASK $REDMINE_TASK_TODO $TASK_DEV
+set -x
+redmine_set_status $TASK $REDMINE_TASK_TODO $TASK_DEV "$(cat "$F")"
 echo ""

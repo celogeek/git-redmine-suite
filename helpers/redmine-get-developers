@@ -68,4 +68,8 @@ for my $journal(@journals) {
     push @res, $opt->ids_only ? $id : $name if !$uniq{$id};
     $uniq{$id} = 1;
 }
-say join(', ', @res);
+if ($opt->ids_only) {
+    say join(' ', @res);
+} else {
+    say join(', ', @res);
+}
