@@ -2,7 +2,7 @@
 
 source /usr/local/share/Git-Redmine-Suite/helpers/current_git_command
 function help {
-    echo "$CURRENT_GIT_COMMAND TASK_NUMBER"
+    echo "$CURRENT_GIT_COMMAND"
     exit 1
 }
 
@@ -16,12 +16,17 @@ set -e
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-checkconf
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-statuses
 
-TASK="$1"
+set +e
+
+TASK=$(git config redmine.review.current)
 
 if [ "x$TASK" == "x" ]
 then
-    help
+    echo "You have not start any review !"
+    exit 1
 fi
+
+set -e
 
 TASK_TITLE=$(git config "redmine.review.$TASK.title")
 BRNAME=$(git config "redmine.review.$TASK.branch")
