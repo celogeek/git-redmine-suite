@@ -2,6 +2,7 @@
 use feature 'say';
 use strict;
 use warnings;
+use Encode;
 {
     package MyOpts;
     use Moo;
@@ -38,6 +39,7 @@ my $r = Redmine::API->new(
 my $resp = $r->projects->list->all(limit => 1000);
 my $content = $resp->content->{projects};
 say "List of all project and slugs : ";
-for my $project(@$content) {
-    say sprintf("    %-6d %40s - %s", @$project{qw/id identifier name/});
+for my $project(sort { $a->{identifier} cmp $b->{identifier} } @$content) {
+    $project->{name} = encode('UTF8', $project->{name});
+    say sprintf("    %-40s ( %s )", @$project{qw/identifier name/});
 }
