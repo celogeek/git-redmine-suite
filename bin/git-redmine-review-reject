@@ -15,6 +15,7 @@ set -e
 
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-checkconf
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-statuses
+source /usr/local/share/Git-Redmine-Suite/helpers/redmine-tasks
 
 set +e
 
@@ -54,6 +55,5 @@ vim "$F"
 
 echo ""
 echo "Updating redmine status ..."
-set -x
 redmine_set_status "$TASK" "$REDMINE_TASK_TODO" "${TASK_DEV[0]}" "$(cat "$F")"
 echo ""
