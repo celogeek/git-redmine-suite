@@ -2,6 +2,7 @@
 use feature 'say';
 use strict;
 use warnings;
+use Encode;
 {
     package MyOpts;
     use Moo;
@@ -35,6 +36,10 @@ use warnings;
         format => 'i',
         doc => 'list the user who set the status to this value'
     );
+    option 'ids_only' => (
+        is => 'ro',
+        doc => 'list ids only'
+    );
     1;
 };
 
@@ -49,13 +54,18 @@ my $r = Redmine::API->new(
 
 my $id = $opt->id;
 my $resp = $r->issues->issue->get($id, include => 'journals');
-my $content = $resp->content->{issue}->{journals};
-my %res;
-for my $journal(@$content) {
+my @res;
+my @journals = sort { $b->{created_on} cmp $a->{created_on} } @{$resp->content->{issue}->{journals}};
+my %uniq;
+for my $journal(@journals) {
     my $keep = 0;
     for my $details(@{$journal->{details}}) {
         $keep = 1, last if ($details->{name} eq 'status_id' && $details->{new_value} eq $opt->status_id);
     }
-    $res{$journal->{user}->{name}} = 1 if $keep;
+    next unless $keep;
+    my $id = $journal->{user}->{id};
+    my $name = encode('UTF8', $journal->{user}->{name});
+    push @res, $opt->ids_only ? $id : $name if !$uniq{$id};
+    $uniq{$id} = 1;
 }
-say join(', ', keys %res);
+say join(', ', @res);
