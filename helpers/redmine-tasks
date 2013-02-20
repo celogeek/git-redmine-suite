@@ -1,7 +1,7 @@
 #!/bin/bash
 function redmine_get_all_local_tasks
 {
-    git config --get-regexp ^redmine.task | cut -d "." -f 3 | sort -u
+    git config --get-regexp ^'redmine\.task\..*\.' | cut -d "." -f 3 | sort -u
 }
 
 function redmine_get_developers
