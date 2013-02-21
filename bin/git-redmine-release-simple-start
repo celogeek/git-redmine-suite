@@ -112,7 +112,13 @@ then
     mv dist.ini.new dist.ini
     vim dist.ini || true
     git add dist.ini
-    git ci -m 'Update version'
+    git ci -m 'Update version DistZilla'
+fi
+if [ -e 'VERSION' ]
+then
+    echo "$V" > VERSION
+    git add VERSION
+    git ci -m 'Update version file'
 fi
 
 set +x
