@@ -2,6 +2,9 @@
 use feature 'say';
 use strict;
 use warnings;
+use DateTime;
+use Date::Parse;
+use Encode;
 {
     package MyOpts;
     use Moo;
@@ -46,11 +49,26 @@ my $r = Redmine::API->new(
 
 my $id = $opt->id;
 my $resp = $r->issues->issue->get($id);
-my $content = $resp->content->{issue};
-my $status = $content->{status}->{name};
-my $title =join("", $content->{tracker}->{name}, " #", $id, " : ", $content->{subject});
+my $issue = $resp->content->{issue};
+my $status = $issue->{status}->{name};
+my $title =join("", encode('UTF8', $issue->{tracker}->{name}), " #", $id, " : ", encode('UTF8', $issue->{subject}));
+my $now = DateTime->now;
 if ($opt->with_status) {
-    say "(",$status,") - ", $title;
+    my $duration_str = '???';
+    eval {
+        my $updated_on_str = $issue->{updated_on};
+        my $updated_on_time = str2time($updated_on_str);
+        my $updated_on = DateTime->from_epoch(epoch => $updated_on_time);
+        my %duration = ($now - $updated_on)->deltas;
+        if ($duration{month}) {
+            $duration_str = sprintf('%d months and %d days ago', $duration{month}, $duration{days});
+        } elsif($duration{days}) {
+            $duration_str = sprintf('%d days ago', $duration{days});
+        } else {
+            $duration_str = 'today';
+        }
+    };
+    say "(",$status,") - ", $title, ', updated ', $duration_str;
 } else {
     say $title;
 }
