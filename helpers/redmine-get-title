@@ -48,27 +48,42 @@ my $r = Redmine::API->new(
 );
 
 my $id = $opt->id;
-my $resp = $r->issues->issue->get($id);
+my $resp = $r->issues->issue->get($id, include => 'journals');
 my $issue = $resp->content->{issue};
 my $status = $issue->{status}->{name};
 my $title =join("", encode('UTF8', $issue->{tracker}->{name}), " #", $id, " : ", encode('UTF8', $issue->{subject}));
 my $now = DateTime->now;
 if ($opt->with_status) {
+    my @journals = sort { $b->{created_on} cmp $a->{created_on} } @{$issue->{journals}};
+    my $release;
+    for my $journal(@journals) {
+        my $notes = $journal->{notes} or next;
+        ($release) = $notes =~ /RELEASED : v(.*)/m;
+        last if $release;
+    }
     my $duration_str = '???';
-    eval {
-        my $updated_on_str = $issue->{updated_on};
-        my $updated_on_time = str2time($updated_on_str);
-        my $updated_on = DateTime->from_epoch(epoch => $updated_on_time);
-        my %duration = ($now - $updated_on)->deltas;
-        if ($duration{month}) {
-            $duration_str = sprintf('%d months and %d days ago', $duration{month}, $duration{days});
-        } elsif($duration{days}) {
-            $duration_str = sprintf('%d days ago', $duration{days});
-        } else {
-            $duration_str = 'today';
-        }
-    };
-    say "(",$status,") - ", $title, ', updated ', $duration_str;
+    if (!$release) {
+        eval {
+            my $updated_on_str = $issue->{updated_on};
+            my $updated_on_time = str2time($updated_on_str);
+            my $updated_on = DateTime->from_epoch(epoch => $updated_on_time);
+            my %duration = ($now - $updated_on)->deltas;
+            if ($duration{month}) {
+                $duration_str = sprintf('%d months and %d days ago', $duration{month}, $duration{days});
+            } elsif($duration{days}) {
+                $duration_str = sprintf('%d days ago', $duration{days});
+            } else {
+                $duration_str = 'today';
+            }
+        };
+    }
+    my $release_or_update_str='';
+    if ($release) {
+        $release_or_update_str = ', released with v' . $release;
+    } else {
+        $release_or_update_str = ', updated ' . $duration_str;
+    }
+    say "(",$status,") - ", $title, $release_or_update_str;
 } else {
     say $title;
 }
