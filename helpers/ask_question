@@ -1,0 +1,27 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use feature 'say';
+use Term::ReadLine;
+
+{
+    package MyOpt;
+    use Moo;
+    use MooX::Options;
+    option 'question' => ( is => 'ro', format => 's', required => 1, doc => 'The question to ask');
+    1;
+}
+
+my $opt = MyOpt->new_with_options;
+my $question = $opt->question;
+my $term = Term::ReadLine->new('Question');
+my $prompt = $question . " (y/N) ";
+my $answer;
+while(defined ($answer = $term->readline($prompt))) {
+    $answer = lc($answer);
+    next if $answer !~ /^[yn]$/;
+    $answer = undef if ($answer eq 'n');
+    last;
+};
+exit 1 if !defined $answer;
+exit 0;
