@@ -92,6 +92,8 @@ git redmine review start $TASK $TAG
 
 $MSG_DEPS
 
+Additional comments from the developer :
+
 $(cat "$F")
 "
 echo ""
