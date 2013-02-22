@@ -125,7 +125,7 @@ then
 fi
 
 set +x
-git diff origin/master | less
+git diff --color origin/master | less -R
 cat <<__EOF__
 Please edit all the file you need and commit it before finish the release.
 Don't forget to run the tests !
