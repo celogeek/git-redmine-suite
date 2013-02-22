@@ -29,4 +29,6 @@ redmine_set_status $TASK "$REDMINE_RELEASE_TODO" $REDMINE_USER_ID
 redmine_check_task $TASK "$REDMINE_RELEASE_TODO" '
 Failed to take control of the task. Please ask to the owner to assign this task to you !
 ' && echo "Succeed !
+
+Take care, that doesn't mean you have start the task !
 "
