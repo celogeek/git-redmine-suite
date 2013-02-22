@@ -15,6 +15,7 @@ set -e
 
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-checkconf
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-statuses
+source /usr/local/share/Git-Redmine-Suite/helpers/redmine-question
 
 set +e
 
@@ -33,6 +34,9 @@ BRNAME=$(git config "redmine.review.$TASK.branch")
 
 echo "Aborting the review of task #$TASK - PR:$PR ..."
 echo "    * $TASK_TITLE"
+echo ""
+
+are_you_sure
 echo ""
 
 git checkout devel

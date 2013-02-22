@@ -14,6 +14,7 @@ fi
 set -e
 
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-checkconf
+source /usr/local/share/Git-Redmine-Suite/helpers/redmine-question
 
 set +e
 
@@ -35,4 +36,5 @@ then
 fi
 
 echo "Set deps for task $TASK to $DEPS"
+are_you_sure
 git config redmine.task.${TASK}.depends "$DEPS"

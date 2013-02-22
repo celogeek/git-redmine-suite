@@ -17,6 +17,7 @@ source /usr/local/share/Git-Redmine-Suite/helpers/redmine-checkconf
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-project
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-tasks
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-statuses
+source /usr/local/share/Git-Redmine-Suite/helpers/redmine-question
 
 if git config "redmine.release.simple.version" > /dev/null
 then
@@ -79,6 +80,8 @@ then
 fi
 
 echo "Start release v$V..."
+echo ""
+are_you_sure
 echo ""
 
 BRNAME="redmine-release-v$V"
