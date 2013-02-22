@@ -3,6 +3,7 @@ use strict;
 use warnings;
 use feature 'say';
 use Version::Next qw/next_version/;
+use DateTime;
 {
     package MyOpt;
     use Moo;
@@ -12,4 +13,11 @@ use Version::Next qw/next_version/;
 }
 
 my $opt = MyOpt->new_with_options;
-say next_version($opt->version);
+my $version = $opt->version;
+if (my ($date) = ($version =~ /^(\d{8})_\d+$/)) {
+    my $dt = DateTime->now;
+    if ($date < $dt->ymd('')) {
+        $version = $dt->ymd('').'_00';
+    }
+}
+say next_version($version);
