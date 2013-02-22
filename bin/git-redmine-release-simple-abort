@@ -16,6 +16,7 @@ set -e
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-checkconf
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-project
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-tasks
+source /usr/local/share/Git-Redmine-Suite/helpers/redmine-question
 
 if ! git config "redmine.release.simple.version" > /dev/null
 then
@@ -27,6 +28,7 @@ fi
 BRNAME=$(git config redmine.release.simple.branch)
 
 echo "Aborting release $BRNAME ..."
+are_you_sure
 git config --remove-section redmine.release.simple
 git checkout devel
 git branch -D $BRNAME

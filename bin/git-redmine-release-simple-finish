@@ -17,6 +17,7 @@ source /usr/local/share/Git-Redmine-Suite/helpers/redmine-checkconf
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-project
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-tasks
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-statuses
+source /usr/local/share/Git-Redmine-Suite/helpers/redmine-question
 
 if ! git config "redmine.release.simple.version" > /dev/null
 then
@@ -45,6 +46,7 @@ V=$(git config redmine.release.simple.version)
 BRNAME=$(git config redmine.release.simple.branch)
 
 echo "Finish release v$V ..."
+are_you_sure
 
 git fetch -ap
 git fetch --tags -p
