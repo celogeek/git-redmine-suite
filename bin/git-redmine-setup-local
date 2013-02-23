@@ -7,6 +7,15 @@ then
     exit 1
 fi
 
+function common_setup
+{
+    git config alias.release "redmine release simple"
+    git config alias.review "redmine review"
+    git config alias.task "redmine task"
+    git config alias.project "redmine project"
+    git config push.default "tracking"
+}
+
 set -e
 case $1 in
     weborama)
@@ -28,10 +37,7 @@ case $1 in
         git config redmine.statuses.review.inprogress 27
         git config redmine.statuses.release.assigned 10
         git config redmine.statuses.release.finish 26
-        git config alias.release "redmine release simple"
-        git config alias.review "redmine review"
-        git config alias.task "redmine task"
-        git config alias.project "redmine project"
+        common_setup
         echo ""
     ;;
     celogeek)
@@ -53,10 +59,7 @@ case $1 in
         git config redmine.statuses.review.inprogress 4
         git config redmine.statuses.release.assigned 7
         git config redmine.statuses.release.finish 5
-        git config alias.release "redmine release simple"
-        git config alias.review "redmine review"
-        git config alias.task "redmine task"
-        git config alias.project "redmine project"
+        common_setup
         echo ""
     ;;
     *)
