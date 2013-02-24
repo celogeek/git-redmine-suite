@@ -30,7 +30,7 @@ redmine_check_task $TASK "$REDMINE_REVIEW_TODO" '
 Failed to take control of the task. Please ask to the owner to assign this task to you !
 ' && echo "Succeed !
 
-Take care, that doesn't mean you have start the task !
+Take care, that doesn't mean you have start the review !
 "
 
 if /usr/local/share/Git-Redmine-Suite/helpers/ask_question --question="Do you want to start the review ?"

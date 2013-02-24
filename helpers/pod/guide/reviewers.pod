@@ -11,9 +11,101 @@ First of all, you have to follow the "setup guide" :
 
  * git redmine guide setup
 
+=head1 Link a git project to redmine
+
+First of all, when you get into a git repository, you need to link it to a redmine project`.
+
+You can use "git redmine project" for this purpose. I suggest you to read the "setup" guide, to understand how it works.
+
+=head1 What your jobs ?
+
+When your redmine projects are linked, you can get the list of your "pending" review.
+
+ * git redmine review pending
+
+All tasks and their parent are shown. Pick one of then.
+
+The latest pull request is push by the "task" job inside the task to review. The full command is present. You can copy paste it, or just the the start command. It will get the latest pull request and purpose you a start.
+
+=head1 Start a review
+
+To start a review, 
+
+ * git redmine review start XXX
+
+The XXX is the number of the task. It will create a branch locally. Your redmine will change from "to be code reviewed" to "review in progress".
+
+If the task doesn't belong to you, or haven't got the right status, you can try to take it.
+
+ * git redmine review take XXX
+
+If it succeed, then try to start again. Otherwise contact the manager to assign this task to you.
+
+You can do multiple think with that.
+
+=over
+
+=item thing to do
+
+During a review, you have to compare with origin/devel to check the changes. Eventually fix some issue.
+
+Then you can "finish", "abort" or "reject" the task.
+
+=item rebase
+
+To have a proper diff, start by a rebase
+
+ * git rebase origin/devel
+
+=item check diff
+
+Then you can check the diff
+
+ * git diff origin/devel
+
+=item apply patches
+
+You can apply all the change you want and commit it. It will be only a local change.
+
+=item reject a task
+
+If a task has too much stuff to be fixed, you can send it back to the latest developer of the task.
+
+The $TASK_SLUG below is the developer branch, it should be the same has yours without the "-review-"
+
+ * git push -f origin HEAD:$TASK_SLUG
+ * git redmine review reject
+
+It will edit a message file. Put everything you want for the developer to known, then save.
+
+The task is sent back to the developer with the error message. It is reassigned to him.
+
+=item accept the patch
+
+To accept your change, just finish it.
+
+ * git redmine review finish
+
+It will apply the changes, merge into devel, save the change log.
+
+=item miscellaneous
+
+They is more in review.
+
+ * git redmine review abort
+
+Cancel the review, set the status back to "to be code reviewed".
+
+ * git redmine review current
+
+It show you the current task you are reviewing.
+
+=back
+
 =head1 AUTHORS
 
  * Vincent Bachelier (vincent@weborama.com)
  * Celogeek (me@celogeek.com)
 
 =cut
+
