@@ -32,6 +32,12 @@ To start a task,
 
 The XXX is the number of the task. It will create a branch locally and remotely. Your redmine will change from "assigned" to "in progress".
 
+If the task doesn't belong to you, or haven't got the right status, you can try to take it.
+
+ * git redmine task take XXX
+
+If it succeed, then try to start again. Otherwise contact the manager to assign this task to you.
+
 You can do multiple think with that.
 
 =over
@@ -52,6 +58,34 @@ To update your local branch,
  * git fetch tags -p
  * git rebase origin/devel
  * git push -f
+
+=item finish your task
+
+When you have finish your task, ensure your branch are up to date, then
+
+ * git redmine task finish
+
+It will assign to the reviewer you have setup the task with the "review pending" status.
+
+=item check your task status
+
+Every task you have start, will be available for the status. You can see the progress of them, if it is release, or if you need to rework on it. You can also see if the review is in progress. If it is integrated.
+
+ * git redmine task status
+
+=item clear you local and remote repos
+
+When the task is released or integrated, you can clear it. It will remove the local branch, clear your git config and remove the remote branch.
+
+ * git redmine task clear XXX
+
+=item miscellaneous
+
+They is more in task.
+
+ * git redmine task current
+
+Is the current tasks you are working on. If you have start multiple task, it will appear here.
 
 =back
 
