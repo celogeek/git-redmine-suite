@@ -33,7 +33,7 @@ Failed to take control of the task. Please ask to the owner to assign this task 
 Take care, that doesn't mean you have start the task !
 "
 
-if /usr/local/share/Git-Redmine-Suite/helpers/ask_question --question="Do you want to start the task ?"
+if /usr/local/share/Git-Redmine-Suite/helpers/ask_question --question="Do you want to start the release ?"
 then
     exec git redmine release simple start "$TASK"
 fi
