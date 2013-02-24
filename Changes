@@ -1,3 +1,7 @@
+0.11  2013-02-24 15:48:14 GMT
+
+    * Bug #34 : Fix sort files for help (Celogeek San)
+
 0.10  2013-02-24 15:14:49 GMT
 
     * Bug #33 : Fix pod releasers (Celogeek San)

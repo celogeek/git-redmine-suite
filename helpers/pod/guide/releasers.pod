@@ -20,7 +20,7 @@ You can use "git redmine project" for this purpose. I suggest you to read the "s
 
 When your redmine projects are linked, you can get the list of your "pending" release.
 
- * git redmine release pending
+ * git redmine release simple pending
 
 All tasks and their parent are shown.
 
@@ -40,7 +40,7 @@ All the task has to be already reviewed, and assign to you in "release pending" 
 
 If the task has not the right status, you can try to take it.
 
- * git redmine release take XXX
+ * git redmine release simple take XXX
 
 You have to repeat the process for each tasks with the wrong status. Then try to start the release again.
 
