@@ -66,7 +66,7 @@ cat "$CHANGELOG" >> "$CHANGELOG".new
 mv "$CHANGELOG".new "$CHANGELOG"
 vim "$CHANGELOG"
 git add "$CHANGELOG"
-git commit -m "reflect changes" "$CHANGELOG"
+git commit -m "reflect changes" "$CHANGELOG" || true
 git push origin devel
 git push origin :tags/"$PR"
 git tag -d "$PR"
