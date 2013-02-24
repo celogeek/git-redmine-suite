@@ -15,6 +15,10 @@ function help {
         echo "    $CURRENT_GIT_COMMAND $TASK $PR"
         echo ""
     fi
+    if /usr/local/share/Git-Redmine-Suite/helpers/ask_question --question "Do you want to start that ?"
+    then
+        exec $CURRENT_GIT_COMMAND $TASK $PR
+    fi
     exit 1
 }
 
