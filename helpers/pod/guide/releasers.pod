@@ -66,7 +66,7 @@ To finish you release,
 
 Your devel will be update with the version. All of this will be merged into the "master". The version tag will be apply to the master branch and sent.
 
-=item miscellaneous
+=head1 miscellaneous
 
 They is more in release.
 
