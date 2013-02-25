@@ -87,7 +87,12 @@ git config "redmine.review.$TASK.project" "$PROJECT"
 redmine_set_status $TASK $REDMINE_REVIEW_IN_PROGRESS $REDMINE_USER_ID
 
 set +e
-git diff --color origin/devel | less -R
+if /usr/local/share/Git-Redmine-Suite/helpers/ask_question --question="Do you want to rebase before review ?"
+then
+    git rebase origin/devel && (git diff --color origin/devel | less -R)
+else
+    git diff --color origin/devel | less -R
+fi
 
 cat <<__EOF__
 
