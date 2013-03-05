@@ -11,12 +11,22 @@ set -e
 
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-checkconf
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-tasks
+source /usr/local/share/Git-Redmine-Suite/helpers/redmine-question
 
 echo "The status of your local tasks : "
 for TASK in $(redmine_get_all_local_tasks)
 do
     echo -n "    "
-    /usr/local/share/Git-Redmine-Suite/helpers/redmine-get-title --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL" --id="$TASK" --with-status
+    T=$(/usr/local/share/Git-Redmine-Suite/helpers/redmine-get-title --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL" --id="$TASK" --with-status)
+	echo "$T"
+    if echo "$T" | grep -q ", released with"
+    then
+    	if are_you_sure "This task has been released, clear it ?"
+    	then
+    		git redmine task clear $TASK
+    		echo ""
+    	fi
+    fi
 done
 echo ""
 
