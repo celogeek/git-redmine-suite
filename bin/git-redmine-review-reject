@@ -34,7 +34,7 @@ TASK_TITLE=$(git config "redmine.review.$TASK.title")
 BRNAME=$(git config "redmine.review.$TASK.branch")
 PR=$(git config "redmine.review.$TASK.pr")
 
-are_you_sure "Rejecting the review of task #$TASK - PR:$PR - $TASK_TITLE ?"
+are_you_sure "Rejecting the review of #$TASK_TITLE - PR:$PR ?"
 
 git fetch -ap
 git fetch --tags -p

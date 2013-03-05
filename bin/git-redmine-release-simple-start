@@ -79,8 +79,13 @@ then
     V=$(/usr/local/share/Git-Redmine-Suite/helpers/next_version --version=$(((git tag | grep ^v) || echo "v0.00") | /usr/bin/perl -pe 's/^v//' | sort -n | tail -n1))
 fi
 
-echo "Start release v$V..."
-are_you_sure
+Q="Start release v$V"
+if [ "x$GIT_REDMINE_CHAIN_RELEASE_START" == "x1" ]
+then
+    echo "$Q ..."
+else
+    are_you_sure "$Q ?"
+fi
 
 BRNAME="redmine-release-v$V"
 
@@ -140,5 +145,5 @@ __EOF__
 
 if are_you_sure "Do you want to finish the release now ?"
 then
-    git redmine release simple finish
+    GIT_REDMINE_CHAIN_RELEASE_FINISH=1 exec git redmine release simple finish
 fi

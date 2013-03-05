@@ -16,6 +16,7 @@ set -e
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-checkconf
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-statuses
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-tasks
+source /usr/local/share/Git-Redmine-Suite/helpers/redmine-question
 
 TASK="$1"
 
@@ -33,7 +34,7 @@ Failed to take control of the task. Please ask to the owner to assign this task 
 Take care, that doesn't mean you have start the task !
 "
 
-if /usr/local/share/Git-Redmine-Suite/helpers/ask_question --question="Do you want to start the task ?"
+if are_you_sure "Do you want to start the task ?"
 then
     exec git redmine task start "$TASK"
 fi
