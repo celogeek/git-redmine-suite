@@ -46,7 +46,7 @@ V=$(git config redmine.release.simple.version)
 BRNAME=$(git config redmine.release.simple.branch)
 
 Q="Finish release v$V"
-if [ "x$GIT_REDMINE_CHAIN_RELEASE_FINISH" == "1" ]
+if [ "x$GIT_REDMINE_CHAIN_RELEASE_FINISH" == "x1" ]
 then
     echo "$Q ..."
 else

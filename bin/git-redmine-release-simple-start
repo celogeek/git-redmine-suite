@@ -80,7 +80,7 @@ then
 fi
 
 Q="Start release v$V"
-if [ "x$GIT_REDMINE_CHAIN_RELEASE_START" == "1" ]
+if [ "x$GIT_REDMINE_CHAIN_RELEASE_START" == "x1" ]
 then
     echo "$Q ..."
 else

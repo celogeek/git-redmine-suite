@@ -73,8 +73,8 @@ SLUG_TITLE=$(/usr/local/share/Git-Redmine-Suite/helpers/slug --this "$TASK_TITLE
 BRNAME="redmine-review-$SLUG_TITLE"
 PROJECT=$(redmine_get_project $TASK)
 
-Q="Starting the review of task #$TASK - PR:$PR - $TASK_TITLE"
-if [ "x$GIT_REDMINE_CHAIN_REVIEW_START" == "1" ]
+Q="Starting the review of $TASK_TITLE - PR:$PR"
+if [ "x$GIT_REDMINE_CHAIN_REVIEW_START" == "x1" ]
 then
     echo "$Q ..."
 else
