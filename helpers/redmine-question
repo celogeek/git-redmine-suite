@@ -1,5 +1,9 @@
 #!/bin/bash
 function are_you_sure
 {
-    /usr/local/share/Git-Redmine-Suite/helpers/ask_question --question="Are you sure ?"
+	QUESTION='Are you sure ?'
+	[ "x$1" == "x" ] || QUESTION=$1
+    /usr/local/share/Git-Redmine-Suite/helpers/ask_question --question="
+    $QUESTION
+    "
 }
