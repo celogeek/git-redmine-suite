@@ -32,7 +32,7 @@ set -e
 TASK_TITLE=$(git config "redmine.review.$TASK.title")
 BRNAME=$(git config "redmine.review.$TASK.branch")
 
-are_you_sure "Aborting the review of task #$TASK - PR:$PR - $TASK_TITLE ?"
+are_you_sure "Aborting the review of #$TASK_TITLE - PR:$PR ?"
 
 git checkout devel
 git branch -D "$BRNAME"
