@@ -145,5 +145,5 @@ __EOF__
 
 if are_you_sure "Do you want to finish the release now ?"
 then
-    GIT_REDMINE_CHAIN_RELEASE_FINISH=1 git redmine release simple finish
+    GIT_REDMINE_CHAIN_RELEASE_FINISH=1 exec git redmine release simple finish
 fi

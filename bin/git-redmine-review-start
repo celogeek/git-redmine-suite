@@ -130,5 +130,5 @@ __EOF__
 
 if are_you_sure "Do you want to finish the review now ?"
 then
-    GIT_REDMINE_CHAIN_REVIEW_FINISH=1 git redmine review finish
+    GIT_REDMINE_CHAIN_REVIEW_FINISH=1 exec git redmine review finish
 fi
