@@ -35,6 +35,7 @@ source /usr/local/share/Git-Redmine-Suite/helpers/redmine-title
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-project
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-review
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-tasks
+source /usr/local/share/Git-Redmine-Suite/helpers/redmine-question
 
 TASK="$1"
 PR="$2"
@@ -122,3 +123,8 @@ And don't forget to run your tests before !
 
 __EOF__
 
+echo "Do you want to finish the review now ?"
+if are_you_sure
+then
+    git redmine review finish
+fi

@@ -140,3 +140,8 @@ git redmine release simple abort
 
 __EOF__
 
+echo "Do you want to finish the release now ?"
+if are_you_sure
+then
+    git redmine release simple finish
+fi
