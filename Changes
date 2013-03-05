@@ -1,5 +1,13 @@
     * Feature #42 : If I'm the reviewer or releaser chain (Celogeek San)
 
+0.13
+
+    * Change Git repos, to git proto
+
+0.12
+
+    * Add rebase before review
+
 0.11  2013-02-24 15:48:14 GMT
 
     * Bug #34 : Fix sort files for help (Celogeek San)
