@@ -35,6 +35,5 @@ then
     help
 fi
 
-echo "Set deps for task $TASK to $DEPS"
-are_you_sure
+are_you_sure "Set deps for task $TASK to $DEPS ?"
 git config redmine.task.${TASK}.depends "$DEPS"
