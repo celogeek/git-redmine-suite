@@ -98,3 +98,12 @@ $(cat "$F")
 "
 echo ""
 unlink "$F"
+
+if [ "x$TASK_FINISH_USER_ID" == "x$REDMINE_USER_ID" ]
+then
+	echo "You are the reviewer of this task. Do you want to review now ?"
+	if are_you_sure
+	then
+		git redmine review start $TASK $TAG
+	fi
+fi

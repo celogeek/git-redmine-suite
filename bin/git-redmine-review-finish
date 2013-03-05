@@ -86,3 +86,11 @@ do
     git tag -d "$tag"
 done
 
+if [ "x$REVIEW_FINISH_USER_ID" == "x$REDMINE_USER_ID" ]
+then
+	echo "You are the releaser of this task. Do you want to release now ?"
+	if are_you_sure
+	then
+		git redmine release simple start $TASK
+	fi
+fi
