@@ -50,7 +50,7 @@ fi
 set -e
 
 Q="Finishing the review of $TASK_TITLE - PR:$PR"
-if [ "x$GIT_REDMINE_CHAIN_REVIEW_FINISH" == "x1" ]
+if [ "x$GIT_REDMINE_CHAIN_REVIEW_FINISH" == "x1" ]
 then
     echo "$Q ..."
 else
