@@ -49,7 +49,13 @@ then
 fi
 set -e
 
-are_you_sure "Finishing the review of task #$TASK - PR:$PR - $TASK_TITLE ?"
+Q="Finishing the review of task #$TASK - PR:$PR - $TASK_TITLE"
+if [ "x$GIT_REDMINE_CHAIN_REVIEW_FINISH" == "1" ]
+then
+    echo "$Q ..."
+else
+    are_you_sure "$Q ?"
+fi
 
 git fetch -ap
 git fetch --tags -p
@@ -86,6 +92,6 @@ if [ "x$REVIEW_FINISH_USER_ID" == "x$REDMINE_USER_ID" ]
 then
 	if are_you_sure "You are the releaser of this task. Do you want to release now ?"
 	then
-		git redmine release simple start $TASK
+		GIT_REDMINE_CHAIN_RELEASE_START=1 git redmine release simple start $TASK
 	fi
 fi

@@ -45,7 +45,13 @@ done
 V=$(git config redmine.release.simple.version)
 BRNAME=$(git config redmine.release.simple.branch)
 
-are_you_sure "Finish release v$V ?"
+Q="Finish release v$V"
+if [ "x$GIT_REDMINE_CHAIN_RELEASE_FINISH" == "1" ]
+then
+    echo "$Q ..."
+else
+    are_you_sure "$Q ?"
+fi
 
 git fetch -ap
 git fetch --tags -p

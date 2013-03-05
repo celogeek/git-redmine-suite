@@ -14,7 +14,7 @@ function help {
         echo ""
         echo "    $CURRENT_GIT_COMMAND $TASK $PR"
         echo ""
-        if /usr/local/share/Git-Redmine-Suite/helpers/ask_question --question "Do you want to start that ?"
+        if are_you_sure "Do you want to start that ?"
         then
             exec $CURRENT_GIT_COMMAND $TASK $PR
         fi
@@ -73,8 +73,13 @@ SLUG_TITLE=$(/usr/local/share/Git-Redmine-Suite/helpers/slug --this "$TASK_TITLE
 BRNAME="redmine-review-$SLUG_TITLE"
 PROJECT=$(redmine_get_project $TASK)
 
-echo "Starting the review of task #$TASK - PR:$PR ..."
-echo "    * $TASK_TITLE"
+Q="Starting the review of task #$TASK - PR:$PR - $TASK_TITLE"
+if [ "x$GIT_REDMINE_CHAIN_REVIEW_START" == "1" ]
+then
+    echo "$Q ..."
+else
+    are_you_sure "$Q ?"
+fi
 
 git fetch -ap
 git fetch --tags -p
@@ -88,7 +93,7 @@ git config "redmine.review.$TASK.project" "$PROJECT"
 redmine_set_status $TASK $REDMINE_REVIEW_IN_PROGRESS $REDMINE_USER_ID
 
 set +e
-if /usr/local/share/Git-Redmine-Suite/helpers/ask_question --question="Do you want to rebase before review ?"
+if are_you_sure "Do you want to rebase before review ?"
 then
     git rebase origin/devel && (git diff --color origin/devel | less -R)
 else
@@ -125,5 +130,5 @@ __EOF__
 
 if are_you_sure "Do you want to finish the review now ?"
 then
-    git redmine review finish
+    GIT_REDMINE_CHAIN_REVIEW_FINISH=1 git redmine review finish
 fi
