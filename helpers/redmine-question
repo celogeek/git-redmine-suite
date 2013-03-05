@@ -3,7 +3,5 @@ function are_you_sure
 {
 	QUESTION='Are you sure ?'
 	[ "x$1" == "x" ] || QUESTION=$1
-    /usr/local/share/Git-Redmine-Suite/helpers/ask_question --question="
-    $QUESTION
-    "
+    /usr/local/share/Git-Redmine-Suite/helpers/ask_question --question="$QUESTION"
 }
