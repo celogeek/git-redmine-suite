@@ -45,8 +45,7 @@ done
 V=$(git config redmine.release.simple.version)
 BRNAME=$(git config redmine.release.simple.branch)
 
-echo "Finish release v$V ..."
-are_you_sure
+are_you_sure "Finish release v$V ?"
 
 git fetch -ap
 git fetch --tags -p

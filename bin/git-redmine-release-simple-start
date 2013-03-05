@@ -80,9 +80,7 @@ then
 fi
 
 echo "Start release v$V..."
-echo ""
 are_you_sure
-echo ""
 
 BRNAME="redmine-release-v$V"
 
@@ -140,8 +138,7 @@ git redmine release simple abort
 
 __EOF__
 
-echo "Do you want to finish the release now ?"
-if are_you_sure
+if are_you_sure "Do you want to finish the release now ?"
 then
     git redmine release simple finish
 fi

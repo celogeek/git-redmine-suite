@@ -34,10 +34,7 @@ set -e
 redmine_check_task "$TASK" "$REDMINE_TASK_IN_PROGRESS"
 
 TASK_TITLE=$(git config redmine.task.$TASK.title)
-echo "You are about to finish the task $TASK: $TASK_TITLE
-"
-are_you_sure
-echo ""
+are_you_sure "Do you really want to finish the task $TASK - $TASK_TITLE ?"
 
 BRNAME=$(git config redmine.task.$TASK.branch)
 PROJECT=$(git config redmine.task.$TASK.project)
@@ -100,8 +97,7 @@ unlink "$F"
 
 if [ "x$TASK_FINISH_USER_ID" == "x$REDMINE_USER_ID" ]
 then
-	echo "You are the reviewer of this task. Do you want to review now ?"
-	if are_you_sure
+	if are_you_sure "You are the reviewer of this task. Do you want to review now ?"
 	then
 		git redmine review start $TASK $TAG
 	fi

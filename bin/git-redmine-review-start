@@ -123,8 +123,7 @@ And don't forget to run your tests before !
 
 __EOF__
 
-echo "Do you want to finish the review now ?"
-if are_you_sure
+if are_you_sure "Do you want to finish the review now ?"
 then
     git redmine review finish
 fi
