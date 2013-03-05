@@ -78,7 +78,6 @@ then
 fi
 
 F=$(mktemp /tmp/redmine.XXXXXX)
-echo "#Put your redmine message here" > "$F"
 vim "$F"
 
 redmine_set_status $TASK $REDMINE_REVIEW_TODO $TASK_FINISH_USER_ID "

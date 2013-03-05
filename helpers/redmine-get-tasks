@@ -91,7 +91,8 @@ for my $issue(@$content) {
     my $parent_id = $issue->{parent} ? $issue->{parent}->{id} : 0;
     $parent{$parent_id} //= [];
     push @{$parent{$parent_id}}, $task_id;
-    $tasks{$task_id} = sprintf("%s (#%d), updated %s", $issue->{subject}, $issue->{id}, $duration_str);
+    my $title =join("", encode('UTF8', $issue->{tracker}->{name}), " # ", $task_id, " : ", encode('UTF8', $issue->{subject}));
+    $tasks{$task_id} = sprintf("%s, updated %s", $title, $duration_str);
 }
 
 if ($opt->ids_only) {
@@ -128,8 +129,8 @@ sub display_tree {
         if ($p{parent}{$task_id}) {
             display_tree(%p, level => $p{level} + 1, parent_id => $task_id);
         }
-        say "" if !$p{level};
     }
 }
 
 display_tree(parent => \%parent, tasks => \%tasks, level => 0, parent_id => 0);
+say "";
