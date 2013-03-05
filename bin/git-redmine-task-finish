@@ -34,7 +34,7 @@ set -e
 redmine_check_task "$TASK" "$REDMINE_TASK_IN_PROGRESS"
 
 TASK_TITLE=$(git config redmine.task.$TASK.title)
-are_you_sure "Do you really want to finish the task $TASK - $TASK_TITLE ?"
+are_you_sure "Do you really want to finish $TASK_TITLE ?"
 
 BRNAME=$(git config redmine.task.$TASK.branch)
 PROJECT=$(git config redmine.task.$TASK.project)
