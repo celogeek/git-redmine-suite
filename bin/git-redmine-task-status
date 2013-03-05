@@ -24,6 +24,7 @@ do
     	if are_you_sure "This task has been released, clear it ?"
     	then
     		git redmine task clear $TASK
+    		echo ""
     	fi
     fi
 done
