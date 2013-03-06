@@ -1,5 +1,4 @@
 #!/bin/bash
-OLDPWD=$PWD
 cd "$(dirname "$0")"
 [ "x$SKIP_CPANM" == "x" ] && sudo HOME=/tmp PERL_CPANM_OPT="" ./cpanm -nv Redmine::API Moo MooX::Options LWP::Protocol::https Version::Next Encode DateTime Term::ReadLine
 sudo rm -rf /usr/local/share/Git-Redmine-Suite usr/local/bin/git-redmine /usr/local/bin/git-redmine-*
@@ -21,9 +20,8 @@ sudo chown -R 0:0 /usr/local/share/Git-Redmine-Suite/ /usr/local/bin/git-redmine
 sudo chmod -R 755 /usr/local/share/Git-Redmine-Suite/ /usr/local/bin/git-redmine /usr/local/bin/git-redmine-*
 sudo chmod u+s,g+s /usr/local/bin/git-redmine-self-upgrade*
 
-if [ "x$1" == "xgit" ]
+if [ "x$CURPWD" != "x" ] && [ "x$1" == "xgit" ]
 then
-	set -x
-	cd "$OLDPWD"
+	cd "$CURPWD"
 	exec $*
 fi
