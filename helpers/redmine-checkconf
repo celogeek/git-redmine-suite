@@ -7,6 +7,14 @@ if [ ! -f "$UPDATE_CHECK_FILE" ]
 then
     touch "$UPDATE_CHECK_FILE"
     echo "Checking update ..."
+    MASTER_VERSION=$(curl -s https://gitorious.celogeek.com/git/redmine-suite/blobs/raw/master/VERSION)
+    CURRENT_VERSION=$(cat /usr/local/share/Git-Redmine-Suite/VERSION)
+    if [ "x$MASTER_VERSION" != "x" ] && [ "x$MASTER_VERSION" != "x$CURRENT_VERSION" ]
+    then
+        echo "Updating ..."
+        echo ""
+        exec git redmine self-upgrade $0 $*
+    fi
 fi
 
 set -e
