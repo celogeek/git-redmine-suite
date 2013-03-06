@@ -20,6 +20,8 @@ sudo chown -R 0:0 /usr/local/share/Git-Redmine-Suite/ /usr/local/bin/git-redmine
 sudo chmod -R 755 /usr/local/share/Git-Redmine-Suite/ /usr/local/bin/git-redmine /usr/local/bin/git-redmine-*
 sudo chmod u+s,g+s /usr/local/bin/git-redmine-self-upgrade*
 
+echo ""
+echo $*
 if [ "x$1" == "xgit" ]
 then
 	exec $*
