@@ -1,0 +1,9 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use DateTime;
+use feature "say";
+
+my $dt = DateTime->now;
+
+say "/tmp/redmine.check_update." . $dt->ymd('');
