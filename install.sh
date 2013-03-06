@@ -22,6 +22,11 @@ sudo chmod u+s,g+s /usr/local/bin/git-redmine-self-upgrade*
 
 if [ "x$CURPWD" != "x" ] && [ "x$1" == "xgit" ]
 then
+	echo ""
+	echo "Move to $CURPWD"
 	cd "$CURPWD"
+	echo ""
+	echo "Run : $*"
+	echo ""
 	exec $*
 fi
