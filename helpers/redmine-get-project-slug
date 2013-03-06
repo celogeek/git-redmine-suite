@@ -4,25 +4,26 @@ use strict;
 use warnings;
 use Encode;
 {
+
     package MyOpts;
     use Moo;
     use MooX::Options;
     option 'auth_key' => (
-        is => 'ro',
-        format => 's',
+        is       => 'ro',
+        format   => 's',
         required => 1,
-        doc => 'your auth key',
+        doc      => 'your auth key',
     );
     option 'server_url' => (
-        is => 'ro',
-        format => 's',
+        is       => 'ro',
+        format   => 's',
         required => 1,
-        doc => 'the redmine url of the server',
+        doc      => 'the redmine url of the server',
     );
     option 'trace' => (
-        is => 'ro',
-        default => sub { 0 },
-        doc => 'debug mode',
+        is      => 'ro',
+        default => sub {0},
+        doc     => 'debug mode',
     );
     1;
 };
@@ -33,13 +34,33 @@ use Redmine::API;
 my $r = Redmine::API->new(
     'auth_key' => $opt->auth_key,
     'base_url' => $opt->server_url,
-    'trace' => $opt->trace,
+    'trace'    => $opt->trace,
 );
 
-my $resp = $r->projects->list->all(limit => 1000);
-my $content = $resp->content->{projects};
-say "List of all project and slugs : ";
-for my $project(sort { $a->{identifier} cmp $b->{identifier} } @$content) {
-    $project->{name} = encode('UTF8', $project->{name});
-    say sprintf("    %-40s ( %s )", @$project{qw/identifier name/});
+print "List of all project and slugs ";
+my $offset = 0;
+my $total_count;
+my @projects;
+my $loop = 0;
+$|=1;
+for ( ;; ) {
+    my $resp = $r->projects->list->all( offset => $offset);
+
+    my $content = $resp->content;
+    $total_count //= $content->{total_count};
+
+    push @projects, @{ $content->{projects} };
+
+    $offset += $content->{limit};
+    last unless $offset < $total_count;
+    $loop = 1;
+    print ".";
+}
+print " " if $loop;
+say ": 
+";
+
+for my $project ( sort { $a->{identifier} cmp $b->{identifier} } @projects ) {
+    $project->{name} = encode( 'UTF8', $project->{name} );
+    say sprintf( "    %-40s ( %s )", @$project{qw/identifier name/} );
 }
