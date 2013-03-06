@@ -1,5 +1,16 @@
 #!/bin/bash
 
+set +e
+
+UPDATE_CHECK_FILE=$(/usr/local/share/Git-Redmine-Suite/helpers/check_update_file)
+if [ ! -f "$UPDATE_CHECK_FILE" ]
+then
+    touch "$UPDATE_CHECK_FILE"
+    echo "Checking update ..."
+fi
+
+set -e
+
 GIT_DIR=$(git rev-parse --git-dir)
 
 cd "$(dirname "$GIT_DIR")"
