@@ -23,6 +23,7 @@ sudo chmod u+s,g+s /usr/local/bin/git-redmine-self-upgrade*
 
 if [ "x$1" == "xgit" ]
 then
+	set -x
 	cd "$OLDPWD"
 	exec $*
 fi
