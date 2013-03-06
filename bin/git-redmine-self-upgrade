@@ -16,4 +16,4 @@ rm -rf redmine-suite
 git clone git://gitorious.celogeek.com/git/redmine-suite.git
 cd redmine-suite
 git checkout master
-exec CURPWD=$CURPWD ./install.sh $*
+CURPWD=$CURPWD exec ./install.sh $*
