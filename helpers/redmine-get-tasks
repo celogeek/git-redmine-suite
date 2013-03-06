@@ -6,131 +6,170 @@ use Encode;
 use DateTime;
 use Date::Parse;
 
-my $TRIANGLE = Encode::encode('utf8', "\x{25B8}");
+my $TRIANGLE = Encode::encode( 'utf8', "\x{25B8}" );
 
 {
+
     package MyOpts;
     use Moo;
     use MooX::Options;
     option 'project' => (
-        is => 'ro',
-        format => 's',
+        is       => 'ro',
+        format   => 's',
         required => 1,
-        doc => 'the id or slug of the project to check',
+        doc      => 'the id or slug of the project to check',
     );
     option 'status_id' => (
-        is => 'ro',
-        format => 'i',
+        is       => 'ro',
+        format   => 'i',
         required => 1,
-        doc => 'status id of the review todo',
+        doc      => 'status id of the review todo',
     );
     option 'assigned_to_id' => (
-        is => 'ro',
-        format => 'i',
+        is       => 'ro',
+        format   => 'i',
         required => 1,
-        doc => 'assigned_to id of the review todo',
+        doc      => 'assigned_to id of the review todo',
     );
     option 'auth_key' => (
-        is => 'ro',
-        format => 's',
+        is       => 'ro',
+        format   => 's',
         required => 1,
-        doc => 'your auth key',
+        doc      => 'your auth key',
     );
     option 'server_url' => (
-        is => 'ro',
-        format => 's',
+        is       => 'ro',
+        format   => 's',
         required => 1,
-        doc => 'the redmine url of the server',
+        doc      => 'the redmine url of the server',
     );
     option 'trace' => (
-        is => 'ro',
-        default => sub { 0 },
-        doc => 'debug mode',
+        is      => 'ro',
+        default => sub {0},
+        doc     => 'debug mode',
     );
     option 'ids_only' => (
-        is => 'ro',
+        is  => 'ro',
         doc => 'only show the list of ids',
     );
     1;
 };
 
-my $opt = MyOpts->new_with_options;
+my $opt     = MyOpts->new_with_options;
 my $project = $opt->project;
 
 use Redmine::API;
 my $r = Redmine::API->new(
     'auth_key' => $opt->auth_key,
     'base_url' => $opt->server_url . '/projects/' . $project,
-    'trace' => $opt->trace,
+    'trace'    => $opt->trace,
 );
 
-my $status_id = $opt->status_id;
+my $status_id      = $opt->status_id;
 my $assigned_to_id = $opt->assigned_to_id;
 my %tasks;
 my %parent;
 
-my $resp = $r->issues->list->all(status_id => $status_id, assigned_to_id => $assigned_to_id, limit => 1000);
-my $content = $resp->content->{issues};
-my $now = DateTime->now;
-for my $issue(@$content) {
-    my $duration_str = '???';
-    eval {
-        my $updated_on_str = $issue->{updated_on};
-        my $updated_on_time = str2time($updated_on_str);
-        my $updated_on = DateTime->from_epoch(epoch => $updated_on_time);
-        my %duration = ($now - $updated_on)->deltas;
-        if ($duration{month}) {
-            $duration_str = sprintf('%d months and %d days ago', $duration{month}, $duration{days});
-        } elsif($duration{days}) {
-            $duration_str = sprintf('%d days ago', $duration{days});
-        } else {
-            $duration_str = 'today';
-        }
-    };
-    my $task_id = $issue->{id};
-    my $parent_id = $issue->{parent} ? $issue->{parent}->{id} : 0;
-    $parent{$parent_id} //= [];
-    push @{$parent{$parent_id}}, $task_id;
-    my $title =join("", encode('UTF8', $issue->{tracker}->{name}), " # ", $task_id, " : ", encode('UTF8', $issue->{subject}));
-    $tasks{$task_id} = sprintf("%s, updated %s", $title, $duration_str);
-}
+my $offset = 0;
+my $total_count;
+my $loop=0;
 
-if ($opt->ids_only) {
-    say join(" ", sort { $a <=> $b } keys %tasks);
+#loop until we have no more data
+$|=1;
+for ( ;; ) {
+    my $resp = $r->issues->list->all(
+        status_id      => $status_id,
+        assigned_to_id => $assigned_to_id,
+        offset         => $offset,
+    );
+    my $content = $resp->content;
+    $total_count //= $content->{total_count};
+    last unless $total_count;
+
+    my $issues = $content->{issues};
+    my $now    = DateTime->now;
+    for my $issue (@$issues) {
+        my $duration_str = '???';
+        eval {
+            my $updated_on_str  = $issue->{updated_on};
+            my $updated_on_time = str2time($updated_on_str);
+            my $updated_on
+                = DateTime->from_epoch( epoch => $updated_on_time );
+            my %duration = ( $now - $updated_on )->deltas;
+            if ( $duration{month} ) {
+                $duration_str = sprintf( '%d months and %d days ago',
+                    $duration{month}, $duration{days} );
+            }
+            elsif ( $duration{days} ) {
+                $duration_str = sprintf( '%d days ago', $duration{days} );
+            }
+            else {
+                $duration_str = 'today';
+            }
+        };
+        my $task_id = $issue->{id};
+        my $parent_id = $issue->{parent} ? $issue->{parent}->{id} : 0;
+        $parent{$parent_id} //= [];
+        push @{ $parent{$parent_id} }, $task_id;
+        my $title = join( "",
+            encode( 'UTF8', $issue->{tracker}->{name} ),
+            " # ", $task_id, " : ", encode( 'UTF8', $issue->{subject} ) );
+        $tasks{$task_id} = sprintf( "%s, updated %s", $title, $duration_str );
+    }
+    $offset += $content->{limit};
+    last unless $offset < $total_count;
+    $loop=1;
+    print ".";
+}
+say "
+" if $loop;
+
+if ( $opt->ids_only ) {
+    say join( " ", sort { $a <=> $b } keys %tasks );
     exit 0;
 }
 
 $r = Redmine::API->new(
     'auth_key' => $opt->auth_key,
     'base_url' => $opt->server_url,
-    'trace' => $opt->trace,
+    'trace'    => $opt->trace,
 );
 
 my $redoit = 1;
-while($redoit) {
+while ($redoit) {
     $redoit = 0;
-    for my $parent_id (keys %parent) {
+    for my $parent_id ( keys %parent ) {
         next if !$parent_id || exists $tasks{$parent_id};
         $redoit = 1;
-        $resp = $r->issues->issue->get($parent_id);
+        my $resp  = $r->issues->issue->get($parent_id);
         my $issue = $resp->content->{issue};
         $tasks{$parent_id} = $issue->{subject};
-        my $parent_parent_id = $issue->{parent} ? $issue->{parent}->{id} : 0;
+        my $parent_parent_id
+            = $issue->{parent} ? $issue->{parent}->{id} : 0;
         $parent{$parent_parent_id} //= [];
-        push @{$parent{$parent_parent_id}}, $parent_id + 0;
+        push @{ $parent{$parent_parent_id} }, $parent_id + 0;
     }
 }
 
 sub display_tree {
     my %p = @_;
-    my $tab = "  " x ($p{level});
-    for my $task_id(@{$p{parent}{$p{parent_id}}}) {
-        say "  " . $tab. $TRIANGLE . " " . $p{tasks}{$task_id};
-        if ($p{parent}{$task_id}) {
-            display_tree(%p, level => $p{level} + 1, parent_id => $task_id);
+    my $tab = "  " x ( $p{level} );
+    for my $task_id ( @{ $p{parent}{ $p{parent_id} } } ) {
+        say "  " . $tab . $TRIANGLE . " " . $p{tasks}{$task_id};
+        if ( $p{parent}{$task_id} ) {
+            display_tree(
+                %p,
+                level     => $p{level} + 1,
+                parent_id => $task_id
+            );
         }
     }
 }
 
-display_tree(parent => \%parent, tasks => \%tasks, level => 0, parent_id => 0);
+display_tree(
+    parent    => \%parent,
+    tasks     => \%tasks,
+    level     => 0,
+    parent_id => 0
+);
 say "";
