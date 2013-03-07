@@ -11,9 +11,20 @@ then
     CURRENT_VERSION=$(cat /usr/local/share/Git-Redmine-Suite/VERSION)
     if [ "x$MASTER_VERSION" != "x" ] && [ "x$MASTER_VERSION" != "x$CURRENT_VERSION" ]
     then
-        echo "Updating ..."
+        echo "A new version is available : $MASTER_VERSION ( Yours: $CURRENT_VERSION )"
         echo ""
-        exec git redmine self-upgrade $0 $*
+        echo "The changes is : "
+        /usr/local/share/Git-Redmine-Suite/helpers/get_changes --from_version="$CURRENT_VERSION"
+        echo ""
+        if /usr/local/share/Git-Redmine-Suite/helpers/ask_question --question="Do you want to upgrade ?"
+        then
+            echo "Updating ..."
+            echo ""
+            exec git redmine self-upgrade $0 $*
+        else
+            echo "I will ask you to upgrade tomorrow ..."
+            echo ""
+        fi
     fi
 fi
 
