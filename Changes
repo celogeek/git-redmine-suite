@@ -1,3 +1,5 @@
+    * Bug #61 : Sort tasks by dependencies, then dates (Celogeek San)
+
 0.26  2013-03-07 21:57:03 GMT
 
     * Bug #62 : Unclear which task has been released. (Celogeek San)
