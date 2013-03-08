@@ -83,7 +83,9 @@ if ($opt->with_status) {
     } else {
         $release_or_update_str = ', updated ' . $duration_str;
     }
-    say "(",$status,") - ", $title, $release_or_update_str;
+
+    my $assigned_to = encode('UTF8', $issue->{assigned_to}->{name});
+    say "(",$status,") - ", $title, $release_or_update_str, ", assigned to ", $assigned_to;
 } else {
     say $title;
 }

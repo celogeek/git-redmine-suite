@@ -10,10 +10,6 @@ function redmine_set_status
     else
         /usr/local/share/Git-Redmine-Suite/helpers/redmine-set-status-id --id="$1" --status_id="$2" --assigned_to_id="$3" --notes="$4" --progress="$PROGRESS" --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL" 2> /dev/null
     fi
-    if [ $? -ne 0 ]
-    then
-        echo "Can't change the redmine status of task $1 with value $2 and assigned_to id $3 ..."
-        exit 1
-    fi
+    /usr/local/share/Git-Redmine-Suite/helpers/redmine-check-task --id="$1" --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL" --status_ids="$2" --assigned_to="$3" --message "DEFAULT" 2> /dev/null
 }
 
