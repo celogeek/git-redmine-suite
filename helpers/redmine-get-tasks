@@ -173,7 +173,7 @@ while ($redoit) {
 sub display_tree {
     my %p = @_;
     my $tab = "  " x ( $p{level} );
-    for my $task_id ( sort { ($s_updated_on{$a}//0) <=> ($s_updated_on{$b}//0) } @{ $p{parent}{ $p{parent_id} } } ) {
+    for my $task_id ( sort { ($s_updated_on{$a}//0) <=> ($s_updated_on{$b}//0) } @{ $p{parent}{ $p{parent_id} } // [] } ) {
         say "  " . $tab . $TRIANGLE . " " . $p{tasks}{$task_id};
         if ( $p{parent}{$task_id} ) {
             display_tree(

@@ -1,3 +1,7 @@
+0.28  2013-03-08 00:57:32 GMT
+
+    * Bug #66 : Empty task list error (Celogeek San)
+
 0.27  2013-03-08 00:48:40 GMT
 
     * Bug #61 : Sort tasks by dependencies, then dates (Celogeek San)
