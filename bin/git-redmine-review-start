@@ -8,6 +8,9 @@ function help {
     then
         echo "$CURRENT_GIT_COMMAND TASK_NUMBER PULL_REQUEST"
     else
+        echo -n "Starting the review : "
+        redmine_get_title_with_status $TASK
+        echo ""
         echo "This PR has been found in the task : $PR"
         echo ""
         echo "If it is ok, start the review with :"
@@ -16,7 +19,7 @@ function help {
         echo ""
         if are_you_sure "Do you want to start that ?"
         then
-            exec $CURRENT_GIT_COMMAND $TASK $PR
+            GIT_REDMINE_CHAIN_REVIEW_START=1 exec $CURRENT_GIT_COMMAND $TASK $PR
         fi
     fi
     exit 1
@@ -66,20 +69,22 @@ __EOF__
     exit 1
 fi
 
-redmine_check_task "$TASK" "$REDMINE_REVIEW_TODO,$REDMINE_REVIEW_IN_PROGRESS"
+echo -n "Starting the review : "
+redmine_get_title_with_status $TASK
+echo "PR:$PR"
+if [ "x$GIT_REDMINE_CHAIN_REVIEW_START" == "x" ]
+then
+    are_you_sure "Do you really want to start this review ?"
+fi
+
+echo ""
+echo "Updating redmine status ..."
+redmine_set_status $TASK $REDMINE_REVIEW_IN_PROGRESS $REDMINE_USER_ID
 
 TASK_TITLE=$(redmine_get_title $TASK)
 SLUG_TITLE=$(/usr/local/share/Git-Redmine-Suite/helpers/slug --this "$TASK_TITLE")
 BRNAME="redmine-review-$SLUG_TITLE"
 PROJECT=$(redmine_get_project $TASK)
-
-Q="Starting the review of $TASK_TITLE - PR:$PR"
-if [ "x$GIT_REDMINE_CHAIN_REVIEW_START" == "x1" ]
-then
-    echo "$Q ..."
-else
-    are_you_sure "$Q ?"
-fi
 
 git fetch -ap
 git fetch --tags -p
@@ -90,7 +95,6 @@ git config "redmine.review.$TASK.title" "$TASK_TITLE"
 git config "redmine.review.$TASK.branch" "$BRNAME"
 git config "redmine.review.$TASK.project" "$PROJECT"
 
-redmine_set_status $TASK $REDMINE_REVIEW_IN_PROGRESS $REDMINE_USER_ID
 
 set +e
 if are_you_sure "Do you want to rebase before review ?"
