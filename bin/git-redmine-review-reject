@@ -55,6 +55,10 @@ vim "$F"
 
 echo ""
 echo "Updating redmine status ..."
-redmine_set_status "$TASK" "$REDMINE_TASK_TODO" "${TASK_DEV[0]}" "$(cat "$F")"
+task=$TASK \
+status=$REDMINE_TASK_TODO \
+assigned_to=${TASK_DEV[0]} \
+notes="$(cat "$F")" \
+redmine_set_status
 echo ""
 unlink "$F"
