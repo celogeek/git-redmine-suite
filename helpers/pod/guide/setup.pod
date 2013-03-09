@@ -148,6 +148,16 @@ Now the task pending should appear if you have some task assigned to you :
 
  * git redmine task pending
 
+=head1 PROJECT CHECK
+
+To ensure that the custom fields is properly fetch, (if you come from an old config), you can run the project check :
+
+ * git redmine project check
+
+It will check that all conf is here, and if the custom fields setup is missing, it will run the setup again.
+
+If the project doesn't have the custom fields setup, the local project will be removed.
+
 =head1 MANAGE PROJECT
 
 You can also list and remove a project.
