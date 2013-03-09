@@ -3,6 +3,7 @@ use feature 'say';
 use strict;
 use warnings;
 use Encode;
+use List::MoreUtils qw/all/;
 {
 
     package MyOpts;
@@ -28,6 +29,16 @@ use Encode;
     1;
 };
 
+sub filter_valid_project {
+    my @projects = @_;
+    my @valid_projects;
+    for my $project(@projects) {
+        my %cf = map { ($_->{name} => $_->{id}) } @{$project->{custom_fields}};
+        push @valid_projects, $project if all { defined } @cf{qw/GIT_REPOS GIT_PR GIT_RELEASE/};
+    }
+    return @valid_projects;
+}
+
 my $opt = MyOpts->new_with_options;
 
 use Redmine::API;
@@ -37,19 +48,18 @@ my $r = Redmine::API->new(
     'trace'    => $opt->trace,
 );
 
-print "List of all project and slugs ";
+print "List of all valid projects and slugs ";
 my $offset = 0;
 my $total_count;
 my @projects;
 my $loop = 0;
 $|=1;
 for ( ;; ) {
-    my $resp = $r->projects->list->all( offset => $offset);
-
+    my $resp = $r->projects->list->all(offset => $offset, include => 'custom_fields');
     my $content = $resp->content;
     $total_count //= $content->{total_count};
 
-    push @projects, @{ $content->{projects} };
+    push @projects, filter_valid_project(@{ $content->{projects} });
 
     $offset += $content->{limit};
     last unless $offset < $total_count;

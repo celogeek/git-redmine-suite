@@ -110,6 +110,15 @@ To have the correct reviewer setup, and to be able to list the pending or curren
 
  * git redmine project setup
 
+Only the project with these custom fields could be add : GIT_REPOS, GIT_PR, GIT_RELEASE.
+The task management will use it to save meta information.
+
+ * GIT_REPOS should be a text field with "Used as a filter" and "Searchable" checked.
+ * GIT_PR should be a text.
+ * GIT_RELEASE should be a text.
+
+You can add them to "For all project". Or add them in each of the project you want to use with "git redmine suite".
+
 This command list you all the project you are members in redmine.
 
 Take the "slug" you want (between the ID and the title).
@@ -138,6 +147,16 @@ So I setup :
 Now the task pending should appear if you have some task assigned to you :
 
  * git redmine task pending
+
+=head1 PROJECT CHECK
+
+To ensure that the custom fields is properly fetch, (if you come from an old config), you can run the project check :
+
+ * git redmine project check
+
+It will check that all conf is here, and if the custom fields setup is missing, it will run the setup again.
+
+If the project doesn't have the custom fields setup, the local project will be removed.
 
 =head1 MANAGE PROJECT
 

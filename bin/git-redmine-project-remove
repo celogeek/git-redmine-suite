@@ -25,5 +25,6 @@ fi
 
 echo "Remove project $PROJECT ..."
 git config --remove-section redmine.project."$PROJECT".finish.user.id
+git config --remove-section redmine.project."$PROJECT".cf.git
 echo ""
 

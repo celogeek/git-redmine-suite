@@ -21,6 +21,15 @@ then
     exit 1
 fi
 
+redmine_get_project_cf $PROJECT
+
+if [ -z $GIT_REPOS ] || [ -z $GIT_PR ] || [ -z $GIT_RELEASE ]
+then
+	echo "Invalid project. Please be sure that the project contain the custom fields GIT_REPOS, GIT_PR, GIT_RELEASE
+"
+	exit 1
+fi
+
 TASK=$2
 REVIEW=$3
 RELEASE=$4
@@ -35,5 +44,8 @@ echo "Setup project $PROJECT with Reviewer: $TASK, Releaser: $REVIEW, Integrator
 git config redmine.project.$PROJECT.finish.user.id.task $TASK
 git config redmine.project.$PROJECT.finish.user.id.review $REVIEW
 git config redmine.project.$PROJECT.finish.user.id.release $RELEASE
+git config redmine.project.$PROJECT.cf.git.repos $GIT_REPOS
+git config redmine.project.$PROJECT.cf.git.pr $GIT_PR
+git config redmine.project.$PROJECT.cf.git.release $GIT_RELEASE
 echo ""
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 cd "$(dirname "$0")"
-[ "x$SKIP_CPANM" == "x" ] && sudo HOME=/tmp PERL_CPANM_OPT="" ./cpanm -nv Redmine::API Moo MooX::Options LWP::Protocol::https Version::Next Encode DateTime Term::ReadLine Date::Parse LWP::Curl 
+[ "x$SKIP_CPANM" == "x" ] && sudo HOME=/tmp PERL_CPANM_OPT="" ./cpanm -nv Redmine::API Moo MooX::Options LWP::Protocol::https Version::Next Encode DateTime Term::ReadLine Date::Parse LWP::Curl List::MoreUtils
 
 sudo rm -rf /usr/local/share/Git-Redmine-Suite usr/local/bin/git-redmine /usr/local/bin/git-redmine-*
 
