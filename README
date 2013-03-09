@@ -11,7 +11,7 @@ Developers should have the right to push redmine-* and pr-*.
 Reviewer should have the right to read redmine-* (and write on it), push to devel and remove the pr-*.
 Integrator should have the right to merge devel into master and create a tag 'vVERSION' on each release.
 
-To view the members of a project, you will need to apply this patch :
+You need to patch your redmine, to be able to setup project :
 
 diff --git a/app/views/projects/show.api.rsb b/app/views/projects/show.api.rsb
 index a6f26f8..f1fdfa9 100644
