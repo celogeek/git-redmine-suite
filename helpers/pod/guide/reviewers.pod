@@ -25,7 +25,7 @@ When your redmine projects are linked, you can get the list of your "pending" re
 
 All tasks and their parent are shown. Pick one of then.
 
-The latest pull request is push by the "task" job inside the task to review. The full command is present. You can copy paste it, or just the the start command. It will get the latest pull request and purpose you a start.
+The field GIT_PR need to be filled inside the task or you will not be able to start the review.
 
 =head1 Start a review
 
