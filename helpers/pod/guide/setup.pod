@@ -110,6 +110,15 @@ To have the correct reviewer setup, and to be able to list the pending or curren
 
  * git redmine project setup
 
+Only the project with these custom fields could be add : GIT_REPOS, GIT_PR, GIT_RELEASE.
+The task management will use it to save meta information.
+
+ * GIT_REPOS should be a text field with "Used as a filter" and "Searchable" checked.
+ * GIT_PR should be a text.
+ * GIT_RELEASE should be a text.
+
+You can add them to "For all project". Or add them in each of the project you want to use with "git redmine suite".
+
 This command list you all the project you are members in redmine.
 
 Take the "slug" you want (between the ID and the title).
