@@ -28,7 +28,12 @@ function redmine_set_status
 		then
 		ADD_PARAMS+=(--cf_id "$git_repos_id")
 		ADD_PARAMS+=(--cf_val "$git_repos_url")
+	elif [ ! -z "$git_pr_id" ] && [ ! -z "$git_pr_val" ]
+		then
+		ADD_PARAMS+=(--cf_id "$git_pr_id")
+		ADD_PARAMS+=(--cf_val "$git_pr_val")
 	fi
+
 
     /usr/local/share/Git-Redmine-Suite/helpers/redmine-set-status-id "${PARAMS[@]}" "${ADD_PARAMS[@]}"
     /usr/local/share/Git-Redmine-Suite/helpers/redmine-check-task "${PARAMS[@]}"
