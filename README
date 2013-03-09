@@ -11,12 +11,13 @@ Developers should have the right to push redmine-* and pr-*.
 Reviewer should have the right to read redmine-* (and write on it), push to devel and remove the pr-*.
 Integrator should have the right to merge devel into master and create a tag 'vVERSION' on each release.
 
-To view the members of a project, you will need to apply this patch :
+You need to patch your redmine, to be able to setup project :
+
 diff --git a/app/views/projects/show.api.rsb b/app/views/projects/show.api.rsb
-index a6f26f8..81b4581 100644
+index a6f26f8..f1fdfa9 100644
 --- a/app/views/projects/show.api.rsb
 +++ b/app/views/projects/show.api.rsb
-@@ -22,4 +22,10 @@ api.project do
+@@ -22,4 +22,16 @@ api.project do
        api.issue_category(:id => category.id, :name => category.name)
      end
    end if include_in_api_response?('issue_categories')
@@ -26,4 +27,10 @@ index a6f26f8..81b4581 100644
 +       api.member(:id => member.user.id, :name => member.user.name)
 +    end
 +  end if include_in_api_response?('members')
++
++  api.array :custom_fields do
++    @project.all_issue_custom_fields.each do |cf|
++       api.custom_field(:id => cf.id, :name => cf.name)
++    end
++  end if include_in_api_response?('custom_fields')
  end
