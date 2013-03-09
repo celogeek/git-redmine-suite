@@ -103,7 +103,9 @@ git config "redmine.task.$TASK.branch" "$BRNAME"
 git config "redmine.task.$TASK.project" "$PROJECT"
 git push origin -u $BRNAME || cat <<__EOF__
 The remote branch $BRNAME already exist !
-You have 2 choice. Or you take control of this branch :
+You have 2 choice. 
+
+Or you take control of this branch :
 
     git push -fu origin "$BRNAME"
 

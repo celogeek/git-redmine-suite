@@ -32,12 +32,6 @@ To start a task,
 
 The XXX is the number of the task. It will create a branch locally and remotely. Your redmine will change from "assigned" to "in progress".
 
-If the task doesn't belong to you, or haven't got the right status, you can try to take it.
-
- * git redmine task take XXX
-
-If it succeed, then try to start again. Otherwise contact the manager to assign this task to you.
-
 You can do multiple think with that.
 
 =over

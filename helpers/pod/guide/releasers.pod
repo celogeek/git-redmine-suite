@@ -38,12 +38,6 @@ To start a release with a specific version
 
 All the task has to be already reviewed, and assign to you in "release pending" status.
 
-If the task has not the right status, you can try to take it.
-
- * git redmine release simple take XXX
-
-You have to repeat the process for each tasks with the wrong status. Then try to start the release again.
-
 Some files will automatically been updated.
 
  * Changes

@@ -35,12 +35,6 @@ To start a review,
 
 The XXX is the number of the task. It will create a branch locally. Your redmine will change from "to be code reviewed" to "review in progress".
 
-If the task doesn't belong to you, or haven't got the right status, you can try to take it.
-
- * git redmine review take XXX
-
-If it succeed, then try to start again. Otherwise contact the manager to assign this task to you.
-
 You can do multiple think with that.
 
 =over
