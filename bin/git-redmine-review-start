@@ -8,8 +8,8 @@ function help {
     then
         echo "$CURRENT_GIT_COMMAND TASK_NUMBER PULL_REQUEST"
     else
-        echo -n "Starting the review : "
-        redmine_get_title_with_status $TASK
+        echo "Starting the review : "
+        extended_status=1 redmine_get_title $TASK
         echo ""
         echo "This PR has been found in the task : $PR"
         echo ""
@@ -69,9 +69,8 @@ __EOF__
     exit 1
 fi
 
-echo -n "Starting the review : "
-redmine_get_title_with_status $TASK
-echo "PR:$PR"
+echo "Starting the review : "
+extended_status=1 redmine_get_title $TASK
 if [ "x$GIT_REDMINE_CHAIN_REVIEW_START" == "x" ]
 then
     are_you_sure "Do you really want to start this review ?"
