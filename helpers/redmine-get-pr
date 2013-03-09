@@ -42,12 +42,6 @@ my $r = Redmine::API->new(
 );
 
 my $id = $opt->id;
-my $resp = $r->issues->issue->get($id, include => 'journals');
-my @journals = sort { $b->{created_on} cmp $a->{created_on} } @{$resp->content->{issue}->{journals}};
-
-for my $journal(@journals) {
-    if (defined $journal->{notes} && $journal->{notes} =~ m/git redmine review start $id (.*)$/m) {
-        say $1;
-        last;
-    }
-}
+my $resp = $r->issues->issue->get($id);
+my %cf = map { @$_{qw/name value/} } @{$resp->content->{issue}->{custom_fields}};
+say $cf{GIT_PR} // "";

@@ -110,6 +110,6 @@ if [ "x$TASK_FINISH_USER_ID" == "x$REDMINE_USER_ID" ]
 then
 	if are_you_sure "You are the reviewer of this task. Do you want to review now ?"
 	then
-		GIT_REDMINE_CHAIN_REVIEW_START=1 exec git redmine review start $TASK $TAG
+		GIT_REDMINE_CHAIN_REVIEW_START=1 exec git redmine review start $TASK
 	fi
 fi
