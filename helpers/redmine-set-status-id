@@ -51,6 +51,16 @@ use warnings;
         default => sub { 0 },
         doc => 'debug mode',
     );
+    option 'cf_id' => (
+        is => 'ro',
+        format => 'i',
+        doc => 'custom field id'
+    );
+    option 'cf_val' => (
+        is => 'ro',
+        format => 's',
+        doc => 'custom field value'
+    );
     1;
 };
 
@@ -71,6 +81,9 @@ my %update = (
 );
 $update{notes} = $opt->notes if $opt->notes;
 $update{done_ratio} = $opt->progress if $opt->progress && $opt->progress >= 0 && $opt->progress <= 100;
+if (defined $opt->cf_id && defined $opt->cf_val) {
+    $update{custom_fields} = [{id => $opt->cf_id, value => $opt->cf_val}];
+}
 
 my $resp = $r->issues->issue->update($id, %update);
 

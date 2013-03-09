@@ -45,7 +45,7 @@ use warnings;
     option 'message' => (
         is => 'ro',
         format => 's',
-        required => 1,
+        default => sub { 'DEFAULT' },
         doc => 'message if fail',
     );
     1;
@@ -81,7 +81,6 @@ It is assigned to "$assigned_to" and as the status "$status".
 
 Please check that the task is assigned properly, and has the expected status.
 
-If you are sure, you can try to take control of the task/review/release with the "take" command.
 __EOF__
     if $message eq 'DEFAULT';
     say $message;

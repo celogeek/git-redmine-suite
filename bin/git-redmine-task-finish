@@ -77,7 +77,10 @@ fi
 F=$(mktemp /tmp/redmine.XXXXXX)
 vim "$F"
 
-redmine_set_status $TASK $REDMINE_REVIEW_TODO $TASK_FINISH_USER_ID "
+task=$TASK \
+status=$REDMINE_REVIEW_TODO \
+assigned_to=$TASK_FINISH_USER_ID \
+notes="
 * REMOTE : $REMOTE_URL
 * PR: $TAG
 
@@ -91,7 +94,8 @@ $MSG_DEPS
 Additional comments from the developer :
 
 $(cat "$F")
-"
+" \
+redmine_set_status
 echo ""
 unlink "$F"
 

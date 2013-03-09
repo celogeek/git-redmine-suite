@@ -2,14 +2,35 @@
 
 function redmine_set_status
 {
-    PROGRESS="-1"
-    [ "x$2" == "x$REDMINE_REVIEW_TODO" ] && PROGRESS="100"
-    if [ "x$4" == "x" ]
-    then
-        /usr/local/share/Git-Redmine-Suite/helpers/redmine-set-status-id --id="$1" --status_id="$2" --assigned_to_id="$3" --progress="$PROGRESS" --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL" 2> /dev/null
-    else
-        /usr/local/share/Git-Redmine-Suite/helpers/redmine-set-status-id --id="$1" --status_id="$2" --assigned_to_id="$3" --notes="$4" --progress="$PROGRESS" --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL" 2> /dev/null
-    fi
-    /usr/local/share/Git-Redmine-Suite/helpers/redmine-check-task --id="$1" --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL" --status_ids="$2" --assigned_to="$3" --message "DEFAULT" 2> /dev/null
+	declare -a PARAMS
+
+	PARAMS+=(--auth_key "$REDMINE_AUTHKEY")
+	PARAMS+=(--server_url "$REDMINE_URL")
+	PARAMS+=(--id "$task")
+	PARAMS+=(--status_id "$status")
+	PARAMS+=(--assigned_to_id "$assigned_to")
+
+	declare -a ADD_PARAMS
+	if [ "x$status" == "x$REDMINE_REVIEW_TODO" ]
+		then
+		ADD_PARAMS+=(--progress "100")
+	elif [ ! -z "$progress" ]
+		then
+		ADD_PARAMS+=(--progress "$progress")
+	fi
+
+	if [ ! -z "$notes" ]
+		then
+		ADD_PARAMS+=(--notes "$notes")
+	fi
+
+	if [ ! -z "$git_repos_id" ] && [ ! -z "$git_repos_url" ]
+		then
+		ADD_PARAMS+=(--cf_id "$git_repos_id")
+		ADD_PARAMS+=(--cf_val "$git_repos_url")
+	fi
+
+    /usr/local/share/Git-Redmine-Suite/helpers/redmine-set-status-id "${PARAMS[@]}" "${ADD_PARAMS[@]}"
+    /usr/local/share/Git-Redmine-Suite/helpers/redmine-check-task "${PARAMS[@]}"
 }
 

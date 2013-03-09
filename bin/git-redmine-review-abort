@@ -40,5 +40,8 @@ git config --remove-section "redmine.review.$TASK"
 
 echo ""
 echo "Updating redmine status ..."
-redmine_set_status $TASK $REDMINE_REVIEW_TODO $REDMINE_USER_ID
+task=$TASK \
+status=$REDMINE_REVIEW_TODO \
+assigned_to=$REDMINE_USER_ID \
+redmine_set_status
 echo ""
