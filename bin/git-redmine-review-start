@@ -79,7 +79,10 @@ fi
 
 echo ""
 echo "Updating redmine status ..."
-redmine_set_status $TASK $REDMINE_REVIEW_IN_PROGRESS $REDMINE_USER_ID
+task=$TASK \
+status=$REDMINE_REVIEW_IN_PROGRESS \
+assigned_to=$REDMINE_USER_ID \
+redmine_set_status
 
 TASK_TITLE=$(redmine_get_title $TASK)
 SLUG_TITLE=$(/usr/local/share/Git-Redmine-Suite/helpers/slug --this "$TASK_TITLE")
