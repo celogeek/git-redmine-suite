@@ -100,7 +100,10 @@ git config "redmine.release.simple.branch" "$BRNAME"
 for TASK in ${TASKS[@]}
 do
     echo "Update redmine status $TASK ..."
-    redmine_set_status "$TASK" "$REDMINE_RELEASE_TODO" "$REDMINE_USER_ID"
+    task=$TASK \
+    status=$REDMINE_RELEASE_TODO \
+    assigned_to=$REDMINE_USER_ID \
+    redmine_set_status
 done
 
 CHANGELOG=$(get_change_log)
