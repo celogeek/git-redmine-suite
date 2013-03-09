@@ -45,7 +45,7 @@ use warnings;
     option 'message' => (
         is => 'ro',
         format => 's',
-        required => 1,
+        default => sub { 'DEFAULT' },
         doc => 'message if fail',
     );
     1;
