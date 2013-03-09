@@ -79,10 +79,14 @@ git config --unset "redmine.review.current"
 echo ""
 echo "Updating redmine status ..."
 REMOTE_URL=$(git config remote.origin.url)
-redmine_set_status $TASK $REDMINE_RELEASE_TODO $REVIEW_FINISH_USER_ID "
+task=$TASK \
+status=$REDMINE_RELEASE_TODO \
+assigned_to=$REVIEW_FINISH_USER_ID \
+notes="
 * REMOTE : $REMOTE_URL
 * PR: $PR
-"
+" \
+redmine_set_status
 echo ""
 
 echo "Removing old pr ..."
