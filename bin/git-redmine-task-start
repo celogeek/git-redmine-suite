@@ -59,6 +59,7 @@ then
     assigned_to=$REDMINE_USER_ID \
     git_repos_id=$GIT_REPOS_ID \
     git_repos_url=$GIT_REPOS_URL \
+    progress=90 \
     redmine_set_status
     echo ""
     echo "Checkout local branch $BRNAME ..."
@@ -95,6 +96,7 @@ status=$REDMINE_TASK_IN_PROGRESS \
 assigned_to=$REDMINE_USER_ID \
 git_repos_id=$GIT_REPOS_ID \
 git_repos_url=$GIT_REPOS_URL \
+progress=10 \
 redmine_set_status
 
 TASK_TITLE=$(redmine_get_title $TASK)

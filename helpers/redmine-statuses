@@ -14,6 +14,9 @@ function redmine_set_status
 	if [ "x$status" == "x$REDMINE_REVIEW_TODO" ]
 		then
 		ADD_PARAMS+=(--progress "100")
+	elif [ ! -z "$progress" ]
+		then
+		ADD_PARAMS+=(--progress "$progress")
 	fi
 
 	if [ ! -z "$notes" ]
