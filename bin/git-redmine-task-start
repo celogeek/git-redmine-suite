@@ -36,8 +36,6 @@ if [ "x$BRNAME" != "x" ]
 then
     echo "Continue the task $TASK ..."
     echo ""
-    echo "Updating redmine status ..."
-    redmine_set_status $TASK $REDMINE_TASK_IN_PROGRESS $REDMINE_USER_ID
     echo "Checkout local branch $BRNAME ..."
     git fetch -ap
     git fetch --tags -p
