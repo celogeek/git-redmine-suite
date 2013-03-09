@@ -27,8 +27,7 @@ function redmine_set_status
 		ADD_PARAMS+=(--cf_val "$git_repos_url")
 	fi
 
-	set -x
-    /usr/local/share/Git-Redmine-Suite/helpers/redmine-set-status-id "${PARAMS[@]}" "${ADD_PARAMS[@]}" # 2> /dev/null
-    /usr/local/share/Git-Redmine-Suite/helpers/redmine-check-task "${PARAMS[@]}" # 2> /dev/null
+    /usr/local/share/Git-Redmine-Suite/helpers/redmine-set-status-id "${PARAMS[@]}" "${ADD_PARAMS[@]}"
+    /usr/local/share/Git-Redmine-Suite/helpers/redmine-check-task "${PARAMS[@]}"
 }
 
