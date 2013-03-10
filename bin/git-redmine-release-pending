@@ -18,7 +18,6 @@ set -e
 
 GIT_REPOS_URL=$(git config remote.origin.url)
 
-set -x
 declare -a PARAMS=(--auth_key "$REDMINE_AUTHKEY" --server_url "$REDMINE_URL" --assigned_to_id "$REDMINE_USER_ID" --status_id "$REDMINE_RELEASE_TODO" --cf_id "$GIT_REPOS_ID" --cf_val "$GIT_REPOS_URL")
 
 /usr/local/share/Git-Redmine-Suite/helpers/redmine-get-tasks ${PARAMS[@]}
