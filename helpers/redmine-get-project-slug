@@ -2,7 +2,7 @@
 use feature 'say';
 use strict;
 use warnings;
-use Encode;
+use utf8::all;
 use List::MoreUtils qw/all/;
 {
 
@@ -71,6 +71,5 @@ say ":
 ";
 
 for my $project ( sort { $a->{identifier} cmp $b->{identifier} } @projects ) {
-    $project->{name} = encode( 'UTF8', $project->{name} );
     say sprintf( "    %-40s ( %s )", @$project{qw/identifier name/} );
 }

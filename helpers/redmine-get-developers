@@ -2,7 +2,7 @@
 use feature 'say';
 use strict;
 use warnings;
-use Encode;
+use utf8::all;
 {
     package MyOpts;
     use Moo;
@@ -64,7 +64,7 @@ for my $journal(@journals) {
     }
     next unless $keep;
     my $id = $journal->{user}->{id};
-    my $name = encode('UTF8', $journal->{user}->{name});
+    my $name = $journal->{user}->{name};
     push @res, $opt->ids_only ? $id : $name if !$uniq{$id};
     $uniq{$id} = 1;
 }

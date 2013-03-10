@@ -2,6 +2,7 @@
 use feature 'say';
 use strict;
 use warnings;
+use utf8::all;
 {
     package MyOpts;
     use Moo;
@@ -44,8 +45,6 @@ my $r = Redmine::API->new(
 my $resp = $r->projects->project->get($opt->project, include => 'members');
 my $content = $resp->content->{project}->{members} // [];
 say "The list of users for the project '", $opt->project, "' : ";
-use utf8;
 for my $member(sort { $a->{name} cmp $b->{name} } @$content) {
-    utf8::encode($member->{name});
     say sprintf("    %-5d - %-30s", $member->{id}, $member->{name});
 }
