@@ -24,6 +24,23 @@ function redmine_get_project_cf
     export GIT_RELEASE=${CF[2]}
 }
 
+function redmine_get_cf_conf
+{
+    export GIT_REPOS_ID=$(git config redmine.cf.git.repos)
+    export GIT_PR_ID=$(git config redmine.cf.git.pr)
+    export GIT_RELEASE_ID=$(git config redmine.cf.git.release)
+    if [ -z "$GIT_REPOS_ID" ] || [ -z "$GIT_PR_ID" ] || [ -z "$GIT_RELEASE_ID" ]
+    then
+        echo "The custom fields is not properly set."
+        echo "Please configure at least one project or run a check :"
+        echo ""
+        echo "  * git project check"
+        echo "  * git project setup"
+        exit 1
+    fi
+
+}
+
 function redmine_get_all_active_projects
 {
     git config --get-regexp ^redmine.project | cut -d "." -f 3 | sort -u

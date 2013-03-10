@@ -21,17 +21,6 @@ source /usr/local/share/Git-Redmine-Suite/helpers/redmine-question
 
 set +e
 TASK=$(git config redmine.task.current)
-PROJECT=$(git config redmine.task.$TASK.project)
-GIT_PR_ID=$(git config redmine.project.$PROJECT.cf.git.pr)
-if [ -z $GIT_PR_ID ]
-then
-    echo "The project $PROJECT is not properly set."
-    echo "Please run a check or setup again :"
-    echo ""
-    echo "  * git project check"
-    echo "  * git project setup $PROJECT"
-    exit 1
-fi
 
 if [ "x$TASK" == "x" ]
 then
@@ -39,14 +28,18 @@ then
     exit 1
 fi
 
+redmine_get_cf_conf
+
 set -e
 
 redmine_check_task "$TASK" "$REDMINE_TASK_IN_PROGRESS"
 
+PROJECT=$(git config redmine.task.$TASK.project)
 TASK_TITLE=$(git config redmine.task.$TASK.title)
 are_you_sure "Do you really want to finish $TASK_TITLE ?"
 
 BRNAME=$(git config redmine.task.$TASK.branch)
+
 set +e
 TASK_FINISH_USER_ID=$(git config redmine.project.$PROJECT.finish.user.id.task)
 if [ "x$TASK_FINISH_USER_ID" == "x" ]
