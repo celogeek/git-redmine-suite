@@ -20,7 +20,7 @@ You can use "git redmine project" for this purpose. I suggest you to read the "s
 
 When your redmine projects are linked, you can get the list of your "pending" release.
 
- * git redmine release simple pending
+ * git redmine release pending
 
 All tasks and their parent are shown.
 
@@ -30,11 +30,11 @@ You can check the changelog to know what you are about to release. You need to s
 
 To start a release,
 
- * git redmine release simple start X Y Z
+ * git redmine release start X Y Z
 
 To start a release with a specific version
 
- * V=XXX git redmine release simple start X Y Z
+ * V=XXX git redmine release start X Y Z
 
 All the task has to be already reviewed, and assign to you in "release pending" status.
 
@@ -56,7 +56,7 @@ The changes file will add the tag release. If you have a dist.ini it will try to
 
 To finish you release,
 
- * git redmine release simple finish
+ * git redmine release finish
 
 Your devel will be update with the version. All of this will be merged into the "master". The version tag will be apply to the master branch and sent.
 
@@ -64,7 +64,7 @@ Your devel will be update with the version. All of this will be merged into the 
 
 They is more in release.
 
- * git redmine release simple abort
+ * git redmine release abort
 
 Cancel the release.
 

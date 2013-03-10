@@ -19,57 +19,41 @@ source /usr/local/share/Git-Redmine-Suite/helpers/redmine-tasks
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-statuses
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-question
 
-if git config "redmine.release.simple.version" > /dev/null
+if git config "redmine.release.version" > /dev/null
 then
     echo "Your already has start a release !"
     echo "Please abort it or finish it :"
     echo ""
-    echo "    git redmine release simple abort"
-    echo "    git redmine release simple finish"
+    echo "    git redmine release abort"
+    echo "    git redmine release finish"
     echo ""
     exit 1
 fi
 
+set +e
+redmine_get_cf_conf
+set -e
+
+GIT_REPOS_URL=$(git config remote.origin.url)
 
 declare -a TASKS=($*)
 
 if [ ${#TASKS[@]} -eq 0 ]
 then
     echo "Please list the tasks you want to release :"
-    TASKS=""
-    for REDMINE_PROJECT in $(redmine_get_all_active_projects)
-    do
-        echo "[$REDMINE_PROJECT]"
-        echo ""
-        /usr/local/share/Git-Redmine-Suite/helpers/redmine-get-tasks --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL" --project="$REDMINE_PROJECT" --assigned_to_id="$REDMINE_USER_ID" --status_id="$REDMINE_RELEASE_TODO"
-        ADD_TASKS=$(/usr/local/share/Git-Redmine-Suite/helpers/redmine-get-tasks --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL" --project="$REDMINE_PROJECT" --assigned_to_id="$REDMINE_USER_ID" --status_id="$REDMINE_RELEASE_TODO" --ids_only)
-        if [ -n "$ADD_TASKS" ]
-        then
-            if [ -z "$TASKS" ]
-            then
-                TASKS="$ADD_TASKS"
-            else
-                TASKS="$TASKS $ADD_TASKS"
-            fi
-        fi
-    done
-    if [ -n "$TASKS" ]
+    echo ""
+    declare -a PARAMS=(--auth_key "$REDMINE_AUTHKEY" --server_url "$REDMINE_URL" --assigned_to_id "$REDMINE_USER_ID" --status_id "$REDMINE_RELEASE_TODO" --cf_id "$GIT_REPOS_ID" --cf_val "$GIT_REPOS_URL")
+
+    /usr/local/share/Git-Redmine-Suite/helpers/redmine-get-tasks ${PARAMS[@]}
+
+    declare -a TASKS=($(/usr/local/share/Git-Redmine-Suite/helpers/redmine-get-tasks --ids_only ${PARAMS[@]}))
+    if [ ${#TASKS[@]} -ne 0 ] && are_you_sure "Do you want to start these tasks ?"
     then
-        echo ""
-        echo "If you want to release everything, you can run :"
-        echo ""
-        echo "    $CURRENT_GIT_COMMAND $TASKS"
-        echo ""
+        exec git redmine release start ${TASKS[@]}
     fi
 
     exit 1
 fi
-
-for TASK in ${TASKS[@]}
-do
-    echo "Check redmine status $TASK ..."
-    redmine_check_task "$TASK" "$REDMINE_RELEASE_TODO,$REDMINE_RELEASE_FINISH"
-done
 
 git fetch -ap
 git fetch --tags -p
@@ -87,24 +71,26 @@ else
     are_you_sure "$Q ?"
 fi
 
-BRNAME="redmine-release-v$V"
-
-git checkout devel
-git merge origin/devel
-git checkout -b "$BRNAME"
-
-git config "redmine.release.simple.version" "$V"
-git config "redmine.release.simple.tasks" "$(echo ${TASKS[@]})"
-git config "redmine.release.simple.branch" "$BRNAME"
-
 for TASK in ${TASKS[@]}
 do
     echo "Update redmine status $TASK ..."
     task=$TASK \
     status=$REDMINE_RELEASE_TODO \
     assigned_to=$REDMINE_USER_ID \
+    git_repos_id=$GIT_REPOS_ID \
+    git_repos_url=$GIT_REPOS_URL \
     redmine_set_status
 done
+
+BRNAME="redmine-release-v$V"
+
+git checkout devel
+git merge origin/devel
+git checkout -b "$BRNAME"
+
+git config "redmine.release.version" "$V"
+git config "redmine.release.tasks" "$(echo ${TASKS[@]})"
+git config "redmine.release.branch" "$BRNAME"
 
 CHANGELOG=$(get_change_log)
 touch "$CHANGELOG"
@@ -130,7 +116,6 @@ then
     git ci -m 'Update version file'
 fi
 
-set +x
 git diff --color origin/master | less -R
 cat <<__EOF__
 Please edit all the file you need and commit it before finish the release.
@@ -138,15 +123,15 @@ Don't forget to run the tests !
 
 You can finish with :
 
-git redmine release simple finish
+git redmine release finish
 
 or you can abort :
 
-git redmine release simple abort
+git redmine release abort
 
 __EOF__
 
 if are_you_sure "Do you want to finish the release now ?"
 then
-    GIT_REDMINE_CHAIN_RELEASE_FINISH=1 exec git redmine release simple finish
+    GIT_REDMINE_CHAIN_RELEASE_FINISH=1 exec git redmine release finish
 fi
