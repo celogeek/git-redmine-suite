@@ -117,7 +117,7 @@ The task management will use it to save meta information.
  * GIT_PR should be a text.
  * GIT_RELEASE should be a text.
 
-You can add them to "For all project". Or add them in each of the project you want to use with "git redmine suite".
+You need to add them to "For all project". Otherwise the search will not work.
 
 This command list you all the project you are members in redmine.
 
