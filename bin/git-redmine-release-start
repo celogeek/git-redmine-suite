@@ -55,15 +55,6 @@ then
     exit 1
 fi
 
-for TASK in ${TASKS[@]}
-do
-    echo "Update redmine status $TASK ..."
-    task=$TASK \
-    status=$REDMINE_RELEASE_TODO \
-    assigned_to=$REDMINE_USER_ID \
-    redmine_set_status
-done
-
 git fetch -ap
 git fetch --tags -p
 
@@ -79,6 +70,17 @@ then
 else
     are_you_sure "$Q ?"
 fi
+
+for TASK in ${TASKS[@]}
+do
+    echo "Update redmine status $TASK ..."
+    task=$TASK \
+    status=$REDMINE_RELEASE_TODO \
+    assigned_to=$REDMINE_USER_ID \
+    git_repos_id=$GIT_REPOS_ID \
+    git_repos_url=$GIT_REPOS_URL \
+    redmine_set_status
+done
 
 BRNAME="redmine-release-v$V"
 
