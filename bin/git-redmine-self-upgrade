@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ "x$HELP" != "x" ]
+if [ -n "$HELP" ]
 then
     echo "git redmine self-upgrade"
     exit 1

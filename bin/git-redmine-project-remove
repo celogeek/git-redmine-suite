@@ -7,7 +7,7 @@ function help_project_remove
     exit 1
 }
 
-if [ "x$HELP" != "x" ]
+if [ -n "$HELP" ]
 then
     help_project_remove
 fi
@@ -18,7 +18,7 @@ source /usr/local/share/Git-Redmine-Suite/helpers/redmine-checkconf
 
 PROJECT=$1
 
-if [ "x$PROJECT" == "x" ]
+if [ -z "$PROJECT" ]
 then
     help_project_remove
 fi

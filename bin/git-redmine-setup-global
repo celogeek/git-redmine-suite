@@ -1,7 +1,7 @@
 #!/bin/bash
 
 source /usr/local/share/Git-Redmine-Suite/helpers/current_git_command
-if [ "x$HELP" != "x" ]
+if [ -n "$HELP" ]
 then
     echo "$CURRENT_GIT_COMMAND PROFILE AUTH_KEY"
     exit 1
@@ -22,7 +22,7 @@ case $1 in
         echo "Setup profile weborama ..."
         REDMINE_URL="http://redmine.intranet.weborama.com"
         REDMINE_AUTHKEY="$2"
-        if [ "x$REDMINE_AUTHKEY" == "x" ]
+        if [ -z "$REDMINE_AUTHKEY" ]
         then
             echo "You need to pass your auth key from redmine to run the setup !"
             echo ""
@@ -44,7 +44,7 @@ case $1 in
         echo "Setup profile celogeek ..."
         REDMINE_URL="https://tasks.celogeek.com"
         REDMINE_AUTHKEY="$2"
-        if [ "x$REDMINE_AUTHKEY" == "x" ]
+        if [ -z "$REDMINE_AUTHKEY" ]
         then
             echo "You need to pass your auth key from redmine to run the setup !"
             echo ""

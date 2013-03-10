@@ -6,7 +6,7 @@ function help {
     exit 1
 }
 
-if [ "x$HELP" != "x" ]
+if [ -n "$HELP" ]
 then
     help
 fi
@@ -43,9 +43,9 @@ then
         echo ""
         /usr/local/share/Git-Redmine-Suite/helpers/redmine-get-tasks --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL" --project="$REDMINE_PROJECT" --assigned_to_id="$REDMINE_USER_ID" --status_id="$REDMINE_RELEASE_TODO"
         ADD_TASKS=$(/usr/local/share/Git-Redmine-Suite/helpers/redmine-get-tasks --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL" --project="$REDMINE_PROJECT" --assigned_to_id="$REDMINE_USER_ID" --status_id="$REDMINE_RELEASE_TODO" --ids_only)
-        if [ "x$ADD_TASKS" != "x" ]
+        if [ -n "$ADD_TASKS" ]
         then
-            if [ "x$TASKS" == "x" ]
+            if [ -z "$TASKS" ]
             then
                 TASKS="$ADD_TASKS"
             else
@@ -53,7 +53,7 @@ then
             fi
         fi
     done
-    if [ "x$TASKS" != "x" ]
+    if [ -n "$TASKS" ]
     then
         echo ""
         echo "If you want to release everything, you can run :"
@@ -74,13 +74,13 @@ done
 git fetch -ap
 git fetch --tags -p
 
-if [ "x$V" == "x" ]
+if [ -z "$V" ]
 then
     V=$(/usr/local/share/Git-Redmine-Suite/helpers/next_version --version=$(((git tag | grep ^v) || echo "v0.00") | /usr/bin/perl -pe 's/^v//' | sort -n | tail -n1))
 fi
 
 Q="Start release v$V"
-if [ "x$GIT_REDMINE_CHAIN_RELEASE_START" == "x1" ]
+if [ -n "$GIT_REDMINE_CHAIN_RELEASE_START" ]
 then
     echo "$Q ..."
 else

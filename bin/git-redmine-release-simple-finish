@@ -6,7 +6,7 @@ function help {
     exit 1
 }
 
-if [ "x$HELP" != "x" ]
+if [ -n "$HELP" ]
 then
     help
 fi
@@ -46,7 +46,7 @@ V=$(git config redmine.release.simple.version)
 BRNAME=$(git config redmine.release.simple.branch)
 
 Q="Finish release v$V"
-if [ "x$GIT_REDMINE_CHAIN_RELEASE_FINISH" == "x1" ]
+if [ -n "$GIT_REDMINE_CHAIN_RELEASE_FINISH" ]
 then
     echo "$Q ..."
 else

@@ -6,7 +6,7 @@ function help {
     exit 1
 }
 
-if [ "x$HELP" != "x" ]
+if [ -n "$HELP" ]
 then
     help
 fi
@@ -20,7 +20,7 @@ source /usr/local/share/Git-Redmine-Suite/helpers/redmine-project
 
 TASK="$1"
 
-if [ "x$TASK" == "x" ]
+if [ -z "$TASK" ]
 then
     help
 fi

@@ -6,7 +6,7 @@ function help {
     exit 1
 }
 
-if [ "x$HELP" != "x" ]
+if [ -n "$HELP" ]
 then
     help
 fi
@@ -22,7 +22,7 @@ source /usr/local/share/Git-Redmine-Suite/helpers/redmine-question
 
 TASK="$1"
 
-if [ "x$TASK" == "x" ]
+if [ -z "$TASK" ]
 then
     help
 fi
@@ -43,7 +43,7 @@ BRNAME=$(git config redmine.task.$TASK.branch)
 
 set -e
 
-if [ "x$BRNAME" != "x" ]
+if [ -n "$BRNAME" ]
 then
     echo "Continue the task $TASK ..."
     echo ""

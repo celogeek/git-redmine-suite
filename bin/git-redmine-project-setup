@@ -1,7 +1,7 @@
 #!/bin/bash
 
 source /usr/local/share/Git-Redmine-Suite/helpers/current_git_command
-if [ "x$HELP" != "x" ]
+if [ -n "$HELP" ]
 then
     echo "$CURRENT_GIT_COMMAND PROJECT REVIEWER RELEASER INTEGRATOR"
     exit 1
@@ -13,7 +13,7 @@ source /usr/local/share/Git-Redmine-Suite/helpers/redmine-checkconf
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-project
 
 PROJECT=$1
-if [ "x$PROJECT" == "x" ]
+if [ -z "$PROJECT" ]
 then
     echo "You have to give a project slug : "
     echo ""
@@ -34,7 +34,7 @@ TASK=$2
 REVIEW=$3
 RELEASE=$4
 
-if [ "x$TASK" == "x" ] || [ "x$REVIEW" == "x" ]
+if [ -z "$TASK" ] || [ -z "$REVIEW" ]
 then
     redmine_get_project_users "$PROJECT"
     exit 1

@@ -6,7 +6,7 @@ function help {
     exit 1
 }
 
-if [ "x$HELP" != "x" ]
+if [ -n "$HELP" ]
 then
     help
 fi
@@ -21,7 +21,7 @@ set +e
 
 TASK=$(git config redmine.review.current)
 
-if [ "x$TASK" == "x" ]
+if [ -z "$TASK" ]
 then
     echo "You have not start any review !"
     exit 1

@@ -13,9 +13,9 @@ else
 
     echo ""
     echo "[$GROUP]"
-    if [ "x$HELP" == "x" ]
+    if [ -z "$HELP" ]
     then
-        if [ "x$1" != "x" ]
+        if [ -n "$1" ]
         then
             echo "The file $MODULE is not present. Check your command"
             echo ""

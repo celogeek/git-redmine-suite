@@ -6,7 +6,7 @@ function help {
     exit 1
 }
 
-if [ "x$HELP" != "x" ]
+if [ -n "$HELP" ]
 then
     help
 fi
@@ -23,7 +23,7 @@ source /usr/local/share/Git-Redmine-Suite/helpers/redmine-question
 
 TASK="$1"
 
-if [ "x$TASK" == "x" ]
+if [ -z "$TASK" ]
 then
     help
 fi
@@ -43,7 +43,7 @@ fi
 BRNAME=$(git config redmine.review.$TASK.branch)
 set -e
 
-if [ "x$BRNAME" != "x" ]
+if [ -n "$BRNAME" ]
 then
     cat<<__EOF__
 This review is already in progress.
@@ -58,7 +58,7 @@ fi
 
 echo "Starting the review : "
 extended_status=1 redmine_get_title $TASK
-if [ "x$GIT_REDMINE_CHAIN_REVIEW_START" == "x" ]
+if [ -z "$GIT_REDMINE_CHAIN_REVIEW_START" ]
 then
     are_you_sure "Do you really want to start this review ?"
 fi
