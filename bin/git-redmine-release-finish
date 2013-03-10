@@ -19,14 +19,14 @@ source /usr/local/share/Git-Redmine-Suite/helpers/redmine-tasks
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-statuses
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-question
 
-if ! git config "redmine.release.simple.version" > /dev/null
+if ! git config "redmine.release.version" > /dev/null
 then
     echo "Your have no release in progress"
     echo ""
     exit 1
 fi
 
-declare -a TASKS=($(git config redmine.release.simple.tasks))
+declare -a TASKS=($(git config redmine.release.tasks))
 
 for TASK in ${TASKS[@]}
 do
@@ -42,8 +42,8 @@ do
 
 done
 
-V=$(git config redmine.release.simple.version)
-BRNAME=$(git config redmine.release.simple.branch)
+V=$(git config redmine.release.version)
+BRNAME=$(git config redmine.release.branch)
 
 Q="Finish release v$V"
 if [ -n "$GIT_REDMINE_CHAIN_RELEASE_FINISH" ]
@@ -66,7 +66,7 @@ git tag -m "release v$V: $(echo ${TASKS[@]})" "v$V"
 git push origin master
 git push origin "tags/v$V"
 git branch -d $BRNAME
-git config --remove-section redmine.release.simple
+git config --remove-section redmine.release
 
 REMOTE_URL=$(git config remote.origin.url)
 for TASK in ${TASKS[@]}

@@ -18,17 +18,17 @@ source /usr/local/share/Git-Redmine-Suite/helpers/redmine-project
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-tasks
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-question
 
-if ! git config "redmine.release.simple.version" > /dev/null
+if ! git config "redmine.release.version" > /dev/null
 then
     echo "Your have no release in progress"
     echo ""
     exit 1
 fi
 
-BRNAME=$(git config redmine.release.simple.branch)
+BRNAME=$(git config redmine.release.branch)
 
 are_you_sure "Aborting release $BRNAME ?"
-git config --remove-section redmine.release.simple
+git config --remove-section redmine.release
 git checkout devel
 git branch -D $BRNAME
 

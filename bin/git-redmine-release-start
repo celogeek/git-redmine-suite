@@ -19,7 +19,7 @@ source /usr/local/share/Git-Redmine-Suite/helpers/redmine-tasks
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-statuses
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-question
 
-if git config "redmine.release.simple.version" > /dev/null
+if git config "redmine.release.version" > /dev/null
 then
     echo "Your already has start a release !"
     echo "Please abort it or finish it :"
@@ -93,9 +93,9 @@ git checkout devel
 git merge origin/devel
 git checkout -b "$BRNAME"
 
-git config "redmine.release.simple.version" "$V"
-git config "redmine.release.simple.tasks" "$(echo ${TASKS[@]})"
-git config "redmine.release.simple.branch" "$BRNAME"
+git config "redmine.release.version" "$V"
+git config "redmine.release.tasks" "$(echo ${TASKS[@]})"
+git config "redmine.release.branch" "$BRNAME"
 
 for TASK in ${TASKS[@]}
 do
