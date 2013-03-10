@@ -12,18 +12,4 @@ set -e
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-checkconf
 source /usr/local/share/Git-Redmine-Suite/helpers/redmine-project
 
-PROJECT_LIST=$(redmine_get_all_active_projects)
-
-for REDMINE_PROJECT in $PROJECT_LIST
-do
-    /usr/local/share/Git-Redmine-Suite/helpers/redmine-get-tasks --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL" --project="$REDMINE_PROJECT" --assigned_to_id="$REDMINE_USER_ID" --status_id="$REDMINE_TASK_TODO"
-done
-
-if [ "x$PROJECT_LIST" == "x" ]
-then
-	echo "No project setup !"
-	echo ""
-fi
-
-echo "To add more project, use 'git redmine project setup'
-"
+/usr/local/share/Git-Redmine-Suite/helpers/redmine-get-tasks --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL" --assigned_to_id="$REDMINE_USER_ID" --status_id="$REDMINE_TASK_TODO"
