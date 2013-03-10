@@ -6,7 +6,7 @@ function help {
     exit 1
 }
 
-if [ "x$HELP" != "x" ]
+if [ -n "$HELP" ]
 then
     help
 fi
@@ -23,7 +23,7 @@ set +e
 
 TASK=$(git config redmine.review.current)
 
-if [ "x$TASK" == "x" ]
+if [ -z "$TASK" ]
 then
     echo "You have not start any review !"
     exit 1
@@ -44,7 +44,7 @@ CHANGELOG=$(get_change_log)
 
 set +e
 REVIEW_FINISH_USER_ID=$(git config redmine.project.$PROJECT.finish.user.id.review)
-if [ "x$REVIEW_FINISH_USER_ID" == "x" ]
+if [ -z "$REVIEW_FINISH_USER_ID" ]
 then
     redmine_get_project_users "$PROJECT"
     exit 1
@@ -52,7 +52,7 @@ fi
 set -e
 
 Q="Finishing the review of $TASK_TITLE - PR:$PR"
-if [ "x$GIT_REDMINE_CHAIN_REVIEW_FINISH" == "x1" ]
+if [ -n "$GIT_REDMINE_CHAIN_REVIEW_FINISH" ]
 then
     echo "$Q ..."
 else
@@ -95,7 +95,7 @@ do
     git tag -d "$tag"
 done
 
-if [ "x$REVIEW_FINISH_USER_ID" == "x$REDMINE_USER_ID" ]
+if [ "$REVIEW_FINISH_USER_ID" = "$REDMINE_USER_ID" ]
 then
 	if are_you_sure "You are the releaser of this task. Do you want to release now ?"
 	then

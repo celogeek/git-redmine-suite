@@ -2,11 +2,11 @@
 function redmine_get_title
 {
     declare -a PARAMS=(--id "$1" --auth_key "$REDMINE_AUTHKEY" --server_url "$REDMINE_URL")
-    if [ ! -z "$status" ]
+    if [ -n "$status" ]
         then
         PARAMS+=(--with_status)
     fi
-    if [ ! -z "$extended_status" ]
+    if [ -n "$extended_status" ]
         then
         PARAMS+=(--with_extended_status)
     fi

@@ -11,24 +11,24 @@ function redmine_set_status
 	PARAMS+=(--assigned_to_id "$assigned_to")
 
 	declare -a ADD_PARAMS
-	if [ "x$status" == "x$REDMINE_REVIEW_TODO" ]
+	if [ "$status" = "$REDMINE_REVIEW_TODO" ]
 		then
 		ADD_PARAMS+=(--progress "100")
-	elif [ ! -z "$progress" ]
+	elif [ -n "$progress" ]
 		then
 		ADD_PARAMS+=(--progress "$progress")
 	fi
 
-	if [ ! -z "$notes" ]
+	if [ -n "$notes" ]
 		then
 		ADD_PARAMS+=(--notes "$notes")
 	fi
 
-	if [ ! -z "$git_repos_id" ] && [ ! -z "$git_repos_url" ]
+	if [ -n "$git_repos_id" ] && [ -n "$git_repos_url" ]
 		then
 		ADD_PARAMS+=(--cf_id "$git_repos_id")
 		ADD_PARAMS+=(--cf_val "$git_repos_url")
-	elif [ ! -z "$git_pr_id" ] && [ ! -z "$git_pr_val" ]
+	elif [ -n "$git_pr_id" ] && [ -n "$git_pr_val" ]
 		then
 		ADD_PARAMS+=(--cf_id "$git_pr_id")
 		ADD_PARAMS+=(--cf_val "$git_pr_val")

@@ -9,7 +9,7 @@ then
     echo "Checking update ..."
     MASTER_VERSION=$(curl -s https://gitorious.celogeek.com/git/redmine-suite/blobs/raw/master/VERSION)
     CURRENT_VERSION=$(cat /usr/local/share/Git-Redmine-Suite/VERSION)
-    if [ "x$MASTER_VERSION" != "x" ] && [ "x$MASTER_VERSION" != "x$CURRENT_VERSION" ]
+    if [ -n "$MASTER_VERSION" ] && [ "$MASTER_VERSION" != "$CURRENT_VERSION" ]
     then
         echo "A new version is available : $MASTER_VERSION ( Current: $CURRENT_VERSION )"
         echo ""
@@ -89,7 +89,7 @@ __EOF__
     echo ""
 }
 
-if [ "x$REDMINE_AUTHKEY" == "x" ] || [ "x$REDMINE_URL" == "x" ]
+if [ -z "$REDMINE_AUTHKEY" ] || [ -z "$REDMINE_URL" ]
 then
     redmine_help
     exit 1
@@ -98,9 +98,9 @@ fi
 export REDMINE_AUTHKEY REDMINE_URL
 
 if 
-    [ "x$REDMINE_TASK_TODO" == "x"    ] || [ "x$REDMINE_TASK_IN_PROGRESS" == "x"    ] ||
-    [ "x$REDMINE_REVIEW_TODO" == "x"  ] || [ "x$REDMINE_REVIEW_IN_PROGRESS" == "x"  ] ||
-    [ "x$REDMINE_RELEASE_TODO" == "x" ] || [ "x$REDMINE_RELEASE_FINISH" == "x" ]
+    [ -z "$REDMINE_TASK_TODO" ]    || [ -z "$REDMINE_TASK_IN_PROGRESS" ]   ||
+    [ -z "$REDMINE_REVIEW_TODO" ]  || [ -z "$REDMINE_REVIEW_IN_PROGRESS" ] ||
+    [ -z "$REDMINE_RELEASE_TODO" ] || [ -z "$REDMINE_RELEASE_FINISH" ]
 then
     redmine_help_with_statuses
     exit 1
@@ -109,7 +109,7 @@ export REDMINE_TASK_TODO REDMINE_TASK_IN_PROGRESS
 export REDMINE_REVIEW_TODO REDMINE_REVIEW_IN_PROGRESS
 export REDMINE_RELEASE_TODO REDMINE_RELEASE_FINISH
 
-if [ "x$REDMINE_USER_ID" == "x" ]
+if [ -z "$REDMINE_USER_ID" ]
 then
     redmine_help_with_current_user_id
     exit 1

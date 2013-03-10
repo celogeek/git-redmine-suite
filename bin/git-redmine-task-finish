@@ -6,7 +6,7 @@ function help {
     exit 1
 }
 
-if [ "x$HELP" != "x" ]
+if [ -n "$HELP" ]
 then
     help
 fi
@@ -22,7 +22,7 @@ source /usr/local/share/Git-Redmine-Suite/helpers/redmine-question
 set +e
 TASK=$(git config redmine.task.current)
 
-if [ "x$TASK" == "x" ]
+if [ -z "$TASK" ]
 then
     echo "You have not start any task !"
     exit 1
@@ -42,7 +42,7 @@ BRNAME=$(git config redmine.task.$TASK.branch)
 
 set +e
 TASK_FINISH_USER_ID=$(git config redmine.project.$PROJECT.finish.user.id.task)
-if [ "x$TASK_FINISH_USER_ID" == "x" ]
+if [ -z "$TASK_FINISH_USER_ID" ]
 then
     redmine_get_project_users "$PROJECT"
     exit 1
@@ -70,7 +70,7 @@ echo "Updating redmine status ..."
 
 DEPS=$((git config redmine.task.$TASK.depends || true) | perl -pe 's/(\d+)/#$1/g')
 MSG_DEPS=""
-if [ "x$DEPS" != "x" ]
+if [ -n "$DEPS" ]
 then
     MSG_DEPS="Before reviewing this task, ensure you have already review : $DEPS"
 fi
@@ -99,7 +99,7 @@ redmine_set_status
 echo ""
 unlink "$F"
 
-if [ "x$TASK_FINISH_USER_ID" == "x$REDMINE_USER_ID" ]
+if [ "$TASK_FINISH_USER_ID" = "$REDMINE_USER_ID" ]
 then
 	if are_you_sure "You are the reviewer of this task. Do you want to review now ?"
 	then

@@ -6,7 +6,7 @@ function help {
     exit 1
 }
 
-if [ "x$HELP" != "x" ]
+if [ -n "$HELP" ]
 then
     help
 fi
@@ -20,7 +20,7 @@ set +e
 
 TASK=$(git config redmine.task.current)
 
-if [ "x$TASK" == "x" ]
+if [ -z "$TASK" ]
 then
     echo "You have not start any task !"
     exit 1
@@ -30,7 +30,7 @@ set -e
 
 DEPS="$@"
 
-if [ "x$DEPS" == "x" ]
+if [ -z "$DEPS" ]
 then
     help
 fi

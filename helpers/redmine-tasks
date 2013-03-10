@@ -26,8 +26,7 @@ function redmine_get_developers_id
 
 function redmine_check_task
 {
-    MESSAGE='DEFAULT'
-    [ "x$3" == "x" ] || MESSAGE="$3"
+    MESSAGE=${3-DEFAULT}
     /usr/local/share/Git-Redmine-Suite/helpers/redmine-check-task --id="$1" --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL" --status_ids="$2" --assigned_to="$REDMINE_USER_ID" --message "$MESSAGE"
 }
 
