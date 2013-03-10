@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use DateTime;
 use Date::Parse;
-use Encode;
+use utf8::all;
 {
 
     package MyOpts;
@@ -58,9 +58,7 @@ my $id     = $opt->id;
 my $resp   = $r->issues->issue->get( $id, include => 'custom_fields' );
 my $issue  = $resp->content->{issue};
 my $status = $issue->{status}->{name};
-my $title  = join( "",
-    encode( 'UTF8', $issue->{tracker}->{name} ),
-    " #", $id, " : ", encode( 'UTF8', $issue->{subject} ) );
+my $title  = $issue->{tracker}->{name} . " #" . $id . " - " . $issue->{subject};
 my $now = DateTime->now;
 
 if ( $opt->with_status || $opt->with_extended_status ) {
@@ -84,7 +82,7 @@ if ( $opt->with_status || $opt->with_extended_status ) {
         }
     };
 
-    my $assigned_to = encode( 'UTF8', $issue->{assigned_to}->{name} );
+    my $assigned_to = $issue->{assigned_to}->{name};
     if ( $opt->with_status ) {
         my $released_str = "";
         if ($release) {
@@ -93,7 +91,7 @@ if ( $opt->with_status || $opt->with_extended_status ) {
         say "($status) $title, Updated $duration_str$released_str";
     }
     elsif ( $opt->with_extended_status ) {
-        say $pad, $title;
+        say $pad, "Title          : ", $title;
         say $pad, "Status         : ", $status;
         say $pad, "Last update    : ", $duration_str;
         say $pad, "Assigned to    : ", $assigned_to;
