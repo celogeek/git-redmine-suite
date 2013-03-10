@@ -1,3 +1,4 @@
+    * Feature #80 - use "-z" test instead of "xstuff" == "x" (Celogeek San)
     * Feature #82 - Autoconf CF (Celogeek San)
     * Feature #83 - Change encode by utf8::all (Celogeek San)
     * Feature #72 : use CF in review pending (Celogeek San)
