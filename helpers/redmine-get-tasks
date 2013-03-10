@@ -85,6 +85,7 @@ my %s_updated_on;
 
 sub s_updated_on_add {
     my ( $p, $id, $t ) = @_;
+    $t //= 0;
     $s_updated_on{$p}{$id} = $t
         unless defined $s_updated_on{$p}{$id} && $s_updated_on{$p}{$id} < $t;
 }
