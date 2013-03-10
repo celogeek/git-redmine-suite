@@ -16,19 +16,16 @@ my $TRIANGLE = Encode::encode( 'utf8', "\x{25B8}" );
     option 'project' => (
         is       => 'ro',
         format   => 's',
-        required => 1,
         doc      => 'the id or slug of the project to check',
     );
     option 'status_id' => (
         is       => 'ro',
         format   => 'i',
-        required => 1,
         doc      => 'status id of the review todo',
     );
     option 'assigned_to_id' => (
         is       => 'ro',
         format   => 'i',
-        required => 1,
         doc      => 'assigned_to id of the review todo',
     );
     option 'auth_key' => (
@@ -52,6 +49,16 @@ my $TRIANGLE = Encode::encode( 'utf8', "\x{25B8}" );
         is  => 'ro',
         doc => 'only show the list of ids',
     );
+    option 'cf_id' => (
+        is => 'ro',
+        doc => 'custom field id',
+        format => 'i',
+    );
+    option 'cf_val' => (
+        is => 'ro',
+        doc => 'custom field value',
+        format => 's',
+    );
     1;
 };
 
@@ -61,12 +68,10 @@ my $project = $opt->project;
 use Redmine::API;
 my $r = Redmine::API->new(
     'auth_key' => $opt->auth_key,
-    'base_url' => $opt->server_url . '/projects/' . $project,
+    'base_url' => $opt->server_url,
     'trace'    => $opt->trace,
 );
 
-my $status_id      = $opt->status_id;
-my $assigned_to_id = $opt->assigned_to_id;
 my %tasks;
 my %parent;
 
@@ -83,10 +88,22 @@ sub s_updated_on_add {
     $s_updated_on{$id} = $t unless defined $s_updated_on{$id} && $s_updated_on{$id} < $t;
 }
 
+my %search;
+sub search_add {
+    my ($key, $val) = @_;
+    $search{$key} = $val if defined $val;
+}
+
+search_add status_id => $opt->status_id;
+search_add project_id => $project;
+search_add assigned_to_id => $opt->assigned_to_id;
+if (defined $opt->cf_id && defined $opt->cf_val) {
+    search_add 'cf_'.$opt->cf_id => $opt->cf_val;
+}
+
 for ( ;; ) {
     my $resp = $r->issues->list->all(
-        status_id      => $status_id,
-        assigned_to_id => $assigned_to_id,
+        %search,
         offset         => $offset,
     );
     my $content = $resp->content;
