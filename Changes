@@ -1,3 +1,4 @@
+    * Feature #83 - Change encode by utf8::all (Celogeek San)
     * Feature #72 : use CF in review pending (Celogeek San)
     * Feature #76 : use CF in review reject (Celogeek San)
     * Feature #75 : use CF in review finish (Celogeek San)
