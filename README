@@ -11,44 +11,5 @@ Developers should have the right to push redmine-* and pr-*.
 Reviewer should have the right to read redmine-* (and write on it), push to devel and remove the pr-*.
 Integrator should have the right to merge devel into master and create a tag 'vVERSION' on each release.
 
-You need to patch your redmine, to be able to setup project :
+You need to patch your redmine, to be able to setup project : see grs.patch
 
-diff --git a/app/views/projects/index.api.rsb b/app/views/projects/index.api.rsb
-index 8fdea9b..c579ef4 100644
---- a/app/views/projects/index.api.rsb
-+++ b/app/views/projects/index.api.rsb
-@@ -11,6 +11,13 @@ api.array :projects, api_meta(:total_count => @project_count, :offset => @offset
- 
-       api.created_on  project.created_on
-       api.updated_on  project.updated_on
-+
-+      api.array :custom_fields do
-+       project.all_issue_custom_fields.each do |cf|
-+               api.custom_field(:id => cf.id, :name => cf.name)
-+       end
-+      end if include_in_api_response?('custom_fields')
-+
-     end
-   end
- end
-diff --git a/app/views/projects/show.api.rsb b/app/views/projects/show.api.rsb
-index a6f26f8..f1fdfa9 100644
---- a/app/views/projects/show.api.rsb
-+++ b/app/views/projects/show.api.rsb
-@@ -22,4 +22,16 @@ api.project do
-       api.issue_category(:id => category.id, :name => category.name)
-     end
-   end if include_in_api_response?('issue_categories')
-+
-+  api.array :members do
-+    @project.members.each do |member|
-+       api.member(:id => member.user.id, :name => member.user.name)
-+    end
-+  end if include_in_api_response?('members')
-+
-+  api.array :custom_fields do
-+    @project.all_issue_custom_fields.each do |cf|
-+       api.custom_field(:id => cf.id, :name => cf.name)
-+    end
-+  end if include_in_api_response?('custom_fields')
- end
