@@ -9,7 +9,7 @@ fi
 
 function common_setup
 {
-    git config --global alias.release "redmine release simple"
+    git config --global alias.release "redmine release"
     git config --global alias.review "redmine review"
     git config --global alias.task "redmine task"
     git config --global alias.project "redmine project"

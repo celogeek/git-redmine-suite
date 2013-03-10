@@ -24,8 +24,8 @@ then
     echo "Your already has start a release !"
     echo "Please abort it or finish it :"
     echo ""
-    echo "    git redmine release simple abort"
-    echo "    git redmine release simple finish"
+    echo "    git redmine release abort"
+    echo "    git redmine release finish"
     echo ""
     exit 1
 fi
@@ -138,15 +138,15 @@ Don't forget to run the tests !
 
 You can finish with :
 
-git redmine release simple finish
+git redmine release finish
 
 or you can abort :
 
-git redmine release simple abort
+git redmine release abort
 
 __EOF__
 
 if are_you_sure "Do you want to finish the release now ?"
 then
-    GIT_REDMINE_CHAIN_RELEASE_FINISH=1 exec git redmine release simple finish
+    GIT_REDMINE_CHAIN_RELEASE_FINISH=1 exec git redmine release finish
 fi
