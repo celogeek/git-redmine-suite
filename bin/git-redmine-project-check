@@ -19,9 +19,9 @@ do
 	REVIEWER=$(git config redmine.project.$P.finish.user.id.task)
 	RELEASER=$(git config redmine.project.$P.finish.user.id.review)
 	INTEGRATOR=$(git config redmine.project.$P.finish.user.id.release)
-	GIT_REPOS=$(git config redmine.project.$P.cf.git.repos)
-	GIT_PR=$(git config redmine.project.$P.cf.git.pr)
-	GIT_RELEASE=$(git config redmine.project.$P.cf.git.release)
+	GIT_REPOS=$(git config redmine.cf.git.repos)
+	GIT_PR=$(git config redmine.cf.git.pr)
+	GIT_RELEASE=$(git config redmine.cf.git.release)
     echo "    * $P (Reviewer: $REVIEWER, Releaser: $RELEASER , Integrator: $INTEGRATOR)"
     if [ -z $GIT_REPOS ] || [ -z $GIT_PR ] || [ -z $GIT_RELEASE ]
    	then
