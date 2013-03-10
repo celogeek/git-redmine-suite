@@ -1,14 +1,15 @@
+    * Feature #69 : Update readme (Celogeek San)
+    * Feature #70 : use CF in task start (Celogeek San)
+    * Feature #71 : use CF in task finish (Celogeek San)
+    * Feature #72 : use CF in review pending (Celogeek San)
+    * Feature #73 : use CF in project setup (Celogeek San)
+    * Feature #74 : use CF in review start (Celogeek San)
+    * Feature #75 : use CF in review finish (Celogeek San)
+    * Feature #76 : use CF in review reject (Celogeek San)
+    * Feature #77 - use CF in release start (Celogeek San)
     * Feature #80 - use "-z" test instead of "xstuff" == "x" (Celogeek San)
     * Feature #82 - Autoconf CF (Celogeek San)
     * Feature #83 - Change encode by utf8::all (Celogeek San)
-    * Feature #72 : use CF in review pending (Celogeek San)
-    * Feature #76 : use CF in review reject (Celogeek San)
-    * Feature #75 : use CF in review finish (Celogeek San)
-    * Feature #74 : use CF in review start (Celogeek San)
-    * Feature #71 : use CF in task finish (Celogeek San)
-    * Feature #70 : use CF in task start (Celogeek San)
-    * Feature #73 : use CF in project setup (Celogeek San)
-    * Feature #69 : Update readme (Celogeek San)
 
 0.29  2013-03-08 21:25:45 GMT
 
