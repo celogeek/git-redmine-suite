@@ -16,6 +16,8 @@ use LWP::Curl;
 
 with 'GRS::Role::Version';
 
+sub required_options {'version'}
+
 sub app {
     my ($self) = @_;
     my $version = $self->version;

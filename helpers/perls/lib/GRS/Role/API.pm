@@ -32,7 +32,7 @@ option 'server_url' => (
 option 'trace' => (
     is      => 'ro',
     doc     => 'trace mode',
-    default => sub { $ENV{REDMINE_DEBUG} },
+    default => sub { !!$ENV{REDMINE_DEBUG} },
 );
 
 option 'server_suburl' => (

@@ -29,8 +29,16 @@ sub import {
 
 sub run {
     my ($class) = @_;
-    return $class->new_with_options->app();
-
+    my $self = $class->new_with_options;
+    if ( $self->can('required_options') ) {
+        my @missing_params
+            = grep { !defined $self->$_ } $self->required_options;
+        if (@missing_params) {
+            say "$_ is missing" for @missing_params;
+            $self->options_usage;
+        }
+    }
+    return $self->app();
 }
 
 1;

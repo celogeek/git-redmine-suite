@@ -14,10 +14,9 @@ use Moo::Role;
 use MooX::Options;
 
 option "version" => (
-    is       => 'ro',
-    format   => 's',
-    required => 1,
-    doc      => 'Version number'
+    is     => 'ro',
+    format => 's',
+    doc    => 'Version number'
 );
 
 1;
