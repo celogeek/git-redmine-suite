@@ -1,23 +1,5 @@
 #!/usr/bin/perl
-use strict;
-use warnings;
-use feature 'say';
-use Version::Next qw/next_version/;
-use DateTime;
-{
-    package MyOpt;
-    use Moo;
-    use MooX::Options;
-    option 'version' => ( is => 'ro', format => 's', required => 1, doc => 'Version to increment');
-    1;
-}
 
-my $opt = MyOpt->new_with_options;
-my $version = $opt->version;
-if (my ($date) = ($version =~ /^(\d{8})_\d+$/)) {
-    my $dt = DateTime->now;
-    if ($date < $dt->ymd('')) {
-        $version = $dt->ymd('').'_00';
-    }
-}
-say next_version($version);
+use GRS 'App::NextVersion';
+
+say GRS->new_with_options->next_version;
