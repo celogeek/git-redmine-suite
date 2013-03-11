@@ -32,6 +32,10 @@ function redmine_set_status
 		then
 		ADD_PARAMS+=(--cf_id "$git_pr_id")
 		ADD_PARAMS+=(--cf_val "$git_pr_val")
+	elif [ -n "$git_release_id" ] && [ -n "$git_release_val" ]
+		then
+		ADD_PARAMS+=(--cf_id "$git_release_id")
+		ADD_PARAMS+=(--cf_val "$git_release_val")
 	fi
 
 

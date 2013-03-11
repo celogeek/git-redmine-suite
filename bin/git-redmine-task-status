@@ -19,7 +19,7 @@ for TASK in $(redmine_get_all_local_tasks)
 do
     T=$(/usr/local/share/Git-Redmine-Suite/helpers/redmine-get-title --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL" --id="$TASK" --with-status)
 	echo "    $T"
-    if echo "$T" | grep -q ", released with"
+    if echo "$T" | grep -q ", Released with v"
     then
     	if are_you_sure "This task (# $TASK) has been released, clear it ?"
     	then
