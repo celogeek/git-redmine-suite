@@ -1,29 +1,5 @@
 #!/usr/bin/perl
-use strict;
-use warnings;
-use feature 'say';
-use Term::ReadLine;
 
-{
-    package MyOpt;
-    use Moo;
-    use MooX::Options;
-    option 'question' => ( is => 'ro', format => 's', required => 1, doc => 'The question to ask');
-    1;
-}
+use GRS 'Question';
 
-my $opt = MyOpt->new_with_options;
-my $question = $opt->question;
-my $term = Term::ReadLine->new('Question');
-my $prompt = $question . " (y/N) ";
-my $answer;
-say "";
-while(defined ($answer = $term->readline($prompt))) {
-    $answer = lc($answer);
-    next if $answer && $answer !~ /^[yn]$/;
-    $answer = undef if ($answer eq 'n');
-    last;
-};
-say "";
-exit 1 if ! $answer;
-exit 0;
+exit ! GRS->new_with_options->answer;
