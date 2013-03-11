@@ -10,6 +10,7 @@ Auto Import Role from import command and purpose command line
 
 use strict;
 use warnings;
+use feature 'say';
 
 # VERSION
 
@@ -18,7 +19,10 @@ use MooX::Options;
 
 sub import {
     my ( $class, @extensions ) = @_;
-    foreach my $ext ( map {"GRS::Role::$_"} @extensions ) {
+    strict->import;
+    warnings->import;
+    feature->import('say');
+    foreach my $ext ( map {"GRS::$_"} @extensions ) {
         with $ext;
     }
 }

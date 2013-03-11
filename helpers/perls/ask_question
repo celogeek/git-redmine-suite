@@ -1,5 +1,5 @@
 #!/usr/bin/perl
 
-use GRS 'Question';
+use GRS 'App::Question';
 
 exit ! GRS->new_with_options->answer;

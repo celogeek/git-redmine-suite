@@ -1,4 +1,4 @@
-package GRS::Role::Question;
+package GRS::App::Question;
 
 # ABSTRACT: Question Role
 
