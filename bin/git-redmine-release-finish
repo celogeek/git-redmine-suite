@@ -30,9 +30,6 @@ declare -a TASKS=($(git config redmine.release.tasks))
 
 for TASK in ${TASKS[@]}
 do
-    echo "Check redmine status $TASK ..."
-    redmine_check_task "$TASK" "$REDMINE_RELEASE_TODO"
-
     PROJECT=$(redmine_get_project $TASK)
     if ! git config redmine.project.$PROJECT.finish.user.id.release > /dev/null
     then
@@ -41,6 +38,10 @@ do
     fi
 
 done
+
+set +e
+redmine_get_cf_conf
+set -e
 
 V=$(git config redmine.release.version)
 BRNAME=$(git config redmine.release.branch)
@@ -62,7 +63,7 @@ git push origin devel
 git checkout master
 git merge origin/master
 git merge --no-ff devel -m "Merge $BRNAME"
-git tag -m "release v$V: $(echo ${TASKS[@]})" "v$V"
+git tag -m "release v$V: ${TASKS[@]}" "v$V"
 git push origin master
 git push origin "tags/v$V"
 git branch -d $BRNAME
@@ -77,10 +78,8 @@ do
     task=$TASK \
     status=$REDMINE_RELEASE_FINISH \
     assigned_to=$RELEASE_FINISH_USER_ID \
-    notes="
-* REMOTE : $REMOTE_URL
-* RELEASED : v$V
-" \
+    git_release_id=$GIT_RELEASE_ID \
+    git_release_val="v$V" \
     redmine_set_status
 done
 
