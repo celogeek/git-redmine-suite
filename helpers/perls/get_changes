@@ -1,29 +1,5 @@
 #!/usr/bin/perl
-use strict;
-use warnings;
-use feature 'say';
-use Carp;
 
-{
-	package MyOpts;
-	use Moo;
-	use MooX::Options;
-	option "from_version" => (
-		is => 'ro',
-		format => 's',
-		required => 1,
-		doc => 'The start version'
-	);
-}
+use GRS 'App::Changes';
 
-my $opt = MyOpts->new_with_options;
-my $version = $opt->from_version;
-
-use LWP::Curl;
-my $lwpcurl = LWP::Curl->new;
-
-my $content = $lwpcurl->get('https://gitorious.celogeek.com/git/redmine-suite/blobs/raw/master/Changes');
-
-$content =~ s/^$version\s+.*//ms;
-
-say $content;
+say GRS->new_with_options->get_changes;
