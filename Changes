@@ -7,6 +7,7 @@
     * Feature #75 : use CF in review finish (Celogeek San)
     * Feature #76 : use CF in review reject (Celogeek San)
     * Feature #77 - use CF in release start (Celogeek San)
+    * Feature #78 - use CF in release finish (Celogeek San)
     * Feature #80 - use "-z" test instead of "xstuff" == "x" (Celogeek San)
     * Feature #82 - Autoconf CF (Celogeek San)
     * Feature #83 - Change encode by utf8::all (Celogeek San)
