@@ -1,5 +1,5 @@
 #!/usr/bin/perl
 
-use GRS 'App::NextVersion';
+use GRS 'NextVersion';
 
-say GRS->new_with_options->next_version;
+say GRS->run;

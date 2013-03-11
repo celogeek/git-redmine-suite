@@ -22,9 +22,15 @@ sub import {
     strict->import;
     warnings->import;
     feature->import('say');
-    foreach my $ext ( map {"GRS::$_"} @extensions ) {
+    foreach my $ext ( map {"GRS::App::$_"} @extensions ) {
         with $ext;
     }
+}
+
+sub run {
+    my ($class) = @_;
+    return $class->new_with_options->app();
+
 }
 
 1;

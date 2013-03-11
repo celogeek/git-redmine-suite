@@ -16,7 +16,7 @@ use LWP::Curl;
 
 with 'GRS::Role::Version';
 
-sub get_changes {
+sub app {
     my ($self) = @_;
     my $version = $self->version;
 

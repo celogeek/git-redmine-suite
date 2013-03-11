@@ -19,7 +19,7 @@ use DateTime;
 
 with 'GRS::Role::Version';
 
-sub next_version {
+sub app {
     my ($self) = @_;
     my $version = $self->version;
     if ( my ($date) = ( $version =~ /^(\d{8})_\d+$/ ) ) {

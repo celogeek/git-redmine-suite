@@ -1,4 +1,4 @@
 #!/usr/bin/perl
-use GRS 'App::CheckUpdateFile';
+use GRS 'CheckUpdateFile';
 
-say GRS->new->check_update_file;
+say GRS->run;

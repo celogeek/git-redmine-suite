@@ -13,7 +13,7 @@ One check per day
 use Moo::Role;
 use DateTime;
 
-sub check_update_file {
+sub app {
 
     return "/tmp/redmine.check_update." . DateTime->now->ymd('');
 

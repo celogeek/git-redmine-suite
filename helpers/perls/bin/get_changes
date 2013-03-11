@@ -1,5 +1,5 @@
 #!/usr/bin/perl
 
-use GRS 'App::Changes';
+use GRS 'Changes';
 
-say GRS->new_with_options->get_changes;
+say GRS->run;

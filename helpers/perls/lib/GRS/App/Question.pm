@@ -22,7 +22,7 @@ option 'question' => (
     doc      => 'The question to ask'
 );
 
-sub answer {
+sub app {
     my ($self)   = @_;
     my $question = $self->question;
     my $term     = Term::ReadLine->new('Question');
