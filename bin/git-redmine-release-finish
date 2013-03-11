@@ -79,7 +79,7 @@ do
     status=$REDMINE_RELEASE_FINISH \
     assigned_to=$RELEASE_FINISH_USER_ID \
     git_release_id=$GIT_RELEASE_ID \
-    git_release_val="v$V" \
+    git_release_val="$V" \
     redmine_set_status
 done
 
