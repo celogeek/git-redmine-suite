@@ -17,5 +17,6 @@ option 'status_ids' => (
     is     => 'ro',
     doc    => 'list of status ids',
     format => 'i@',
+    autosplit => ',',
 );
 1;

@@ -11,6 +11,7 @@ Auto Import Role from import command and purpose command line
 use strict;
 use warnings;
 use feature 'say';
+use utf8::all;
 
 # VERSION
 
@@ -22,6 +23,7 @@ sub import {
     strict->import;
     warnings->import;
     feature->import('say');
+    utf8::all->import;
     foreach my $ext ( map {"GRS::App::$_"} @extensions ) {
         with $ext;
     }
