@@ -30,7 +30,7 @@ sub import {
 }
 
 sub run {
-    my ($class) = @_;
+    my ($class, @params) = @_;
     my $self = $class->new_with_options;
     if ( $self->can('required_options') ) {
         my @missing_params
@@ -40,7 +40,7 @@ sub run {
             $self->options_usage;
         }
     }
-    return $self->app();
+    return $self->app(@params);
 }
 
 1;

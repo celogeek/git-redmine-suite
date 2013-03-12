@@ -20,7 +20,7 @@ with 'GRS::Role::API';
 sub required_options {qw/server_url auth_key/}
 
 sub app {
-    my ($self) = @_;
+    my ( $self, $progress ) = @_;
 
     my $filter = sub {
         my ( $self, @projects ) = @_;
@@ -34,11 +34,9 @@ sub app {
         return @valid_projects;
     };
 
-	print "List of all valid projects and slugs ";
-    for my $project ( sort { $a->{identifier} cmp $b->{identifier} } $self->API_fetchAll('projects', {include => 'custom_fields'}, '.', $filter))
-    {
-        say sprintf( "    %-40s ( %s )", @$project{qw/identifier name/} );
-    }
-
+    return
+        sort { $a->{identifier} cmp $b->{identifier} }
+        $self->API_fetchAll( 'projects', { include => 'custom_fields' },
+        $progress, $filter );
 }
 1;

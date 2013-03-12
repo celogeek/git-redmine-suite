@@ -1,3 +1,7 @@
 #!/usr/bin/perl
 use GRS 'ProjectSlug';
-GRS->run;
+
+print "List of all valid projects and slugs ";
+for my $project ( GRS->run('.') ) {
+    say sprintf( "    %-40s ( %s )", @$project{qw/identifier name/} );
+}
