@@ -1,8 +1,8 @@
 package GRS::App::TaskCF;
-# ABSTRACT: Return the Task CF value
+# ABSTRACT: Return the Task CF values
 =head1 DESCRIPTION
 
-Return the CF value of a task
+Return the CF values of a task
 
 =cut
 

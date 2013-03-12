@@ -1,0 +1,4 @@
+#!/usr/bin/perl
+use GRS 'ProjectCF';
+
+say join("\n", GRS->run);
