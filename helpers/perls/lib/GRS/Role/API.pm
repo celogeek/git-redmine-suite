@@ -35,7 +35,7 @@ option 'trace' => (
     default => sub { !!$ENV{REDMINE_DEBUG} },
 );
 
-option 'server_suburl' => (
+has 'server_suburl' => (
     is      => 'ro',
     default => sub {""},
     doc     => 'subpath',
@@ -53,14 +53,42 @@ sub _build_API {
     );
 }
 
-sub BUILD {
-    my ($self) = @_;
-    my @missing_params = grep { !defined $self->$_ } qw/auth_key server_url/;
-    if (@missing_params) {
-        say "$_ is missing" for @missing_params;
-        $self->options_usage;
-        exit 1;
+sub API_fetchAll {
+    my ( $self, $what, $search, $progress, $filter ) = @_;
+
+    my $offset = 0;
+    my $total_count;
+    my @res;
+    my $loop = 0;
+    $| = 1 if $progress;
+    $search //= {};
+
+    for ( ;; ) {
+        my $resp = $self->API->$what->list->all(
+            offset => $offset,
+            %$search
+        );
+        my $content = $resp->content;
+        $total_count //= $content->{total_count};
+
+        if ( ref $filter eq 'CODE' ) {
+            push @res, $self->$filter( @{ $content->{$what} } );
+        }
+        else {
+            push @res, @{ $content->{$what} };
+        }
+
+        $offset += $content->{limit};
+        last unless $offset < $total_count;
+        $loop = 1;
+        print $progress if $progress;
     }
+    if ($progress) {
+        print " " if $loop;
+        say ": \n";
+    }
+
+    return @res;
 }
 
 1;
