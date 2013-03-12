@@ -26,7 +26,7 @@ option 'message' => (
 );
 
 sub required_options {
-    qw/assigned_to_id status_ids/;
+    qw/server_url auth_key assigned_to_id status_ids/;
 }
 
 sub app {

@@ -15,6 +15,8 @@ with 'GRS::Role::API';
 
 sub server_suburl { '/users' }
 
+sub required_options { qw/server_url auth_key/ }
+
 sub app {
 	my ($self) = @_;
 	return $self->API->current->list->all()->content->{user}->{id};

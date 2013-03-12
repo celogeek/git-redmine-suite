@@ -13,7 +13,7 @@ use MooX::Options;
 
 with 'GRS::Role::API', 'GRS::Role::TaskID', 'GRS::Role::CFNames';
 
-sub required_options { qw/task_id cf_names/ }
+sub required_options { qw/server_url auth_key task_id cf_names/ }
 
 sub app {
 	my ($self) = @_;

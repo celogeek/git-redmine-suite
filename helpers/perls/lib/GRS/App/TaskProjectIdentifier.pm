@@ -15,7 +15,7 @@ use MooX::Options;
 
 with 'GRS::Role::API', 'GRS::Role::TaskID';
 
-sub required_options {'task_id'}
+sub required_options {'server_url auth_key task_id'}
 
 use DDP colored => 1;
 

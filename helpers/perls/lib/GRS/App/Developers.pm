@@ -17,7 +17,7 @@ with 'GRS::Role::API', 'GRS::Role::TaskID', 'GRS::Role::StatusIDS',
     'GRS::Role::IDSOnly';
 
 sub required_options {
-    qw/task_id status_ids/;
+    qw/server_url auth_key task_id status_ids/;
 }
 
 sub app {

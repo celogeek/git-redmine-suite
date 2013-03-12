@@ -13,7 +13,7 @@ use MooX::Options;
 
 with 'GRS::Role::API', 'GRS::Role::Project', 'GRS::Role::CFNames';
 
-sub required_options { qw/project cf_names/ }
+sub required_options { qw/server_url auth_key project cf_names/ }
 
 sub app {
 	my ($self) = @_;
