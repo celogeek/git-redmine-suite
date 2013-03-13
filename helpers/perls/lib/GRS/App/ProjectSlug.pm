@@ -12,7 +12,6 @@ Return the list of project slug
 
 use Moo::Role;
 use MooX::Options;
-use feature 'say';
 use List::MoreUtils qw/all/;
 
 with 'GRS::Role::API';
