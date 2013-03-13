@@ -35,6 +35,7 @@ sub app {
     };
 
     return
+        map { [ @$_{qw/identifier name/} ] }
         sort { $a->{identifier} cmp $b->{identifier} }
         $self->API_fetchAll( 'projects', { include => 'custom_fields' },
         $progress, $filter );

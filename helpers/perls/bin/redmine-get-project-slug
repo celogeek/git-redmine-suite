@@ -3,5 +3,5 @@ use GRS 'ProjectSlug';
 
 print "List of all valid projects and slugs ";
 for my $project ( GRS->run('.') ) {
-    say sprintf( "    %-40s ( %s )", @$project{qw/identifier name/} );
+    say sprintf( "    %-40s ( %s )", @$project );
 }
