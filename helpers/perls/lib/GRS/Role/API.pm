@@ -69,7 +69,7 @@ sub API_fetchAll {
             %$search
         );
         my $content = $resp->content;
-        $total_count //= $content->{total_count};
+        $total_count //= $content->{total_count} // 0;
 
         if ( ref $filter eq 'CODE' ) {
             push @res, $self->$filter( @{ $content->{$what} } );
@@ -78,7 +78,7 @@ sub API_fetchAll {
             push @res, @{ $content->{$what} };
         }
 
-        $offset += $content->{limit};
+        $offset += $content->{limit} // 0;
         last unless $offset < $total_count;
         $loop = 1;
         print $progress if $progress;

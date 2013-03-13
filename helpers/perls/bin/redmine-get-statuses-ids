@@ -1,0 +1,7 @@
+#!/usr/bin/perl
+use GRS 'Statuses';
+
+say "Available statuses ids :";
+for my $status ( GRS->run('.') ) {
+    say sprintf( "    %3d : %s", @$status );
+}
