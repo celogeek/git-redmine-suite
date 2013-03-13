@@ -1,4 +1,4 @@
-package GRS::App::Developers;
+package GRS::App::TaskDevelopers;
 
 # ABSTRACT: Return the list of developers who has participate to the dev
 

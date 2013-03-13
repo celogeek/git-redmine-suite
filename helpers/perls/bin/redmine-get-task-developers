@@ -1,5 +1,5 @@
 #!/usr/bin/perl
 
-use GRS 'Developers';
+use GRS 'TaskDevelopers';
 
 say GRS->run;
