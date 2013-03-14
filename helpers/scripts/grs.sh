@@ -10,3 +10,4 @@ set +e
 source $SCRIPT_DIR/check_update.sh
 set -e
 source $SCRIPT_DIR/set_env.sh
+source $SCRIPT_DIR/helpers.sh
