@@ -2,10 +2,9 @@
 cd "$(dirname "$0")"
 [ -z "$SKIP_CPANM" ] && sudo HOME=/tmp PERL_CPANM_OPT="" ./cpanm -nv Redmine::API Moo MooX::Options LWP::Protocol::https Version::Next DateTime Term::ReadLine Date::Parse LWP::Curl List::MoreUtils List::Util List::Util::XS autodie utf8::all Term::Size
 
-sudo rm -rf /usr/local/share/Git-Redmine-Suite usr/local/bin/git-redmine /usr/local/bin/git-redmine-*
+sudo rm -rf /usr/local/share/Git-Redmine-Suite /usr/local/bin/git-redmine /usr/local/bin/git-redmine-*
 
-sudo mkdir -p /usr/local/share/Git-Redmine-Suite/helpers/
-sudo cp -av helpers/* /usr/local/share/Git-Redmine-Suite/helpers/
+sudo cp -av share/* /usr/local/share/
 sudo cp -av bin/* /usr/local/bin/
 sudo cp -av VERSION /usr/local/share/Git-Redmine-Suite/
 
@@ -19,7 +18,6 @@ done
 
 sudo chown -R 0:0 /usr/local/share/Git-Redmine-Suite/ /usr/local/bin/git-redmine /usr/local/bin/git-redmine-*
 sudo chmod -R 755 /usr/local/share/Git-Redmine-Suite/ /usr/local/bin/git-redmine /usr/local/bin/git-redmine-*
-sudo chmod u+s,g+s /usr/local/bin/git-redmine-self-upgrade*
 
 if [ -n "$CURPWD" ] && [ -n "$1" ]
 then
