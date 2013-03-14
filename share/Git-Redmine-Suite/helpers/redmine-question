@@ -1,6 +1,0 @@
-#!/bin/bash
-function are_you_sure
-{
-	QUESTION=${1-Are you sure ?}
-    /usr/local/share/Git-Redmine-Suite/helpers/ask_question --question="$QUESTION"
-}
