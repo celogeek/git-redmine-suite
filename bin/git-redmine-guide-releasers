@@ -3,4 +3,4 @@ source "$(dirname "$0")/../share/Git-Redmine-Suite/helpers/scripts/grs.sh"
 
 help_command
 
-man $MAN_DIR/releasers.man
+guide_show releasers

@@ -1,4 +1,4 @@
-ROOT_DIR=$(dirname "$(dirname "$(dirname ${BASH_SOURCE[0]})")")
+ROOT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")/../../"; pwd)
 SCRIPT_DIR=$ROOT_DIR/helpers/scripts
 PERL_DIR=$ROOT_DIR/helpers/perls
 MAN_DIR=$ROOT_DIR/helpers/pod/guide
