@@ -2,7 +2,7 @@
 
 if [ -n "$HELP" ]
 then
-    echo "git redmine self-upgrade"
+    echo "    * git redmine self-upgrade"
     exit 1
 fi
 
