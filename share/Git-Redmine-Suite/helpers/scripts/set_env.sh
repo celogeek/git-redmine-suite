@@ -47,9 +47,11 @@ REDMINE_REVIEW_IN_PROGRESS=$(git config redmine.statuses.review.inprogress)
 REDMINE_RELEASE_TODO=$(git config redmine.statuses.release.assigned)
 REDMINE_RELEASE_FINISH=$(git config redmine.statuses.release.finish)
 
+REDMINE_GIT_REPOS_ID=$(git config redmine.git.repos)
+REDMINE_GIT_PR_ID=$(git config redmine.git.pr)
+REDMINE_GIT_RELEASE_ID=$(git config redmine.git.release)
 
-if [ -z "$REDMINE_AUTHKEY" ] || [ -z "$REDMINE_URL" ]
-then
+if [ -z "$REDMINE_AUTHKEY" ] || [ -z "$REDMINE_URL" ]; then
     redmine_help
     exit 1
 fi
@@ -57,8 +59,7 @@ fi
 if 
     [ -z "$REDMINE_TASK_TODO" ]    || [ -z "$REDMINE_TASK_IN_PROGRESS" ]   ||
     [ -z "$REDMINE_REVIEW_TODO" ]  || [ -z "$REDMINE_REVIEW_IN_PROGRESS" ] ||
-    [ -z "$REDMINE_RELEASE_TODO" ] || [ -z "$REDMINE_RELEASE_FINISH" ]
-then
+    [ -z "$REDMINE_RELEASE_TODO" ] || [ -z "$REDMINE_RELEASE_FINISH" ]; then
     redmine_help_with_statuses
     exit 1
 fi
@@ -66,13 +67,22 @@ fi
 if [ "$REDMINE_USER_AUTH_KEY" != "$REDMINE_AUTHKEY" ]; then
     REDMINE_USER_ID=""
     REDMINE_USER_AUTH_KEY=$REDMINE_AUTHKEY
+    REDMINE_GIT_REPOS_ID=""
+    REDMINE_GIT_PR_ID=""
+    REDMINE_GIT_RELEASE_ID=""
 fi
 
-if [ -z "$REDMINE_USER_ID" ]
-then
+if [ -z "$REDMINE_USER_ID" ]; then
     REDMINE_USER_ID=$(redmine-get-current-user-id)
     git config redmine.user.id $REDMINE_USER_ID
     git config redmine.user.authkey $REDMINE_USER_AUTH_KEY
+fi
+
+if [ -z "$REDMINE_GIT_REPOS_ID" ] || [ -z "$REDMINE_GIT_PR_ID" ] || [ -z "$REDMINE_GIT_RELEASE_ID" ]; then
+    redmine-get-project-cf | /bin/bash
+    REDMINE_GIT_REPOS_ID=$(git config redmine.git.repos)
+    REDMINE_GIT_PR_ID=$(git config redmine.git.pr)
+    REDMINE_GIT_RELEASE_ID=$(git config redmine.git.release)
 fi
 
 export REDMINE_AUTHKEY REDMINE_URL
@@ -80,5 +90,6 @@ export REDMINE_TASK_TODO REDMINE_TASK_IN_PROGRESS
 export REDMINE_REVIEW_TODO REDMINE_REVIEW_IN_PROGRESS
 export REDMINE_RELEASE_TODO REDMINE_RELEASE_FINISH
 export REDMINE_USER_ID
+export REDMINE_GIT_REPOS_ID REDMINE_GIT_PR_ID REDMINE_GIT_RELEASE_ID
 
 set -e

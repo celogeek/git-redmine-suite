@@ -10,16 +10,39 @@ Return the CF ids of a project
 
 use Moo::Role;
 use MooX::Options;
+use List::MoreUtils qw/all/;
 
-with 'GRS::Role::API', 'GRS::Role::Project', 'GRS::Role::CFNames';
+with 'GRS::Role::API';
 
-sub required_options { qw/server_url auth_key project cf_names/ }
+sub required_options { qw/server_url auth_key/ }
 
 sub app {
 	my ($self) = @_;
 
-	my $resp = $self->API->projects->project->get($self->project, include => 'custom_fields');
-	my %cf = map { @$_{qw/name id/} } @{$resp->content->{project}->{custom_fields}};
-	return map { $_ // "" } @cf{@{$self->cf_names}};
+    my $filter = sub {
+        my ( $self, @projects ) = @_;
+        my @valid_projects;
+        for my $project (@projects) {
+            my %cf = map { ( $_->{name} => $_->{id} ) }
+                @{ $project->{custom_fields} };
+            push @valid_projects, $project
+                if all {defined} @cf{qw/GIT_REPOS GIT_PR GIT_RELEASE/};
+        }
+        return @valid_projects;
+    };
+
+	my ($project) = $self->API_fetchAll('projects', { include => 'custom_fields' },
+        undef, $filter );
+
+	return if ! defined $project;
+
+	my %cf = map { ( @$_{qw/name id/}) } @{$project->{custom_fields}};
+
+	return (
+		"git config redmine.git.repos " . $cf{GIT_REPOS},
+		"git config redmine.git.pr " . $cf{GIT_PR},
+		"git config redmine.git.release " . $cf{GIT_RELEASE},
+	);
+
 }
 1;

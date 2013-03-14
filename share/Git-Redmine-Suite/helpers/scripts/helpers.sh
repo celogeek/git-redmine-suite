@@ -42,3 +42,4 @@ function help_setup_with_profile {
 	echo ""
 	exit 1
 }
+
