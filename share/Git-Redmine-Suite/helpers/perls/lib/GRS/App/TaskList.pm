@@ -54,21 +54,21 @@ sub app {
 
     for my $identifier ( sort { $a cmp $b } keys %{ $self->_projects } ) {
         say "[$identifier]";
-        my $prj = $self->_projects->{$identifier};
-        my $tasks = $prj->{tasks};
+        my $prj    = $self->_projects->{$identifier};
+        my $tasks  = $prj->{tasks};
         my $parent = $prj->{parent};
         my %flip_parent;
-        for my $task_id(keys %$parent) {
-        	my $parent_id = $parent->{$task_id};
-        	$flip_parent{$parent_id} //= [];
-        	push @{$flip_parent{$parent_id}}, $task_id;
+        for my $task_id ( keys %$parent ) {
+            my $parent_id = $parent->{$task_id};
+            $flip_parent{$parent_id} //= [];
+            push @{ $flip_parent{$parent_id} }, $task_id;
         }
         $self->_display_tree(
-        	level => 0,
-        	parent_id => 0,
-        	flip_parent => \%flip_parent,
-        	tasks => $tasks,
-        	columns => $columns,
+            level       => 0,
+            parent_id   => 0,
+            flip_parent => \%flip_parent,
+            tasks       => $tasks,
+            columns     => $columns,
         );
         say "";
     }
@@ -80,15 +80,21 @@ has '_projects' => (
 );
 
 sub _issue_add {
-    my ( $self, $issue ) = @_;
+    my ( $self, $issue, %options ) = @_;
 
     my $task_id    = $issue->{id};
     my $parent_id  = $issue->{parent}->{id} // 0;
     my $identifier = $issue->{project}->{identifier};
     my $updated_on = str2time( $issue->{updated_on} );
-    my $title      = join( "",
-        $issue->{tracker}->{name},
-        " # ", $task_id, " : ", $issue->{subject} );
+    my $title;
+    if ( $options{missing} ) {
+        $title = $issue->{subject};
+    }
+    else {
+        $title = join( "",
+            $issue->{tracker}->{name},
+            " # ", $task_id, " : ", $issue->{subject} );
+    }
     my $assigned_to = $issue->{assigned_to}->{name} // 'nobody';
 
     my $prj = (
@@ -119,7 +125,9 @@ sub _fetch_missing_tasks {
                 if ( $parent_id && !$tasks->{$parent_id} ) {
                     $self->_issue_add(
                         $self->API->issues->issue->get($parent_id)
-                            ->content->{issue} );
+                            ->content->{issue},
+                        missing => 1
+                    );
                 }
             }
         }
@@ -150,42 +158,58 @@ sub _compute_oldest_updated_on {
 }
 
 sub _display_tree {
-	my ($self, %p) = @_;
+    my ( $self, %p ) = @_;
 
     my $TRIANGLE = "\x{25B8}";
     my $tab = "  " x ( $p{level} );
 
-	for my $task_id(sort { $p{tasks}{$a}{oldest_updated_on} <=> $p{tasks}{$b}{oldest_updated_on} } @{$p{flip_parent}{$p{parent_id}}}) {
-        say $self->_format_str($p{columns}, "  " . $tab . $TRIANGLE . " ", $p{tasks}{$task_id}{title}, $p{tasks}{$task_id}{assigned_to}, $p{tasks}{$task_id}{oldest_updated_on});
-		if ($p{flip_parent}{$task_id}) {
-			$self->_display_tree(
-				%p,
-				level => $p{level} + 1,
-				parent_id => $task_id,
-			);
-		}
-	}
+    for my $task_id (
+        sort {
+            $p{tasks}{$a}{oldest_updated_on}
+                <=> $p{tasks}{$b}{oldest_updated_on}
+        } @{ $p{flip_parent}{ $p{parent_id} } }
+        )
+    {
+        say $self->_format_str(
+            $p{columns},
+            "  " . $tab . $TRIANGLE . " ",
+            $p{tasks}{$task_id}{title},
+            $p{tasks}{$task_id}{assigned_to},
+            $p{tasks}{$task_id}{oldest_updated_on}
+        );
+        if ( $p{flip_parent}{$task_id} ) {
+            $self->_display_tree(
+                %p,
+                level     => $p{level} + 1,
+                parent_id => $task_id,
+            );
+        }
+    }
 
 }
 
 sub _trunc_str {
-    my ($self, $str, $max) = @_;
-    if (length($str) > $max) {
-        return substr($str, 0, $max - 4) . ' ...';
-    } else {
+    my ( $self, $str, $max ) = @_;
+    if ( length($str) > $max ) {
+        return substr( $str, 0, $max - 4 ) . ' ...';
+    }
+    else {
         return $str;
     }
 }
+
 sub _format_str {
-    my ($self, $columns, $pad, $title, $assigned_to, $updated_on) = @_;
+    my ( $self, $columns, $pad, $title, $assigned_to, $updated_on ) = @_;
     $assigned_to //= 'nobody';
-    my $date_str = DateTime->from_epoch(epoch => $updated_on)->strftime('%Y/%m/%d %H:%M');
+    my $date_str = DateTime->from_epoch( epoch => $updated_on )
+        ->strftime('%Y/%m/%d %H:%M');
     my $mtitle = $columns - 41;
     $mtitle = length($pad) + 20 if $mtitle < length($pad) + 20;
     my $format_str = "%-" . ($mtitle) . "s [ %15s ] [ %s ]";
 
-    return sprintf($format_str, $self->_trunc_str($pad . $title, $mtitle), $self->_trunc_str($assigned_to, 15), $date_str);
+    return sprintf( $format_str,
+        $self->_trunc_str( $pad . $title, $mtitle ),
+        $self->_trunc_str( $assigned_to,  15 ), $date_str );
 }
-
 
 1;
