@@ -36,6 +36,7 @@ REDMINE_AUTHKEY=$(git config redmine.authkey)
 REDMINE_URL=$(git config redmine.url)
 
 REDMINE_USER_ID=$(git config redmine.user.id)
+REDMINE_USER_AUTH_KEY=$(git config redmine.user.authkey)
 
 REDMINE_TASK_TODO=$(git config redmine.statuses.task.assigned)
 REDMINE_TASK_IN_PROGRESS=$(git config redmine.statuses.task.inprogress)
@@ -46,7 +47,6 @@ REDMINE_REVIEW_IN_PROGRESS=$(git config redmine.statuses.review.inprogress)
 REDMINE_RELEASE_TODO=$(git config redmine.statuses.release.assigned)
 REDMINE_RELEASE_FINISH=$(git config redmine.statuses.release.finish)
 
-set -e
 
 if [ -z "$REDMINE_AUTHKEY" ] || [ -z "$REDMINE_URL" ]
 then
@@ -63,10 +63,16 @@ then
     exit 1
 fi
 
+if [ "$REDMINE_USER_AUTH_KEY" != "$REDMINE_AUTHKEY" ]; then
+    REDMINE_USER_ID=""
+    REDMINE_USER_AUTH_KEY=$REDMINE_AUTHKEY
+fi
+
 if [ -z "$REDMINE_USER_ID" ]
 then
     REDMINE_USER_ID=$(redmine-get-current-user-id)
     git config redmine.user.id $REDMINE_USER_ID
+    git config redmine.user.authkey $REDMINE_USER_AUTH_KEY
 fi
 
 export REDMINE_AUTHKEY REDMINE_URL
@@ -74,3 +80,5 @@ export REDMINE_TASK_TODO REDMINE_TASK_IN_PROGRESS
 export REDMINE_REVIEW_TODO REDMINE_REVIEW_IN_PROGRESS
 export REDMINE_RELEASE_TODO REDMINE_RELEASE_FINISH
 export REDMINE_USER_ID
+
+set -e
