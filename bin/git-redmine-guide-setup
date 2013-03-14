@@ -1,0 +1,6 @@
+#!/bin/bash
+source "$(dirname "$0")/../share/Git-Redmine-Suite/helpers/scripts/grs.sh"
+
+help_command
+
+man $MAN_DIR/setup.man
