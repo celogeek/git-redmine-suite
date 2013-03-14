@@ -9,5 +9,7 @@ export PERLLIB=$PERL_DIR/lib
 set +e
 source $SCRIPT_DIR/check_update.sh
 set -e
-source $SCRIPT_DIR/set_env.sh
+if [ -z "$SETUP" ]; then
+	source $SCRIPT_DIR/set_env.sh
+fi
 source $SCRIPT_DIR/helpers.sh
