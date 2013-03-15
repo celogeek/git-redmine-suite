@@ -131,3 +131,25 @@ __EOF__
 
 
 }
+
+function task_status {
+	echo "Status of your tasks : "
+	echo ""
+	CURRENT_TASK=$(git config redmine.task.current)
+	for TASK in $(git config --get-regexp ^'redmine\.task\..*\.' | cut -d "." -f 3 | sort -u); do
+		if [ "$TASK" == "$CURRENT_TASK" ]; then
+			continue
+		fi
+    	T=$(redmine-get-task-info --task_id=$TASK --with-status)
+		echo "    $T"
+    	if echo "$T" | grep -q ", Released with v"
+    	then
+    		if ask_question --question="This task (# $TASK) has been released, clear it ?"
+    		then
+    			git redmine task clear $TASK
+    		fi
+    	fi
+   	    echo ""
+	done
+	echo ""
+}
