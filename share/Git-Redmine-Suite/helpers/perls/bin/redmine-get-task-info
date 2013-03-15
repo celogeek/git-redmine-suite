@@ -3,7 +3,10 @@
 use List::Util qw/max/;
 use GRS 'TaskInfo';
 my ( $app, $issue ) = GRS->run();
-
+if (!$issue) {
+	say "Invalid task !";
+	exit 1;
+}
 if ( $app->with_status ) {
 	say $app->title_with_status($issue);
 }

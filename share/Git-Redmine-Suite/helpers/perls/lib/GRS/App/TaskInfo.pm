@@ -31,10 +31,16 @@ option 'pad'                  => (
 sub app {
     my ($self) = @_;
 
+    my $issue = 
+        $self->API->issues->issue->get( $self->task_id,
+            include => 'custom_fields' )->content->{issue};
+
+    my %cf = map { @$_{qw/name id/} } @{$issue->{custom_fields}};
+    return if grep {!exists $cf{$_}} qw/GIT_REPOS GIT_PR GIT_RELEASE/;
+
     return (
         $self,
-        $self->API->issues->issue->get( $self->task_id,
-            include => 'custom_fields' )->content->{issue}
+        $issue
     );
 
 }

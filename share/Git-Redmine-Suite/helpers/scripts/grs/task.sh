@@ -56,7 +56,9 @@ function task_create {
 	TASK=$1
 
 	echo "Starting the task : "
-	redmine-get-task-info --task_id=$TASK --with-extended-status
+	if ! redmine-get-task-info --task_id=$TASK --with-extended-status; then
+		exit 1
+	fi
 	if ! ask_question --question="Do you really want to start this task ?"; then
 		exit 1
 	fi
@@ -70,5 +72,10 @@ function task_create {
 	cf_val=$REDMINE_GIT_REPOS_URL \
 	progress=10 \
 	task_update
+
+	#TASK_TITLE=$(redmine_get_title $TASK)
+	#SLUG_TITLE=$(/usr/local/share/Git-Redmine-Suite/helpers/slug --this "$TASK_TITLE")
+	#BRNAME="redmine-$SLUG_TITLE"
+
 
 }
