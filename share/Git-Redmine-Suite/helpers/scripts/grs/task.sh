@@ -30,3 +30,14 @@ function task_update
     redmine-update-task "${PARAMS[@]}" "${ADD_PARAMS[@]}"
     redmine-check-task "${PARAMS[@]}"
 }
+
+function task_start {
+	TASK=$1
+	if [ -z "$TASK" ]; then
+		echo "Missing TASK_NUMBER : "
+		echo ""
+		HELP=1 $0
+	fi
+
+	
+}
