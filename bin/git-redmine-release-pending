@@ -5,4 +5,4 @@ help_command
 
 source "$(dirname "$0")/../share/Git-Redmine-Suite/helpers/scripts/grs.sh"
 
-redmine-get-task-list --status_ids="$REDMINE_RELEASE_TODO" --cf_id="$REDMINE_GIT_REPOS_ID" --cf_val="$(git config remote.origin.url)"
+redmine-get-task-list --status_ids="$REDMINE_RELEASE_TODO" --cf_id="$REDMINE_GIT_REPOS_ID" --cf_val="$REDMINE_GIT_REPOS_URL"

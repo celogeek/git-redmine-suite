@@ -1,7 +1,6 @@
 #!/bin/bash
 
 MODULE="$0-$1"
-set -e
 
 if [ -x "$MODULE" ]
 then
