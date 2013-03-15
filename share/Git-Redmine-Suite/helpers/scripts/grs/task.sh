@@ -3,8 +3,8 @@ function task_update
 {
 	declare -a PARAMS
 
-	PARAMS+=(--id "$task")
-	PARAMS+=(--status_id "$status")
+	PARAMS+=(--task_id "$task")
+	PARAMS+=(--status_ids "$status")
 	PARAMS+=(--assigned_to_id "$assigned_to")
 
 	declare -a ADD_PARAMS
@@ -39,5 +39,36 @@ function task_start {
 		HELP=1 $0
 	fi
 
-	
+	if git config redmine.task.$TASK.branch; then
+		task_continue "$1"
+	else
+		task_create "$1"
+	fi
+
+}
+
+function task_continue {
+	TASK=$1
+
+}
+
+function task_create {
+	TASK=$1
+
+	echo "Starting the task : "
+	redmine-get-task-info --task_id=$TASK --with-extended-status
+	if ! ask_question --question="Do you really want to start this task ?"; then
+		exit 1
+	fi
+
+	echo "Updating redmine status ..."
+
+	task=$TASK \
+	status=$REDMINE_TASK_IN_PROGRESS \
+	assigned_to=$REDMINE_USER_ID \
+	cf_id=$REDMINE_GIT_REPOS_ID \
+	cf_val=$REDMINE_GIT_REPOS_URL \
+	progress=10 \
+	task_update
+
 }
