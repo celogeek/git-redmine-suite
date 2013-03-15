@@ -186,3 +186,24 @@ function task_clear {
 	fi
 
 }
+
+function task_depends {
+	CURRENT_TASK=$(git config redmine.task.current)
+
+	if [ -z "$CURRENT_TASK" ]; then
+		echo "No task started !"
+		exit 1
+	fi
+
+	DEPS="$@"
+
+	if [ -z "$DEPS" ]; then
+		if ask_question --question "Do you want to clear the deps of this task ?"; then
+			git config --unset redmine.task.$CURRENT_TASK.depends
+		fi
+	else
+		if ask_question --question "Do you want to set the deps of this task to '$DEPS' ?"; then
+			git config redmine.task.$CURRENT_TASK.depends "$DEPS"
+		fi
+	fi
+}
