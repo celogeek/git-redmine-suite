@@ -10,29 +10,16 @@ Return the CF ids of a project
 
 use Moo::Role;
 use MooX::Options;
-use List::MoreUtils qw/all/;
 
-with 'GRS::Role::API';
+with 'GRS::Role::API', 'GRS::Role::CFFilter';
 
 sub required_options { qw/server_url auth_key/ }
 
 sub app {
 	my ($self) = @_;
 
-    my $filter = sub {
-        my ( $self, @projects ) = @_;
-        my @valid_projects;
-        for my $project (@projects) {
-            my %cf = map { ( $_->{name} => $_->{id} ) }
-                @{ $project->{custom_fields} };
-            push @valid_projects, $project
-                if all {defined} @cf{qw/GIT_REPOS GIT_PR GIT_RELEASE/};
-        }
-        return @valid_projects;
-    };
-
 	my ($project) = $self->API_fetchAll('projects', { include => 'custom_fields' },
-        undef, $filter );
+        undef, $self->can('cf_filter') );
 
 	return if ! defined $project;
 

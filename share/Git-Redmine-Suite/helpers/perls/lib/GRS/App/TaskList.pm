@@ -18,7 +18,7 @@ use DateTime;
 use Date::Parse;
 
 with 'GRS::Role::API', 'GRS::Role::Project', 'GRS::Role::StatusIDS',
-    'GRS::Role::AssignedToID', 'GRS::Role::IDSOnly', 'GRS::Role::CFSet';
+    'GRS::Role::AssignedToID', 'GRS::Role::IDSOnly', 'GRS::Role::CFSet', 'GRS::Role::CFFilter';
 
 sub required_options {qw/server_url auth_key/}
 
@@ -40,7 +40,7 @@ sub app {
 
     print "List of tasks " unless $self->ids_only;
 
-    my @issues = $self->API_fetchAll( 'issues', \%search, $progress );
+    my @issues = $self->API_fetchAll( 'issues', \%search, $progress, $self->can('cf_filter') );
 
     if ( $self->ids_only ) {
         say for sort { $a <=> $b } map { $_->{id} } @issues;
