@@ -72,10 +72,10 @@ sub default_message {
     my ( $self, $assigned_to, $status ) = @_;
 
     return <<__EOF__
-This task has not the right status in redmine.
-It is assigned to "$assigned_to" and as the status "$status".
 
-Please check that the task is assigned properly, and has the expected status.
+I can't update this task. It is assigned to "$assigned_to" and as the status "$status".
+
+Please ask your manager or an administrator to change the status in redmine.
 
 __EOF__
 }

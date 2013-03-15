@@ -71,11 +71,34 @@ function task_create {
 	cf_id=$REDMINE_GIT_REPOS_ID \
 	cf_val=$REDMINE_GIT_REPOS_URL \
 	progress=10 \
-	task_update
+	task_update || exit 1
 
-	#TASK_TITLE=$(redmine_get_title $TASK)
-	#SLUG_TITLE=$(/usr/local/share/Git-Redmine-Suite/helpers/slug --this "$TASK_TITLE")
-	#BRNAME="redmine-$SLUG_TITLE"
+	PROJECT=$(redmine-get-task-project-identifier --task_id=$TASK)
+	TASK_TITLE=$(redmine-get-task-info --task_id=$TASK)
+	SLUG_TITLE=$(slug --this "$TASK_TITLE")
+	BRNAME="redmine-$SLUG_TITLE"
+
+	echo "Creation local branch $BRNAME ..."
+	git_refresh_local_repos
+	git checkout -b "$BRNAME" origin/devel
+	git config "redmine.task.current" "$TASK"
+	git config "redmine.task.$TASK.title" "$TASK_TITLE"
+	git config "redmine.task.$TASK.branch" "$BRNAME"
+	git config "redmine.task.$TASK.project" "$PROJECT"
+	git push origin -u $BRNAME || cat <<__EOF__
+The remote branch $BRNAME already exist !
+You have 2 choice. 
+
+Or you take control of this branch :
+
+    git push -fu origin "$BRNAME"
+
+Or you get that branch and continue the devel :
+
+    git reset --hard "origin/$BRNAME"
+    git push -u origin "$BRNAME"
+
+__EOF__
 
 
 }
