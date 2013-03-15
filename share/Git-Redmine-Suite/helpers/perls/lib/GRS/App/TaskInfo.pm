@@ -52,7 +52,6 @@ sub title_with_status {
 
     my $duration_str = $self->_duration($issue);
     my $status       = $issue->{status}->{name};
-    my $assigned_to  = $issue->{assigned_to}->{name};
     my $title        = $self->title($issue);
     my $release      = $self->_release($issue);
     my $released_str = "";
@@ -70,7 +69,7 @@ sub title_with_extended_status {
         [ "Title"          => $self->title($issue) ],
         [ "Status"         => $issue->{status}->{name} ],
         [ "Last update"    => $self->_duration($issue) ],
-        [ "Assigned to"    => $self->{assigned_to}->{name} ],
+        [ "Assigned to"    => $issue->{assigned_to}->{name} ],
         [ "Reported Repos" => $cf{GIT_REPOS} ],
         [ "Last PR"        => $cf{GIT_PR} ],
         [ "Released"       => $cf{GIT_RELEASE} ],
