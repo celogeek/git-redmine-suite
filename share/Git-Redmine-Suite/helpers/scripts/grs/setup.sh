@@ -18,6 +18,8 @@ function setup_with_profile {
 		HELP=1 $0
 	fi
 
+	echo "Setup profile $2 with $3 ..."
+
 	git config --remove-section redmine.user 2> /dev/null
 
 	cat $PROFILE | perl -pe 's/^(.*?)\s+=\s+(.*)$/git config '$GLOBAL' $1 "$2"/' | /bin/bash
