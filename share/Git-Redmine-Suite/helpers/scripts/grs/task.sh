@@ -153,3 +153,36 @@ function task_status {
 	done
 	echo ""
 }
+
+function task_clear {
+	TASK=$1
+	if [ -z "$TASK" ]; then
+		echo "Missing TASK_NUMBER : "
+		echo ""
+		HELP=1 $0
+	fi
+
+	BRNAME=$(git config "redmine.task.${TASK}.branch")
+	
+	if [ -z "$BRNAME" ]; then
+		echo "Invalid task !"
+		exit 1
+	fi
+
+	echo "Cleaning local and remote dev for task $TASK..."
+
+	git_refresh_local_repos	
+	git checkout devel
+	git merge origin/devel
+	git branch -D "$BRNAME"
+	git push origin :"$BRNAME"
+	git config --remove-section "redmine.task.$TASK"
+
+	CURRENT_TASK=$(git config redmine.task.current)
+	if [ "$TASK" == "$CURRENT_TASK" ]; then
+		git config --unset redmine.task.current
+	else
+		git checkout $(git config redmine.task.$CURRENT_TASK.branch)
+	fi
+
+}
