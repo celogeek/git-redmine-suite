@@ -39,7 +39,7 @@ function task_start {
 		HELP=1 $0
 	fi
 
-	if git config redmine.task.$TASK.branch; then
+	if git config redmine.task.$TASK.branch > /dev/null; then
 		task_continue "$1"
 	else
 		task_create "$1"
@@ -80,7 +80,7 @@ function task_create {
 
 	echo "Creation local branch $BRNAME ..."
 	git_refresh_local_repos
-	git checkout -b "$BRNAME" origin/devel
+	git checkout -b "$BRNAME" origin/devel || git checkout "$BRNAME" || exit 1
 	git config "redmine.task.current" "$TASK"
 	git config "redmine.task.$TASK.title" "$TASK_TITLE"
 	git config "redmine.task.$TASK.branch" "$BRNAME"
