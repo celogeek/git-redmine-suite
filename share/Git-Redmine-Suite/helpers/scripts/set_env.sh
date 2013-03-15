@@ -24,13 +24,15 @@ __EOF__
     echo ""
 }
 
-set -e
-
 GIT_DIR=$(git rev-parse --git-dir)
+
+if [ -z $GIT_DIR ]; then
+    exit 1
+fi
 
 cd "$(dirname "$GIT_DIR")"
 
-set +e
+REDMINE_GIT_REPOS_URL=$(git config remote.origin.url)
 
 REDMINE_AUTHKEY=$(git config redmine.authkey)
 REDMINE_URL=$(git config redmine.url)
@@ -90,6 +92,4 @@ export REDMINE_TASK_TODO REDMINE_TASK_IN_PROGRESS
 export REDMINE_REVIEW_TODO REDMINE_REVIEW_IN_PROGRESS
 export REDMINE_RELEASE_TODO REDMINE_RELEASE_FINISH
 export REDMINE_USER_ID
-export REDMINE_GIT_REPOS_ID REDMINE_GIT_PR_ID REDMINE_GIT_RELEASE_ID
-
-set -e
+export REDMINE_GIT_REPOS_ID REDMINE_GIT_REPOS_URL REDMINE_GIT_PR_ID REDMINE_GIT_RELEASE_ID
