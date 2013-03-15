@@ -4,9 +4,8 @@ cd "$(dirname "$0")"
 
 sudo rm -rf /usr/local/share/Git-Redmine-Suite /usr/local/bin/git-redmine /usr/local/bin/git-redmine-*
 
-sudo cp -av share/* /usr/local/share/
+sudo cp -rv share/* /usr/local/share/
 sudo cp -av bin/* /usr/local/bin/
-sudo cp -av VERSION /usr/local/share/Git-Redmine-Suite/
 
 POD2MAN=$(/usr/bin/perl -E 'say "/usr/bin/pod2man", sprintf("%d.%d",split(/\./, sprintf("%vd",$^V)))')
 [ -x $POD2MAN ] || POD2MAN=/usr/bin/pod2man
