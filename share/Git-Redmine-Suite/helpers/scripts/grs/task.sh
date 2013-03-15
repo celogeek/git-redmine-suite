@@ -49,6 +49,35 @@ function task_start {
 
 function task_continue {
 	TASK=$1
+	BRNAME=$(git config redmine.task.$TASK.branch)
+    echo "Continue the task $TASK ..."
+    echo ""
+    echo "Updating redmine ..."
+	task=$TASK \
+	status=$REDMINE_TASK_IN_PROGRESS \
+	assigned_to=$REDMINE_USER_ID \
+	cf_id=$REDMINE_GIT_REPOS_ID \
+	cf_val=$REDMINE_GIT_REPOS_URL \
+	progress=10 \
+	task_update || exit 1
+    echo ""
+    echo "Checkout local branch $BRNAME ..."
+    git_refresh_local_repos
+    git checkout "$BRNAME"
+    git config "redmine.task.current" "$TASK"
+    git rebase origin/"$BRNAME" || cat <<__EOF__
+Fix the conflict, and finish the rebase or remote branch
+
+__EOF__
+
+    cat <<__EOF__
+
+To update your branch :
+    git rebase origin/devel
+    #fix conflict, then
+    git push origin -f $BRNAME
+
+__EOF__
 
 }
 
