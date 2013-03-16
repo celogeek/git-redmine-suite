@@ -36,7 +36,7 @@ sub app {
             include => 'custom_fields' )->content->{issue};
 
     my %cf = map { @$_{qw/name id/} } @{$issue->{custom_fields}};
-    return if grep {!exists $cf{$_}} qw/GIT_REPOS GIT_PR GIT_RELEASE/;
+    return $self if grep {!exists $cf{$_}} qw/GIT_REPOS GIT_PR GIT_RELEASE/;
 
     return (
         $self,

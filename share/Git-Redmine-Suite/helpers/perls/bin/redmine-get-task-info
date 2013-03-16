@@ -4,7 +4,7 @@ use List::Util qw/max/;
 use GRS 'TaskInfo';
 my ( $app, $issue ) = GRS->run();
 if (!$issue) {
-	say "Invalid task !";
+	say "Task # ", $app->task_id, ": Invalid task (missing or project without the CF) !";
 	exit 1;
 }
 if ( $app->with_status ) {
