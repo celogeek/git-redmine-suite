@@ -149,8 +149,9 @@ function release_finish {
 
 	echo ""
 	echo "Update redmine"
-	echo ""
 	for TASK in ${TASKS[@]}; do
+		echo ""
+		echo "Task # $TASK : "
 
 		redmine-get-task-info --task_id="$TASK" --with_extended_status
 		echo ""
