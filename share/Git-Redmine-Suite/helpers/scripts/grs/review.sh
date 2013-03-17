@@ -94,9 +94,36 @@ And don't forget to run your tests before !
 
 __EOF__
 
-if ask_question --question="Do you want to finish the review now ?"
-then
-    REDMINE_CHAIN=1 exec git redmine review finish
-fi
+	if ask_question --question="Do you want to finish the review now ?"; then
+	    REDMINE_CHAIN=1 exec git redmine review finish
+	fi
+
+}
+
+function review_abort {
+	TASK=$(git config redmine.review.current)
+
+	if [ -z "$TASK" ]; then
+	    echo "You have not start any review !"
+	    exit 1
+	fi
+	
+	TASK_TITLE=$(git config "redmine.review.$TASK.title")
+	BRNAME=$(git config "redmine.review.$TASK.branch")
+	PR=$(git config "redmine.review.$TASK.pr")
+
+	if ! ask_question --question="Aborting the review of $TASK_TITLE - PR:$PR ?"; then
+		exit 1
+	fi
+	
+	git checkout devel
+	git branch -D "$BRNAME"
+	git config --remove-section "redmine.review.$TASK"
+	git config --unset redmine.review.current
+
+	task=$TASK \
+	status=$REDMINE_REVIEW_TODO \
+	assigned_to=$REDMINE_USER_ID \
+	task_update
 
 }
