@@ -12,6 +12,10 @@
     * Feature #82 - Autoconf CF (Celogeek San)
     * Feature #83 - Change encode by utf8::all (Celogeek San)
     * Feature #86 - Uniformize task number (always #_NUMBER) (Celogeek San)
+    * Feature #81 : Improve call structure (Celogeek San)
+	Fully rewrite from scratch
+	Create GRS Perl App and Script helpers
+	Improve all process
 
 0.29  2013-03-08 21:25:45 GMT
 
