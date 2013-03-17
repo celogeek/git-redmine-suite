@@ -174,3 +174,71 @@ $(cat "$F")
 	git config --unset "redmine.review.current"
 
 }
+
+function review_finish {
+	TASK=$(git config redmine.review.current)
+
+	if [ -z "$TASK" ]; then
+	    echo "You have not start any review !"
+	    exit 1
+	fi
+	
+	PROJECT=$(git config "redmine.review.$TASK.project")
+	TASK_TITLE=$(git config "redmine.review.$TASK.title")
+	TASK_DEV=$(redmine-get-task-developers --task_id="$TASK" --status_ids="$REDMINE_TASK_IN_PROGRESS")
+	PR=$(git config "redmine.review.$TASK.pr")
+	BRNAME=$(git config "redmine.review.$TASK.branch")
+	CHANGELOG=$(get_change_log)
+
+
+	if [ -z "$REDMINE_CHAIN" ]; then
+		if ! ask_question --question="Finish the review of $TASK_TITLE - PR:$PR ?"; then
+			exit 1
+		fi
+	fi
+
+	if ! reassigned_this "review" "$PROJECT"; then
+		exit 1
+	fi
+
+	git_refresh_local_repos
+	git checkout devel
+	git merge origin/devel
+	git merge --no-ff "$BRNAME" -m "Merge $BRNAME"
+	echo "    * $TASK_TITLE ($TASK_DEV)" > "$CHANGELOG".new
+	touch "$CHANGELOG"
+	cat "$CHANGELOG" >> "$CHANGELOG".new
+	mv "$CHANGELOG".new "$CHANGELOG"
+	vim "$CHANGELOG"
+	git add "$CHANGELOG"
+	git commit -m "reflect changes" "$CHANGELOG" || true
+	git push origin devel
+	git push origin :tags/"$PR"
+	git tag -d "$PR"
+	git branch -D "$BRNAME"
+	git config --remove-section "redmine.review.$TASK"
+	git config --unset "redmine.review.current"
+
+	task=$TASK \
+	status=$REDMINE_RELEASE_TODO \
+	assigned_to=$ASSIGNED_TO_ID \
+	cf_id=$REDMINE_GIT_PR_ID \
+	cf_val=" " \
+	task_update
+	echo ""
+
+	echo "Removing old pr ..."
+	for tag in $(git tag | grep pr-.*-redmine-.*-$TASK-)
+	do
+    	git push origin :tags/"$tag"
+    	git tag -d "$tag"
+	done
+
+	if [ "$ASSIGNED_TO_ID" = "$REDMINE_USER_ID" ]
+	then
+		if ask_question --question="You are the releaser of this task. Do you want to release now ?"
+		then
+			REDMINE_CHAIN=1 exec git redmine release start $TASK
+		fi
+	fi
+}
