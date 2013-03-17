@@ -15,7 +15,7 @@ function setup_with_profile {
 	if [ -z "$AUTH_KEY" ]; then
 		echo "Missing AUTH_KEY :"
 		echo ""
-		HELP=1 $0
+		HELP=1 exec $0
 	fi
 
 	echo "Setup profile $2 with $3 ..."

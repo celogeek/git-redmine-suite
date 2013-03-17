@@ -21,7 +21,7 @@ else
         set +e
         for MODULE in $0-*
         do
-            HELP=1 $MODULE
+            HELP=1 exec $MODULE
         done
         echo ""
     fi

@@ -37,7 +37,7 @@ function task_start {
 	if [ -z "$TASK" ]; then
 		echo "Missing TASK_NUMBER : "
 		echo ""
-		HELP=1 $0
+		HELP=1 exec $0
 	fi
 
 	if git config redmine.task.$TASK.branch > /dev/null; then
@@ -157,7 +157,7 @@ function task_clear {
 	if [ -z "$TASK" ]; then
 		echo "Missing TASK_NUMBER : "
 		echo ""
-		HELP=1 $0
+		HELP=1 exec $0
 	fi
 
 	BRNAME=$(git config "redmine.task.${TASK}.branch")
