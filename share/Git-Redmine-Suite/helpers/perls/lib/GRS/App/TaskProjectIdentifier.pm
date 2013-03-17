@@ -17,8 +17,6 @@ with 'GRS::Role::API', 'GRS::Role::TaskID';
 
 sub required_options { qw/server_url auth_key task_id/ }
 
-use DDP colored => 1;
-
 sub app {
     my ($self) = @_;
 
