@@ -44,6 +44,7 @@ sub app {
 
     if ( $self->ids_only ) {
         say for sort { $a <=> $b } map { $_->{id} } @issues;
+        return;
     }
 
     $self->_issue_add($_) for @issues;

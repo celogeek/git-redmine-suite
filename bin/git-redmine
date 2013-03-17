@@ -18,10 +18,9 @@ else
             echo "The file $MODULE is not present. Check your command"
             echo ""
         fi
-        set +e
         for MODULE in $0-*
         do
-            HELP=1 exec $MODULE
+            HELP=1 $MODULE
         done
         echo ""
     fi
