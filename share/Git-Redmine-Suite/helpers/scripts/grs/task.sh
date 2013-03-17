@@ -27,6 +27,7 @@ function task_update
 		ADD_PARAMS+=(--cf_val "$cf_val")
 	fi
 
+	echo "Updating redmine task $task ..."
     redmine-update-task "${PARAMS[@]}" "${ADD_PARAMS[@]}"
     redmine-check-task "${PARAMS[@]}"
 }
@@ -52,7 +53,6 @@ function task_continue {
 	BRNAME=$(git config redmine.task.$TASK.branch)
     echo "Continue the task $TASK ..."
     echo ""
-    echo "Updating redmine ..."
 	task=$TASK \
 	status=$REDMINE_TASK_IN_PROGRESS \
 	assigned_to=$REDMINE_USER_ID \
@@ -91,8 +91,6 @@ function task_create {
 	if ! ask_question --question="Do you really want to start this task ?"; then
 		exit 1
 	fi
-
-	echo "Updating redmine status ..."
 
 	task=$TASK \
 	status=$REDMINE_TASK_IN_PROGRESS \
@@ -220,7 +218,6 @@ function task_finish {
 		exit 1
 	fi
 
-    echo "Updating redmine ..."
 	task=$CURRENT_TASK \
 	status=$REDMINE_TASK_IN_PROGRESS \
 	assigned_to=$REDMINE_USER_ID \
@@ -233,5 +230,58 @@ function task_finish {
 	if ! reassigned_this "task" "$PROJECT"; then
 		exit 1
 	fi
+
+	BRNAME=$(git config redmine.task.$CURRENT_TASK.branch)
+	TAG=$(tag_pr --name="$BRNAME")
+
+	set -e
+	git_refresh_local_repos
+	git checkout "$BRNAME"
+	git push origin "$BRNAME"
+	git tag "$TAG"
+	git push origin tags/"$TAG"
+	git checkout devel
+	git merge origin/devel
+	git config --unset "redmine.task.current"
+	set +e
+
+
+	DEPS=$(git config redmine.task.$CURRENT_TASK.depends | perl -pe 's/(\d+)/#$1/g')
+	MSG_DEPS=""
+	if [ -n "$DEPS" ]; then
+    	MSG_DEPS="Before reviewing this task, ensure you have already review : $DEPS"
+	fi
+
+	F=$(mktemp /tmp/redmine.XXXXXX)
+	vim "$F"
+
+	task=$CURRENT_TASK \
+	status=$REDMINE_REVIEW_TODO \
+	assigned_to=$ASSIGNED_TO_ID \
+	cf_id=$REDMINE_GIT_PR_ID \
+	cf_val=$TAG \
+	notes="
+You can start a review with :
+<pre>
+git redmine review start $TASK
+</pre>
+
+$MSG_DEPS
+
+Additional comments from the developer :
+
+$(cat "$F")
+" \
+	task_update
+
+	echo ""
+	unlink "$F"
+
+	if [ "$ASSIGNED_TO_ID" = "$REDMINE_USER_ID" ]; then
+		if ask_question --question="You are the reviewer of this task. Do you want to review it now ?"; then
+			REDMINE_CHAIN=1 exec git redmine review start $CURRENT_TASK
+		fi
+	fi
+
 
 }
