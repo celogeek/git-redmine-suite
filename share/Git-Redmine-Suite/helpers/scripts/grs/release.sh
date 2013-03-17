@@ -94,3 +94,20 @@ __EOF__
 	fi	
 
 }
+
+function release_abort {
+
+	if ! git config "redmine.release.version" > /dev/null
+	then
+		echo "No release started !"
+	    exit 1
+	fi
+	
+	BRNAME=$(git config redmine.release.branch)
+	
+	ask_question --question="Aborting release $BRNAME ?"
+	git config --remove-section redmine.release
+	git checkout devel
+	git branch -D $BRNAME
+
+}
