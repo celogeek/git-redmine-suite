@@ -1,23 +1,8 @@
 #!/bin/bash
+source "$(dirname "$0")/../share/Git-Redmine-Suite/helpers/scripts/help.sh"
 
-source /usr/local/share/Git-Redmine-Suite/helpers/current_git_command
-if [ -n "$HELP" ]
-then
-    echo "$CURRENT_GIT_COMMAND"
-    exit 1
-fi
+help_command
 
-set -e
+source "$(dirname "$0")/../share/Git-Redmine-Suite/helpers/scripts/grs.sh"
 
-source /usr/local/share/Git-Redmine-Suite/helpers/redmine-checkconf
-source /usr/local/share/Git-Redmine-Suite/helpers/redmine-project
-
-GIT_REPOS_ID=$(git config --get-regexp ^redmine.project.*.git.repos | head -n1 | cut -d " " -f 2)
-if [ -z "$GIT_REPOS_ID" ]
-	then
-	echo "You need to configure at least one project, to get the global GIT_REPOS value."
-	exit 1
-fi
-GIT_REPOS_URL=$(git config remote.origin.url)
-
-/usr/local/share/Git-Redmine-Suite/helpers/redmine-get-tasks --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL" --status_id="$REDMINE_REVIEW_TODO" --cf_id="$GIT_REPOS_ID" --cf_val="$GIT_REPOS_URL"
+redmine-get-task-list --status_ids="$REDMINE_REVIEW_TODO" --cf_id="$REDMINE_GIT_REPOS_ID" --cf_val="$REDMINE_GIT_REPOS_URL"

@@ -1,15 +1,13 @@
 #!/bin/bash
 
 MODULE="$0-$1"
-set -e
 
 if [ -x "$MODULE" ]
 then
     shift
     exec $MODULE $*
 else
-    source /usr/local/share/Git-Redmine-Suite/helpers/current_git_command
-    GROUP=$(echo $CURRENT_GIT_COMMAND | /usr/bin/perl -pe 's/^git redmine (.*)/\U$1/; s/^git redmine/MAIN/; s/SELF/SELF-UPGRADE/')
+    GROUP=$(basename "$0" | /usr/bin/perl -pe 's/\-/ /g; s/^git redmine (.*)/\U$1/; s/^git redmine/MAIN/; s/SELF/SELF-UPGRADE/')
 
     echo ""
     echo "[$GROUP]"
@@ -20,7 +18,6 @@ else
             echo "The file $MODULE is not present. Check your command"
             echo ""
         fi
-        set +e
         for MODULE in $0-*
         do
             HELP=1 $MODULE

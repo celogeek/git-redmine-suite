@@ -1,0 +1,3 @@
+#!/usr/bin/perl
+use GRS 'ProjectCheckUsers';
+exit !GRS->run;

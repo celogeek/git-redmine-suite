@@ -1,39 +1,8 @@
 #!/bin/bash
+source "$(dirname "$0")/../share/Git-Redmine-Suite/helpers/scripts/help.sh"
 
-source /usr/local/share/Git-Redmine-Suite/helpers/current_git_command
-function help {
-    echo "$CURRENT_GIT_COMMAND TASK_NUMBER"
-    exit 1
-}
+help_command "TASK_NUMBER"
 
-if [ -n "$HELP" ]
-then
-    help
-fi
+source "$(dirname "$0")/../share/Git-Redmine-Suite/helpers/scripts/grs.sh"
 
-set -e
-
-source /usr/local/share/Git-Redmine-Suite/helpers/redmine-checkconf
-source /usr/local/share/Git-Redmine-Suite/helpers/redmine-statuses
-source /usr/local/share/Git-Redmine-Suite/helpers/redmine-title
-source /usr/local/share/Git-Redmine-Suite/helpers/redmine-project
-
-TASK="$1"
-
-if [ -z "$TASK" ]
-then
-    help
-fi
-
-BRNAME=$(git config "redmine.task.${TASK}.branch")
-
-echo "Cleaning local and remote dev for task $TASK..."
-
-git fetch -ap
-git fetch --tags -p
-git checkout devel
-git merge origin/devel
-git branch -D "$BRNAME"
-git push origin :"$BRNAME"
-git config --remove-section "redmine.task.$TASK"
-
+task_clear "$1"

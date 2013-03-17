@@ -1,0 +1,9 @@
+#!/usr/bin/perl
+use GRS 'ProjectUsers';
+
+my ($app, @members) = GRS->run;
+
+say "The list of users for the project '",$app->project,"' :";
+for my $member(@members) {
+    say sprintf("    %-5d - %-30s", @$member);
+}
