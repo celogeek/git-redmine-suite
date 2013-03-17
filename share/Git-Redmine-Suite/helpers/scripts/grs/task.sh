@@ -207,3 +207,32 @@ function task_depends {
 		fi
 	fi
 }
+
+function task_finish {
+	CURRENT_TASK=$(git config redmine.task.current)
+
+	if [ -z "$CURRENT_TASK" ]; then
+		echo "No task started !"
+		exit 1
+	fi
+
+	if ! ask_question --question="Do you really want to finish the task $CURRENT_TASK ?"; then
+		exit 1
+	fi
+
+    #echo "Updating redmine ..."
+	#task=$CURRENT_TASK \
+	#status=$REDMINE_TASK_IN_PROGRESS \
+	#assigned_to=$REDMINE_USER_ID \
+	#cf_id=$REDMINE_GIT_REPOS_ID \
+	#cf_val=$REDMINE_GIT_REPOS_URL \
+	#progress=100 \
+	#task_update || exit 1
+
+	PROJECT=$(git config redmine.task.$CURRENT_TASK.project)
+	if ! reassigned_task_to "$PROJECT"; then
+		exit 1
+	fi
+
+	echo "Choice : $ASSIGNED_TO_ID"
+}

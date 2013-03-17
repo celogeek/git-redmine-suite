@@ -75,7 +75,7 @@ sub answer_mode_id {
     my ( $self, $term, $prompt, $default_answer ) = @_;
 
     my $answer;
-    say "";
+    print STDERR "\n";
     for ( ;; ) {
         $answer = $term->readline($prompt);
         $answer = $default_answer unless defined $answer && length $answer;
