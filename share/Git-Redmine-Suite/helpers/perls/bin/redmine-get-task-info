@@ -17,7 +17,9 @@ elsif ( $app->with_extended_status ) {
 
 	for my $r(@res) {
 		my ($title, $value) = @$r;
-		next unless defined $value && length($value);
+		$value //= "";
+		$value =~ s/^\s+|\s+$//g;
+		next unless length($value);
 		say $app->pad,sprintf($max_fmt, $title)," : ",$value;
 	}
 }

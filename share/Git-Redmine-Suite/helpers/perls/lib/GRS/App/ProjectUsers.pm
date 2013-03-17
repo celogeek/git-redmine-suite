@@ -25,7 +25,7 @@ sub app {
     my $content = $resp->content->{project}->{members} // [];
 
     return
-        map { [ @$_{qw/id name/} ] } sort { $a->{name} cmp $b->{name} } @$content;
+        $self, map { [ @$_{qw/id name/} ] } sort { $a->{name} cmp $b->{name} } @$content;
 
 }
 1;

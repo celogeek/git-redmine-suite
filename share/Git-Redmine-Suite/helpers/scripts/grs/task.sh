@@ -140,10 +140,8 @@ function task_status {
 		fi
     	T=$(redmine-get-task-info --task_id=$TASK --with-status)
 		echo "    $T"
-    	if echo "$T" | grep -q ", Released with v"
-    	then
-    		if ask_question --question="This task (# $TASK) has been released, clear it ?"
-    		then
+    	if echo "$T" | grep -q ", Released with v"; then
+    		if ask_question --question="This task (# $TASK) has been released, clear it ?"; then
     			git redmine task clear $TASK
     		fi
     	fi

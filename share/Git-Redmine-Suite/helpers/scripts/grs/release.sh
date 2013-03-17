@@ -44,7 +44,7 @@ function release_start {
 	git checkout -b "$BRNAME"
 	
 	git config "redmine.release.version" "$VERSION"
-	git config "redmine.release.tasks" "$(echo ${TASKS[@]})"
+	git config "redmine.release.tasks" "${TASKS[*]}"
 	git config "redmine.release.branch" "$BRNAME"
 	
 	CHANGELOG=$(get_change_log)
@@ -97,17 +97,82 @@ __EOF__
 
 function release_abort {
 
-	if ! git config "redmine.release.version" > /dev/null
-	then
+	VERSION=$(git config redmine.release.version)
+	BRNAME=$(git config redmine.release.branch)
+
+	if [ -z "$VERSION" ]; then
 		echo "No release started !"
 	    exit 1
 	fi
-	
-	BRNAME=$(git config redmine.release.branch)
-	
-	ask_question --question="Aborting release $BRNAME ?"
+
+	if ! ask_question --question="Aborting release $BRNAME ?"; then
+		exit 1
+	fi
 	git config --remove-section redmine.release
 	git checkout devel
 	git branch -D $BRNAME
 
+}
+
+function release_finish {
+	
+	VERSION=$(git config redmine.release.version)
+	BRNAME=$(git config redmine.release.branch)
+	declare -a TASKS=($(git config redmine.release.tasks))
+
+	if [ -z "$VERSION" ]; then
+		echo "No release started !"
+	    exit 1
+	fi
+
+	if [ -z "$REDMINE_CHAIN" ]; then
+		if ! ask_question --question="Do you want to finish the release these tasks : ${TASKS[*]} ?"; then
+			exit 1
+		fi
+	fi
+
+	echo "Finish the release ${TASKS[@]} ..."
+
+	git_refresh_local_repos
+	git checkout devel
+	git merge origin/devel
+	git merge --no-ff "$BRNAME" -m "Merge $BRNAME"
+	git push origin devel
+	git checkout master
+	git merge origin/master
+	git merge --no-ff devel -m "Merge $BRNAME"
+	git tag -m "release v$V: ${TASKS[*]}" "v$VERSION"
+	git push origin master
+	git push origin "tags/v$VERSION"
+	git branch -d "$BRNAME"
+	git config --remove-section redmine.release
+
+	echo ""
+	echo "Update redmine"
+	echo ""
+	for TASK in ${TASKS[@]}; do
+
+		redmine-get-task-info --task_id="$TASK" --with_extended_status
+		echo ""
+		PROJECT=$(redmine-get-task-project-identifier --task_id=$TASK)
+		
+
+		while true; do
+			reassigned_this "release" "$PROJECT" || true
+			if [ -z "$ASSIGNED_TO_ID" ]; then
+				echo "You need it for the release !"
+			else
+				break
+			fi
+		done
+
+	    task=$TASK \
+	    status=$REDMINE_RELEASE_FINISH \
+	    assigned_to=$ASSIGNED_TO_ID \
+	    cf_id=$REDMINE_GIT_RELEASE_ID \
+	    cf_val="$VERSION" \
+	    task_update
+	done
+
+	
 }

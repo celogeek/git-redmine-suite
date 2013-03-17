@@ -60,8 +60,7 @@ __EOF__
 	git config "redmine.review.$TASK.branch" "$BRNAME"
 	git config "redmine.review.$TASK.project" "$PROJECT"
 
-	if ask_question --question="Do you want to rebase before review ?"
-	then
+	if ask_question --question="Do you want to rebase before review ?"; then
 	    git rebase origin/devel && (git diff --color origin/devel | less -R)
 	else
 	    git diff --color origin/devel | less -R
@@ -236,8 +235,7 @@ function review_finish {
 
 	if [ "$ASSIGNED_TO_ID" = "$REDMINE_USER_ID" ]
 	then
-		if ask_question --question="You are the releaser of this task. Do you want to release now ?"
-		then
+		if ask_question --question="You are the releaser of this task. Do you want to release now ?"; then
 			REDMINE_CHAIN=1 exec git redmine release start $TASK
 		fi
 	fi

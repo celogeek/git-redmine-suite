@@ -15,9 +15,12 @@ function reassigned_this {
 	ASSIGNED_TO_ID=$(ask_question "${PARAMS[@]}")
 
 	if ! redmine-check-project-users-id --project="$PROJECT" --assigned_to_id="$ASSIGNED_TO_ID"; then
+		ASSIGNED_TO_ID=""
 		echo "This user is not a member of this project !"
-		exit 1
+		if [ "$TYPE" != "release" ]; then
+			exit 1
+		fi
+	else
+		git config redmine.project.$PROJECT.$TYPE $ASSIGNED_TO_ID
 	fi
-
-	git config redmine.project.$PROJECT.$TYPE $ASSIGNED_TO_ID
 }
