@@ -45,7 +45,7 @@ __EOF__
 	assigned_to=$REDMINE_USER_ID \
 	cf_id=$REDMINE_GIT_REPOS_ID \
 	cf_val=$REDMINE_GIT_REPOS_URL \
-	task_update
+	task_update || exit 1
 	
 	PROJECT=$(redmine-get-task-project-identifier --task_id=$TASK)
 	TASK_TITLE=$(redmine-get-task-info --task_id=$TASK)
@@ -112,7 +112,7 @@ function review_abort {
 	BRNAME=$(git config "redmine.review.$TASK.branch")
 	PR=$(git config "redmine.review.$TASK.pr")
 
-	if ! ask_question --question="Aborting the review of $TASK_TITLE - PR:$PR ?"; then
+	if ! ask_question --question="Abort the review of $TASK_TITLE - PR:$PR ?"; then
 		exit 1
 	fi
 	
@@ -124,6 +124,53 @@ function review_abort {
 	task=$TASK \
 	status=$REDMINE_REVIEW_TODO \
 	assigned_to=$REDMINE_USER_ID \
-	task_update
+	task_update || exit 1
+
+}
+
+function review_reject {
+	TASK=$(git config redmine.review.current)
+
+	if [ -z "$TASK" ]; then
+	    echo "You have not start any review !"
+	    exit 1
+	fi
+	
+	TASK_TITLE=$(git config "redmine.review.$TASK.title")
+	BRNAME=$(git config "redmine.review.$TASK.branch")
+	PR=$(git config "redmine.review.$TASK.pr")
+
+	if ! ask_question --question="Reject the review of $TASK_TITLE - PR:$PR ?"; then
+		exit 1
+	fi
+
+	echo "Fetching last developer ..."
+	declare -a TASK_DEV=($(redmine-get-task-developers --task_id="$TASK" --status_ids="$REDMINE_TASK_IN_PROGRESS" --ids_only))
+
+	F=$(mktemp /tmp/redmine.XXXXXX)
+	vim "$F"
+
+	task=$TASK \
+	status=$REDMINE_TASK_TODO \
+	assigned_to=${TASK_DEV[0]} \
+	notes="This task has been rejected. Here the reasons :
+
+$(cat "$F")
+" \
+	cf_id=$REDMINE_GIT_PR_ID \
+	cf_val=" " \
+	task_update || exit 1
+
+	echo ""
+	unlink "$F"
+
+	git_refresh_local_repos
+	git checkout devel
+	git merge origin/devel
+	git push origin :tags/"$PR"
+	git tag -d "$PR"
+	git branch -D "$BRNAME"
+	git config --remove-section "redmine.review.$TASK"
+	git config --unset "redmine.review.current"
 
 }

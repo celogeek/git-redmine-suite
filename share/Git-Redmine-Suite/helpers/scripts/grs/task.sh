@@ -272,7 +272,7 @@ Additional comments from the developer :
 
 $(cat "$F")
 " \
-	task_update
+	task_update || exit 1
 
 	echo ""
 	unlink "$F"

@@ -20,6 +20,6 @@ sub app {
 	my $id = $self->task_id;
 	my $resp = $self->API->issues->issue->get($id);
 	my %cf = map { @$_{qw/name value/} } @{$resp->content->{issue}->{custom_fields}};
-	return map { $_ // "" } @cf{@{$self->cf_names}};
+	return map { s/^\s+|\s+$//g; $_ } map { $_ // "" } @cf{@{$self->cf_names}};
 }
 1;
