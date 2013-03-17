@@ -1,0 +1,5 @@
+#!/usr/bin/perl
+
+use GRS 'TaskDevelopers';
+
+say GRS->run;

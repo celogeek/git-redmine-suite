@@ -1,0 +1,4 @@
+#!/usr/bin/perl
+use GRS 'TagPR';
+
+say GRS->run;

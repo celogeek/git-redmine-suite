@@ -1,74 +1,9 @@
 #!/bin/bash
+source "$(dirname "$0")/../share/Git-Redmine-Suite/helpers/scripts/help.sh"
 
-source /usr/local/share/Git-Redmine-Suite/helpers/current_git_command
-if [ "x$HELP" != "x" ]
-then
-    echo "$CURRENT_GIT_COMMAND PROFILE AUTH_KEY"
-    exit 1
-fi
+help_command "PROFILE AUTH_KEY"
 
-function common_setup
-{
-    git config alias.release "redmine release simple"
-    git config alias.review "redmine review"
-    git config alias.task "redmine task"
-    git config alias.project "redmine project"
-    git config push.default "tracking"
-}
+SETUP=1
+source "$(dirname "$0")/../share/Git-Redmine-Suite/helpers/scripts/grs.sh"
 
-set -e
-case $1 in
-    weborama)
-        echo "Setup profile weborama ..."
-        REDMINE_URL="http://redmine.intranet.weborama.com"
-        REDMINE_AUTHKEY="$2"
-        if [ "x$REDMINE_AUTHKEY" == "x" ]
-        then
-            echo "You need to pass your auth key from redmine to run the setup !"
-            echo ""
-            exit 1
-        fi
-        git config redmine.url "$REDMINE_URL"
-        git config redmine.authkey "$REDMINE_AUTHKEY"
-        git config redmine.user.id $(/usr/local/share/Git-Redmine-Suite/helpers/redmine-get-current-user-id --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL" --id_only)
-        git config redmine.statuses.task.assigned 2
-        git config redmine.statuses.task.inprogress 7
-        git config redmine.statuses.review.assigned 14
-        git config redmine.statuses.review.inprogress 27
-        git config redmine.statuses.release.assigned 10
-        git config redmine.statuses.release.finish 26
-        common_setup
-        echo ""
-    ;;
-    celogeek)
-        echo "Setup profile celogeek ..."
-        REDMINE_URL="https://tasks.celogeek.com"
-        REDMINE_AUTHKEY="$2"
-        if [ "x$REDMINE_AUTHKEY" == "x" ]
-        then
-            echo "You need to pass your auth key from redmine to run the setup !"
-            echo ""
-            exit 1
-        fi
-        git config redmine.url "$REDMINE_URL"
-        git config redmine.authkey "$REDMINE_AUTHKEY"
-        git config redmine.user.id $(/usr/local/share/Git-Redmine-Suite/helpers/redmine-get-current-user-id --auth_key="$REDMINE_AUTHKEY" --server_url="$REDMINE_URL" --id_only)
-        git config redmine.statuses.task.assigned 1
-        git config redmine.statuses.task.inprogress 2
-        git config redmine.statuses.review.assigned 3
-        git config redmine.statuses.review.inprogress 4
-        git config redmine.statuses.release.assigned 7
-        git config redmine.statuses.release.finish 5
-        common_setup
-        echo ""
-    ;;
-    *)
-        echo "$CURRENT_GIT_COMMAND PROFILE AUTH_KEY"
-        echo ""
-        echo "Profiles :"
-        echo ""
-        echo "    * celogeek"
-        echo "    * weborama"
-        echo ""
-    ;;
-esac
+setup_with_profile "" "$1" "$2"

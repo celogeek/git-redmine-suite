@@ -1,44 +1,8 @@
 #!/bin/bash
+source "$(dirname "$0")/../share/Git-Redmine-Suite/helpers/scripts/help.sh"
 
-source /usr/local/share/Git-Redmine-Suite/helpers/current_git_command
-function help {
-    echo "$CURRENT_GIT_COMMAND"
-    exit 1
-}
+help_command
 
-if [ "x$HELP" != "x" ]
-then
-    help
-fi
+source "$(dirname "$0")/../share/Git-Redmine-Suite/helpers/scripts/grs.sh"
 
-set -e
-
-source /usr/local/share/Git-Redmine-Suite/helpers/redmine-checkconf
-source /usr/local/share/Git-Redmine-Suite/helpers/redmine-statuses
-source /usr/local/share/Git-Redmine-Suite/helpers/redmine-question
-
-set +e
-
-TASK=$(git config redmine.review.current)
-
-if [ "x$TASK" == "x" ]
-then
-    echo "You have not start any review !"
-    exit 1
-fi
-
-set -e
-
-TASK_TITLE=$(git config "redmine.review.$TASK.title")
-BRNAME=$(git config "redmine.review.$TASK.branch")
-
-are_you_sure "Aborting the review of #$TASK_TITLE - PR:$PR ?"
-
-git checkout devel
-git branch -D "$BRNAME"
-git config --remove-section "redmine.review.$TASK"
-
-echo ""
-echo "Updating redmine status ..."
-redmine_set_status $TASK $REDMINE_REVIEW_TODO $REDMINE_USER_ID
-echo ""
+review_abort

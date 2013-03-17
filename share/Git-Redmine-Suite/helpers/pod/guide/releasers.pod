@@ -1,0 +1,78 @@
+=head1 RELEASERS GUIDE
+
+Welcome to the releasers guide.
+
+This guide lead you to :
+
+ * release tasks
+
+First of all, you have to follow the "setup guide" :
+
+ * git redmine guide setup
+
+=head1 What your jobs ?
+
+You can get the list of your "pending" release.
+
+ * git redmine release pending
+
+All task in all project that need to be released with the current local repositorie are shown.
+
+You can check the changelog to know what you are about to release. You need to start a release with all the tasks you have to release.
+
+=head1 Start a release
+
+To start a release with all pending release
+
+ * git redmine release start
+
+To start a release with all pending release and a specific version
+
+ * V=XXX git redmine release start
+
+To start a release with specific task,
+
+ * git redmine release start X Y Z
+
+To start a release with a specific task and version
+
+ * V=XXX git redmine release start X Y Z
+
+Some files will automatically been updated.
+
+ * Changes
+ * dist.ini
+ * VERSION
+
+The changes file will add the tag release. If you have a dist.ini it will try to replace the line "version" inside. If you have a "VERSION" file, it will put the version inside.
+
+=head1 What you have to do ?
+
+ * Check all versions file is up to date.
+ * Run the tests
+ * Check any thing you need to
+
+=head1 Finish the task
+
+To finish you release,
+
+ * git redmine release finish
+
+Your devel will be update with the version. All of this will be merged into the "master". The version tag will be apply to the master branch and sent.
+
+Then it will ask the reassignment for each task, and setup GIT_RELEASE with the current version.
+
+=head1 miscellaneous
+
+They is more in release.
+
+ * git redmine release abort
+
+Cancel the release.
+
+=head1 AUTHORS
+
+ * Vincent Bachelier (vincent@weborama.com)
+ * Celogeek (me@celogeek.com)
+
+=cut

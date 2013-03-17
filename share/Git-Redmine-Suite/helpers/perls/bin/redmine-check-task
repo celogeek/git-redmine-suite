@@ -1,0 +1,10 @@
+#!/usr/bin/perl
+
+use GRS 'CheckTask';
+
+my $message = GRS->run;
+
+if (defined $message) {
+    say $message;
+    exit 1;
+}

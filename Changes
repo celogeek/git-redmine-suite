@@ -1,3 +1,23 @@
+0.30  2013-03-17 17:47:16 GMT
+    * Feature #69 : Update readme (Celogeek San)
+    * Feature #70 : use CF in task start (Celogeek San)
+    * Feature #71 : use CF in task finish (Celogeek San)
+    * Feature #72 : use CF in review pending (Celogeek San)
+    * Feature #73 : use CF in project setup (Celogeek San)
+    * Feature #74 : use CF in review start (Celogeek San)
+    * Feature #75 : use CF in review finish (Celogeek San)
+    * Feature #76 : use CF in review reject (Celogeek San)
+    * Feature #77 - use CF in release start (Celogeek San)
+    * Feature #78 - use CF in release finish (Celogeek San)
+    * Feature #80 - use "-z" test instead of "xstuff" == "x" (Celogeek San)
+    * Feature #82 - Autoconf CF (Celogeek San)
+    * Feature #83 - Change encode by utf8::all (Celogeek San)
+    * Feature #86 - Uniformize task number (always #_NUMBER) (Celogeek San)
+    * Feature #81 : Improve call structure (Celogeek San)
+	Fully rewrite from scratch
+	Create GRS Perl App and Script helpers
+	Improve all process
+
 0.29  2013-03-08 21:25:45 GMT
 
     * Feature #48 : Improve review finish (Celogeek San)

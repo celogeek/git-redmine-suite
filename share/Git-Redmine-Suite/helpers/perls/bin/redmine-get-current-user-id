@@ -1,0 +1,5 @@
+#!/usr/bin/perl
+
+use GRS 'CurrentUserID';
+
+say GRS->run;

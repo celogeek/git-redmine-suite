@@ -1,0 +1,4 @@
+#!/usr/bin/perl
+use GRS 'TagVersion';
+
+say GRS->run;
