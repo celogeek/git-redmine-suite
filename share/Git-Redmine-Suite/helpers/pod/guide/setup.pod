@@ -106,64 +106,15 @@ But display nothing. This is normal you have to setup project for that.
 
 =head1 PROJECT SETUP
 
-To have the correct reviewer setup, and to be able to list the pending or current tasks, you need to setup at least one project.
+The project need 3 custom fields to be compatible with Git Redmine Suite : GIT_REPOS, GIT_PR, GIT_RELEASE.
 
- * git redmine project setup
-
-Only the project with these custom fields could be add : GIT_REPOS, GIT_PR, GIT_RELEASE.
 The task management will use it to save meta information.
 
  * GIT_REPOS should be a text field with "Used as a filter" and "Searchable" checked.
  * GIT_PR should be a text.
  * GIT_RELEASE should be a text.
 
-You need to add them to "For all project". Otherwise the search will not work.
-
-This command list you all the project you are members in redmine.
-
-Take the "slug" you want (between the ID and the title).
-
- * git redmine project setup test
-
-This will list you the ID of the members of this project.
-
-Then you need to setup :
-
- * a reviewer
- * an integrator
- * a releaser
-
-If you are only a simple "developer" you don't care about the "integrator" and "releaser" id. You will never have to use it.
-In that case you can put again the same ID. It is not important.
-
-In my case I have :
- * The list of users for the project 'test' : 
- * 1     - Celogeek San   
-
-So I setup :
-
- * git redmine project setup test 1 1 1
-
-Now the task pending should appear if you have some task assigned to you :
-
- * git redmine task pending
-
-=head1 PROJECT CHECK
-
-To ensure that the custom fields is properly fetch, (if you come from an old config), you can run the project check :
-
- * git redmine project check
-
-It will check that all conf is here, and if the custom fields setup is missing, it will run the setup again.
-
-If the project doesn't have the custom fields setup, the local project will be removed.
-
-=head1 MANAGE PROJECT
-
-You can also list and remove a project.
-
- * git redmine project list
- * git redmine project remove PROJECT
+You can add them "For all project". Otherwise the search will be a little bit slower due to Redmine issue on that.
 
 =head1 AUTHORS
 

@@ -10,19 +10,13 @@ First of all, you have to follow the "setup guide" :
 
  * git redmine guide setup
 
-=head1 Link a git project to redmine
-
-First of all, when you get into a git repository, you need to link it to a redmine project`.
-
-You can use "git redmine project" for this purpose. I suggest you to read the "setup" guide, to understand how it works.
-
 =head1 What your jobs ?
 
-When your redmine projects are linked, you can get the list of your "pending" task.
+You can get the list of your "pending" tasks.
 
  * git redmine task pending
 
-All tasks and their parent are shown. Pick one of then.
+All tasks in all project assigned to you are shown. Pick one of then.
 
 =head1 Start a task
 
@@ -30,7 +24,8 @@ To start a task,
 
  * git redmine task start XXX
 
-The XXX is the number of the task. It will create a branch locally and remotely. Your redmine will change from "assigned" to "in progress".
+The XXX is the number of the task. It will create a branch locally and remotely. Your redmine will change from "assigned" to "in progress"
+and setup GIT_REPOS to the current local git repository url.
 
 You can do multiple think with that.
 
@@ -59,13 +54,15 @@ When you have finish your task, ensure your branch are up to date, then
 
  * git redmine task finish
 
-It will assign to the reviewer you have setup the task with the "review pending" status.
+It will ask you to choose a reviewer. It will reassign the task and set GIT_PR with your pull request.
 
 =item check your task status
 
 Every task you have start, will be available for the status. You can see the progress of them, if it is release, or if you need to rework on it. You can also see if the review is in progress. If it is integrated.
 
  * git redmine task status
+
+If the task has been released, it will automatically ask you to clear it.
 
 =item clear you local and remote repos
 

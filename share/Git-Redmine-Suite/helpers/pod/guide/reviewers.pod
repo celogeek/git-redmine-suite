@@ -11,21 +11,15 @@ First of all, you have to follow the "setup guide" :
 
  * git redmine guide setup
 
-=head1 Link a git project to redmine
-
-First of all, when you get into a git repository, you need to link it to a redmine project`.
-
-You can use "git redmine project" for this purpose. I suggest you to read the "setup" guide, to understand how it works.
-
 =head1 What your jobs ?
 
-When your redmine projects are linked, you can get the list of your "pending" review.
+You can get the list of your "pending" review.
 
  * git redmine review pending
 
-All tasks and their parent are shown. Pick one of then.
-
 The field GIT_PR need to be filled inside the task or you will not be able to start the review.
+
+It list all the review in all project with the current GIT_REPOS set to the local repositorie url.
 
 =head1 Start a review
 
@@ -80,7 +74,7 @@ To accept your change, just finish it.
 
  * git redmine review finish
 
-It will apply the changes, merge into devel, save the change log.
+It will apply the changes, merge into devel, save the change log. It will ask and reassign to the releaser the task.
 
 =item miscellaneous
 

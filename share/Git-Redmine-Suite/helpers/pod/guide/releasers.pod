@@ -10,33 +10,33 @@ First of all, you have to follow the "setup guide" :
 
  * git redmine guide setup
 
-=head1 Link a git project to redmine
-
-First of all, when you get into a git repository, you need to link it to a redmine project`.
-
-You can use "git redmine project" for this purpose. I suggest you to read the "setup" guide, to understand how it works.
-
 =head1 What your jobs ?
 
-When your redmine projects are linked, you can get the list of your "pending" release.
+You can get the list of your "pending" release.
 
  * git redmine release pending
 
-All tasks and their parent are shown.
+All task in all project that need to be released with the current local repositorie are shown.
 
 You can check the changelog to know what you are about to release. You need to start a release with all the tasks you have to release.
 
 =head1 Start a release
 
-To start a release,
+To start a release with all pending release
+
+ * git redmine release start
+
+To start a release with all pending release and a specific version
+
+ * V=XXX git redmine release start
+
+To start a release with specific task,
 
  * git redmine release start X Y Z
 
-To start a release with a specific version
+To start a release with a specific task and version
 
  * V=XXX git redmine release start X Y Z
-
-All the task has to be already reviewed, and assign to you in "release pending" status.
 
 Some files will automatically been updated.
 
@@ -59,6 +59,8 @@ To finish you release,
  * git redmine release finish
 
 Your devel will be update with the version. All of this will be merged into the "master". The version tag will be apply to the master branch and sent.
+
+Then it will ask the reassignment for each task, and setup GIT_RELEASE with the current version.
 
 =head1 miscellaneous
 
