@@ -233,10 +233,4 @@ function review_finish {
     	git tag -d "$tag"
 	done
 
-	if [ "$ASSIGNED_TO_ID" = "$REDMINE_USER_ID" ]
-	then
-		if ask_question --question="You are the releaser of this task. Do you want to release now ?"; then
-			REDMINE_CHAIN=1 exec git redmine release start $TASK
-		fi
-	fi
 }
