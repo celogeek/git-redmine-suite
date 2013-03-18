@@ -1,3 +1,8 @@
+0.36  2013-03-18 21:30:51 GMT
+    * Feature #97 : Display name of project in task pending (Celogeek San)
+    * Feature #98 : Enlarge assigned name in task pending (Celogeek San)
+    * Bug #93 : Tasks in different projects (Celogeek San)
+
 0.35  2013-03-18 10:45:34 GMT
     * Bug #91 : change PERLLIB into PERL5LIB (Celogeek San)
 

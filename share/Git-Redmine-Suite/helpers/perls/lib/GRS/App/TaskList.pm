@@ -20,6 +20,21 @@ use Date::Parse;
 with 'GRS::Role::API', 'GRS::Role::Project', 'GRS::Role::StatusIDS',
     'GRS::Role::AssignedToID', 'GRS::Role::IDSOnly', 'GRS::Role::CFSet', 'GRS::Role::CFFilter';
 
+has '_max_assigned_to' => (
+    is => 'rw',
+    default => sub { 0 },
+);
+
+has '_project_name' => (
+    is => 'ro',
+    default => sub { {} },
+);
+
+has '_projects' => (
+    is      => 'ro',
+    default => sub { {} }
+);
+
 sub required_options {qw/server_url auth_key/}
 
 sub app {
@@ -40,6 +55,15 @@ sub app {
 
     print "List of tasks " unless $self->ids_only;
 
+    my @projects = $self->API_fetchAll( 'projects' );
+
+    for my $project(@projects) {
+        $self->_project_name->{$project->{id}} = {
+            name => $project->{name},
+            parent => $project->{parent}->{id},
+        }
+    }
+
     my @issues = $self->API_fetchAll( 'issues', \%search, $progress, $self->can('cf_filter') );
 
     if ( $self->ids_only ) {
@@ -54,8 +78,9 @@ sub app {
     $self->_compute_oldest_updated_on;
 
     for my $identifier ( sort { $a cmp $b } keys %{ $self->_projects } ) {
-        say "[$identifier]";
         my $prj    = $self->_projects->{$identifier};
+        say "[", $self->_display_project_name($prj->{id}), "]";
+
         my $tasks  = $prj->{tasks};
         my $parent = $prj->{parent};
         my %flip_parent;
@@ -75,17 +100,12 @@ sub app {
     }
 }
 
-has '_projects' => (
-    is      => 'ro',
-    default => sub { {} }
-);
-
 sub _issue_add {
     my ( $self, $issue, %options ) = @_;
 
     my $task_id    = $issue->{id};
     my $parent_id  = $issue->{parent}->{id} // 0;
-    my $identifier = $issue->{project}->{identifier};
+    my $identifier = $options{missing} ? $options{missing} : $issue->{project}->{identifier};
     my $updated_on = str2time( $issue->{updated_on} );
     my $title;
     if ( $options{missing} ) {
@@ -97,18 +117,20 @@ sub _issue_add {
             " # ", $task_id, " : ", $issue->{subject} );
     }
     my $assigned_to = $issue->{assigned_to}->{name} // 'nobody';
+    $self->_max_assigned_to(length($assigned_to)) if length($assigned_to) > $self->_max_assigned_to;
 
     my $prj = (
         $self->_projects->{$identifier} //= {
             tasks  => {},
             parent => {},
+            id => $issue->{project}->{id},
         }
     );
 
     $prj->{tasks}->{$task_id} = {
         title       => $title,
         assigned_to => $assigned_to,
-        updated_on  => $updated_on
+        updated_on  => $updated_on,
     };
     $prj->{parent}->{$task_id} = $parent_id;
 
@@ -117,7 +139,8 @@ sub _issue_add {
 
 sub _fetch_missing_tasks {
     my ($self) = @_;
-    for my $prj ( values %{ $self->_projects } ) {
+    for my $identifier ( keys %{ $self->_projects } ) {
+        my $prj = $self->_projects->{$identifier};
         my ( $tasks, $parent ) = @$prj{qw/tasks parent/};
         foreach my $task_id ( keys %$parent ) {
             my $parent_id = $task_id;
@@ -127,7 +150,7 @@ sub _fetch_missing_tasks {
                     $self->_issue_add(
                         $self->API->issues->issue->get($parent_id)
                             ->content->{issue},
-                        missing => 1
+                        missing => $identifier,
                     );
                 }
             }
@@ -204,13 +227,27 @@ sub _format_str {
     $assigned_to //= 'nobody';
     my $date_str = DateTime->from_epoch( epoch => $updated_on )
         ->strftime('%Y/%m/%d %H:%M');
-    my $mtitle = $columns - 41;
+    my $mtitle = $columns - length($date_str) - $self->_max_assigned_to - 10;
     $mtitle = length($pad) + 20 if $mtitle < length($pad) + 20;
-    my $format_str = "%-" . ($mtitle) . "s [ %15s ] [ %s ]";
+    my $format_str = "%-" . ($mtitle) . "s [ %" . ($self->_max_assigned_to) . "s ] [ %16s ]";
 
     return sprintf( $format_str,
         $self->_trunc_str( $pad . $title, $mtitle ),
         $self->_trunc_str( $assigned_to,  15 ), $date_str );
+}
+
+sub _display_project_name {
+    my ($self, $id) = @_;
+    my $prjs = $self->_project_name;
+    my @prj_names = $prjs->{$id}->{name};
+
+    while($id = $prjs->{$id}->{parent}) {
+        my $name = $prjs->{$id}->{name};
+        last if !defined $name;
+        unshift @prj_names, $name;
+    }
+
+    return join ' / ', @prj_names;
 }
 
 1;
