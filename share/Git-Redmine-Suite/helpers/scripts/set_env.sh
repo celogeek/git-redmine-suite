@@ -58,6 +58,8 @@ if [ -z "$REDMINE_AUTHKEY" ] || [ -z "$REDMINE_URL" ]; then
     exit 1
 fi
 
+export REDMINE_AUTHKEY REDMINE_URL
+
 if 
     [ -z "$REDMINE_TASK_TODO" ]    || [ -z "$REDMINE_TASK_IN_PROGRESS" ]   ||
     [ -z "$REDMINE_REVIEW_TODO" ]  || [ -z "$REDMINE_REVIEW_IN_PROGRESS" ] ||
@@ -65,6 +67,10 @@ if
     redmine_help_with_statuses
     exit 1
 fi
+
+export REDMINE_TASK_TODO REDMINE_TASK_IN_PROGRESS
+export REDMINE_REVIEW_TODO REDMINE_REVIEW_IN_PROGRESS
+export REDMINE_RELEASE_TODO REDMINE_RELEASE_FINISH
 
 if [ "$REDMINE_USER_AUTH_KEY" != "$REDMINE_AUTHKEY" ]; then
     REDMINE_USER_ID=""
@@ -80,16 +86,13 @@ if [ -z "$REDMINE_USER_ID" ]; then
     git config redmine.user.authkey $REDMINE_USER_AUTH_KEY
 fi
 
+export REDMINE_USER_ID
+
 if [ -z "$REDMINE_GIT_REPOS_ID" ] || [ -z "$REDMINE_GIT_PR_ID" ] || [ -z "$REDMINE_GIT_RELEASE_ID" ]; then
-    redmine-get-project-cf | /bin/bash
+    redmine-get-project-cf | grep "^git config" | /bin/bash
     REDMINE_GIT_REPOS_ID=$(git config redmine.git.repos)
     REDMINE_GIT_PR_ID=$(git config redmine.git.pr)
     REDMINE_GIT_RELEASE_ID=$(git config redmine.git.release)
 fi
 
-export REDMINE_AUTHKEY REDMINE_URL
-export REDMINE_TASK_TODO REDMINE_TASK_IN_PROGRESS
-export REDMINE_REVIEW_TODO REDMINE_REVIEW_IN_PROGRESS
-export REDMINE_RELEASE_TODO REDMINE_RELEASE_FINISH
-export REDMINE_USER_ID
 export REDMINE_GIT_REPOS_ID REDMINE_GIT_REPOS_URL REDMINE_GIT_PR_ID REDMINE_GIT_RELEASE_ID
