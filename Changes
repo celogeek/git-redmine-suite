@@ -1,3 +1,5 @@
+    * Bug #91 : change PERLLIB into PERL5LIB (Celogeek San)
+
 0.34  2013-03-18 10:27:09 GMT
     * Bug #90 : fix pod2man right (Celogeek San)
 
