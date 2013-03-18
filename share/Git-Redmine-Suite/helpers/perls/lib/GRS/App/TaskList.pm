@@ -85,7 +85,7 @@ sub _issue_add {
 
     my $task_id    = $issue->{id};
     my $parent_id  = $issue->{parent}->{id} // 0;
-    my $identifier = $issue->{project}->{identifier};
+    my $identifier = $options{missing} ? $options{missing} : $issue->{project}->{identifier};
     my $updated_on = str2time( $issue->{updated_on} );
     my $title;
     if ( $options{missing} ) {
@@ -108,7 +108,7 @@ sub _issue_add {
     $prj->{tasks}->{$task_id} = {
         title       => $title,
         assigned_to => $assigned_to,
-        updated_on  => $updated_on
+        updated_on  => $updated_on,
     };
     $prj->{parent}->{$task_id} = $parent_id;
 
@@ -117,7 +117,8 @@ sub _issue_add {
 
 sub _fetch_missing_tasks {
     my ($self) = @_;
-    for my $prj ( values %{ $self->_projects } ) {
+    for my $identifier ( keys %{ $self->_projects } ) {
+        my $prj = $self->_projects->{$identifier};
         my ( $tasks, $parent ) = @$prj{qw/tasks parent/};
         foreach my $task_id ( keys %$parent ) {
             my $parent_id = $task_id;
@@ -127,7 +128,7 @@ sub _fetch_missing_tasks {
                     $self->_issue_add(
                         $self->API->issues->issue->get($parent_id)
                             ->content->{issue},
-                        missing => 1
+                        missing => $identifier,
                     );
                 }
             }
