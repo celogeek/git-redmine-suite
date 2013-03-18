@@ -20,6 +20,11 @@ use Date::Parse;
 with 'GRS::Role::API', 'GRS::Role::Project', 'GRS::Role::StatusIDS',
     'GRS::Role::AssignedToID', 'GRS::Role::IDSOnly', 'GRS::Role::CFSet', 'GRS::Role::CFFilter';
 
+has _max_assigned_to => (
+    is => 'rw',
+    default => sub { 0 },
+);
+
 sub required_options {qw/server_url auth_key/}
 
 sub app {
@@ -97,6 +102,8 @@ sub _issue_add {
             " # ", $task_id, " : ", $issue->{subject} );
     }
     my $assigned_to = $issue->{assigned_to}->{name} // 'nobody';
+    $self->_max_assigned_to(length($assigned_to)) if length($assigned_to) > $self->_max_assigned_to;
+
 
     my $prj = (
         $self->_projects->{$identifier} //= {
@@ -205,9 +212,9 @@ sub _format_str {
     $assigned_to //= 'nobody';
     my $date_str = DateTime->from_epoch( epoch => $updated_on )
         ->strftime('%Y/%m/%d %H:%M');
-    my $mtitle = $columns - 41;
+    my $mtitle = $columns - length($date_str) - $self->_max_assigned_to - 10;
     $mtitle = length($pad) + 20 if $mtitle < length($pad) + 20;
-    my $format_str = "%-" . ($mtitle) . "s [ %15s ] [ %s ]";
+    my $format_str = "%-" . ($mtitle) . "s [ %" . ($self->_max_assigned_to) . "s ] [ %16s ]";
 
     return sprintf( $format_str,
         $self->_trunc_str( $pad . $title, $mtitle ),
