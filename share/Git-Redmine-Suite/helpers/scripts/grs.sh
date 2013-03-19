@@ -7,9 +7,13 @@ export PATH=$PERL_DIR/bin:$PATH
 export PERL5LIB=$PERL_DIR/lib
 
 source "$SCRIPT_DIR"/check_update.sh
+
+source "$SCRIPT_DIR"/setup.sh
+setup_upgrade
+
 if [ -z "$SETUP" ]; then
 	source "$SCRIPT_DIR"/set_env.sh
+	for P in "$SCRIPT_DIR"/grs/*.sh; do
+		source "$P"
+	done
 fi
-for P in "$SCRIPT_DIR"/grs/*.sh; do
-	source "$P"
-done
