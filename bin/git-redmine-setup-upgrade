@@ -1,9 +1,0 @@
-#!/bin/bash
-source "$(dirname "$0")/../share/Git-Redmine-Suite/helpers/scripts/help.sh"
-
-help_command
-
-SETUP=1
-source "$(dirname "$0")/../share/Git-Redmine-Suite/helpers/scripts/grs.sh"
-
-setup_upgrade
