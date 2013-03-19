@@ -15,7 +15,8 @@ use MooX::Options;
 use DateTime;
 use Date::Parse;
 
-with 'GRS::Role::API', 'GRS::Role::TaskID';
+with 'GRS::Role::API', 'GRS::Role::TaskID',
+    'GRS::Role::ProjectFullName', 'GRS::Role::PrioColor';
 
 sub required_options {qw/server_url auth_key task_id/}
 
@@ -31,18 +32,13 @@ option 'pad'                  => (
 sub app {
     my ($self) = @_;
 
-    my $issue = 
-        $self->API->issues->issue->get( $self->task_id,
-            include => 'custom_fields' )->content->{issue};
+    my $issue = $self->API->issues->issue->get( $self->task_id,
+        include => 'custom_fields' )->content->{issue};
 
+    my %cf = map { @$_{qw/name id/} } @{ $issue->{custom_fields} };
+    return $self if grep { !exists $cf{$_} } qw/GIT_REPOS GIT_PR GIT_RELEASE/;
 
-    my %cf = map { @$_{qw/name id/} } @{$issue->{custom_fields}};
-    return $self if grep {!exists $cf{$_}} qw/GIT_REPOS GIT_PR GIT_RELEASE/;
-
-    return (
-        $self,
-        $issue
-    );
+    return ( $self, $issue );
 
 }
 
@@ -71,8 +67,12 @@ sub title_with_status {
 
 sub title_with_extended_status {
     my ( $self, $issue ) = @_;
-    my %cf = $self->_cf($issue);
+    my %cf       = $self->_cf($issue);
+
+    my $color = $self->prio_color->{lc($issue->{priority}->{name})} // 0;
     my @response = (
+        [ "Project"        => $self->project_fullname($issue->{project}->{id}) ],
+        [ "Priority"       => "\033[".$color."m".$issue->{priority}->{name}."\033[0m" ],
         [ "Title"          => $self->title($issue) ],
         [ "Status"         => $issue->{status}->{name} ],
         [ "Last update"    => $self->_duration($issue) ],

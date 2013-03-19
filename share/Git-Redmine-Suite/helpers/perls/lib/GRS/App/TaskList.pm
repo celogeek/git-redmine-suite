@@ -18,8 +18,9 @@ use DateTime;
 use Date::Parse;
 
 with 'GRS::Role::API', 'GRS::Role::Project', 'GRS::Role::StatusIDS',
-    'GRS::Role::AssignedToID', 'GRS::Role::IDSOnly', 'GRS::Role::CFSet', 'GRS::Role::CFFilter';
-
+    'GRS::Role::AssignedToID', 'GRS::Role::IDSOnly', 'GRS::Role::CFSet', 'GRS::Role::CFFilter',
+    'GRS::Role::ProjectFullName', 'GRS::Role::PrioColor';
+    
 has '_max_assigned_to' => (
     is => 'rw',
     default => sub { 0 },
@@ -36,28 +37,12 @@ has '_max_tracker' => (
 );
 
 
-has '_project_name' => (
-    is => 'ro',
-    default => sub { {} },
-);
-
 has '_projects' => (
     is      => 'ro',
     default => sub { {} }
 );
 
 sub required_options {qw/server_url auth_key/}
-
-has _color_prio => (
-    is => 'ro',
-    coerce => sub {
-        my ($color_settings) = @_;
-        return $color_settings if ref $color_settings eq 'HASH';
-        my %settings = map { split /=/ } split /:/, lc($color_settings);
-        return \%settings;
-    },
-    default => sub { $ENV{REDMINE_PRIO_COLOR} // {} },
-);
 
 sub app {
     my ($self) = @_;
@@ -77,15 +62,6 @@ sub app {
 
     print "List of tasks " unless $self->ids_only;
 
-    my @projects = $self->API_fetchAll( 'projects' );
-
-    for my $project(@projects) {
-        $self->_project_name->{$project->{id}} = {
-            name => $project->{name},
-            parent => $project->{parent}->{id},
-        }
-    }
-
     my @issues = $self->API_fetchAll( 'issues', \%search, $progress, $self->can('cf_filter') );
 
     if ( $self->ids_only ) {
@@ -101,7 +77,7 @@ sub app {
 
     for my $identifier ( sort { $a cmp $b } keys %{ $self->_projects } ) {
         my $prj    = $self->_projects->{$identifier};
-        say "[", $self->_display_project_name($prj->{id}), "]";
+        say "[", $self->project_fullname($prj->{id}), "]";
 
         my $tasks  = $prj->{tasks};
         my $parent = $prj->{parent};
@@ -148,7 +124,7 @@ sub _issue_add {
     my $assigned_to = $issue->{assigned_to}->{name} // 'nobody';
     $self->_max_assigned_to(length($assigned_to)) if length($assigned_to) > $self->_max_assigned_to;
 
-    my $color = $options{missing} ? 0 : $self->_color_prio->{lc($priority)} // 0;
+    my $color = $options{missing} ? 0 : $self->prio_color->{lc($priority)} // 0;
 
     my $prj = (
         $self->_projects->{$identifier} //= {
@@ -285,20 +261,6 @@ sub _format_str {
         $self->_center_str($priority,$self->_max_priority),
         $self->_center_str($assigned_to,$self->_max_assigned_to),
         $date_str );
-}
-
-sub _display_project_name {
-    my ($self, $id) = @_;
-    my $prjs = $self->_project_name;
-    my @prj_names = $prjs->{$id}->{name};
-
-    while($id = $prjs->{$id}->{parent}) {
-        my $name = $prjs->{$id}->{name};
-        last if !defined $name;
-        unshift @prj_names, $name;
-    }
-
-    return join ' / ', @prj_names;
 }
 
 1;
