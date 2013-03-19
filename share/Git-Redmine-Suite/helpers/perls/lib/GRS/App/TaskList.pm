@@ -48,19 +48,15 @@ has '_projects' => (
 
 sub required_options {qw/server_url auth_key/}
 
-has _color_priority => (
+has _color_prio => (
     is => 'ro',
-    default => sub { 
-        {
-            'Top' => "1;41", #background red
-            'Immediate' => "1;41", #background red
-            'Urgent' => "1;31", #foreground red
-            'High' => '1;37', #white bold
-            'Regular' => '37', #white
-            'Normal' => '37', #white
-            'Low' => '34', #blue
-        } 
-    }
+    coerce => sub {
+        my ($color_settings) = @_;
+        return $color_settings if ref $color_settings eq 'HASH';
+        my %settings = map { split /=/ } split /:/, lc($color_settings);
+        return \%settings;
+    },
+    default => sub { $ENV{REDMINE_PRIO_COLOR} // {} },
 );
 
 sub app {
@@ -152,7 +148,7 @@ sub _issue_add {
     my $assigned_to = $issue->{assigned_to}->{name} // 'nobody';
     $self->_max_assigned_to(length($assigned_to)) if length($assigned_to) > $self->_max_assigned_to;
 
-    my $color = $options{missing} ? 0 : $self->_color_priority->{$priority} // 0;
+    my $color = $options{missing} ? 0 : $self->_color_prio->{lc($priority)} // 0;
 
     my $prj = (
         $self->_projects->{$identifier} //= {
