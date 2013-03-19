@@ -25,6 +25,11 @@ has '_max_assigned_to' => (
     default => sub { 0 },
 );
 
+has '_max_priority' => (
+    is => 'rw',
+    default => sub { 0 },
+);
+
 has '_project_name' => (
     is => 'ro',
     default => sub { {} },
@@ -36,6 +41,21 @@ has '_projects' => (
 );
 
 sub required_options {qw/server_url auth_key/}
+
+has _color_priority => (
+    is => 'ro',
+    default => sub { 
+        {
+            'Top' => "1;41", #background red
+            'Immediate' => "1;41", #background red
+            'Urgent' => "1;31", #foreground red
+            'High' => '1;37', #white bold
+            'Regular' => '37', #white
+            'Normal' => '37', #white
+            'Low' => '34', #blue
+        } 
+    }
+);
 
 sub app {
     my ($self) = @_;
@@ -107,6 +127,9 @@ sub _issue_add {
     my $parent_id  = $issue->{parent}->{id} // 0;
     my $identifier = $options{missing} ? $options{missing} : $issue->{project}->{identifier};
     my $updated_on = str2time( $issue->{updated_on} );
+    my $priority = $issue->{priority}->{name} // "Regular";
+    $self->_max_priority(length($priority)) if length($priority) > $self->_max_priority;
+
     my $title;
     if ( $options{missing} ) {
         $title = $issue->{subject};
@@ -118,6 +141,8 @@ sub _issue_add {
     }
     my $assigned_to = $issue->{assigned_to}->{name} // 'nobody';
     $self->_max_assigned_to(length($assigned_to)) if length($assigned_to) > $self->_max_assigned_to;
+
+    my $color = $options{missing} ? 0 : $self->_color_priority->{$priority} // 0;
 
     my $prj = (
         $self->_projects->{$identifier} //= {
@@ -131,6 +156,8 @@ sub _issue_add {
         title       => $title,
         assigned_to => $assigned_to,
         updated_on  => $updated_on,
+        priority => $priority,
+        color => $color,
     };
     $prj->{parent}->{$task_id} = $parent_id;
 
@@ -187,6 +214,8 @@ sub _display_tree {
     my $TRIANGLE = "\x{25B8}";
     my $tab = "  " x ( $p{level} );
 
+    my $reset_color = "\033[0m";
+
     for my $task_id (
         sort {
             $p{tasks}{$a}{oldest_updated_on}
@@ -194,13 +223,18 @@ sub _display_tree {
         } @{ $p{flip_parent}{ $p{parent_id} } }
         )
     {
-        say $self->_format_str(
-            $p{columns},
-            "  " . $tab . $TRIANGLE . " ",
-            $p{tasks}{$task_id}{title},
-            $p{tasks}{$task_id}{assigned_to},
-            $p{tasks}{$task_id}{oldest_updated_on}
-        );
+        my $color = "\033[".$p{tasks}{$task_id}{color}."m";
+
+        say $color,
+            $self->_format_str(
+                $p{columns},
+                "  " . $tab . $TRIANGLE . " ",
+                $p{tasks}{$task_id}{title},
+                $p{tasks}{$task_id}{priority},
+                $p{tasks}{$task_id}{assigned_to},
+                $p{tasks}{$task_id}{oldest_updated_on}
+            ),
+            $reset_color;
         if ( $p{flip_parent}{$task_id} ) {
             $self->_display_tree(
                 %p,
@@ -230,16 +264,18 @@ sub _center_str {
 }
 
 sub _format_str {
-    my ( $self, $columns, $pad, $title, $assigned_to, $updated_on ) = @_;
+    my ( $self, $columns, $pad, $title, $priority, $assigned_to, $updated_on ) = @_;
     $assigned_to //= 'nobody';
     my $date_str = DateTime->from_epoch( epoch => $updated_on )
         ->strftime('%Y/%m/%d %H:%M');
-    my $mtitle = $columns - length($date_str) - $self->_max_assigned_to - 6;
+    my $mtitle = $columns - length($date_str) - $self->_max_priority - $self->_max_assigned_to - 9;
     $mtitle = length($pad) + 20 if $mtitle < length($pad) + 20;
-    my $format_str = "%-" . ($mtitle) . "s [%-" . ($self->_max_assigned_to) . "s] [%16s]";
+    my $format_str = "%-" . ($mtitle) . "s [%-" .$self->_max_priority. "s] [%-" .$self->_max_assigned_to. "s] [%16s]";
     return sprintf( $format_str,
         $self->_trunc_str( $pad . $title, $mtitle ),
-        $self->_center_str($assigned_to,$self->_max_assigned_to), $date_str );
+        $self->_center_str($priority,$self->_max_priority),
+        $self->_center_str($assigned_to,$self->_max_assigned_to),
+        $date_str );
 }
 
 sub _display_project_name {
