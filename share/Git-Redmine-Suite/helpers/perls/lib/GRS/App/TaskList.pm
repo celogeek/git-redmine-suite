@@ -30,6 +30,12 @@ has '_max_priority' => (
     default => sub { 0 },
 );
 
+has '_max_tracker' => (
+    is => 'rw',
+    default => sub { 0 },
+);
+
+
 has '_project_name' => (
     is => 'ro',
     default => sub { {} },
@@ -124,9 +130,14 @@ sub _issue_add {
     my ( $self, $issue, %options ) = @_;
 
     my $task_id    = $issue->{id};
+    my $tracker_name = $issue->{tracker}->{name};
+    $self->_max_tracker(length($tracker_name)) if length($tracker_name) > $self->_max_tracker;
+    
+
     my $parent_id  = $issue->{parent}->{id} // 0;
     my $identifier = $options{missing} ? $options{missing} : $issue->{project}->{identifier};
     my $updated_on = str2time( $issue->{updated_on} );
+
     my $priority = $issue->{priority}->{name} // "Regular";
     $self->_max_priority(length($priority)) if length($priority) > $self->_max_priority;
 
@@ -136,8 +147,7 @@ sub _issue_add {
     }
     else {
         $title = join( "",
-            $issue->{tracker}->{name},
-            " # ", $task_id, " : ", $issue->{subject} );
+            "# ", $task_id, " : ", $issue->{subject} );
     }
     my $assigned_to = $issue->{assigned_to}->{name} // 'nobody';
     $self->_max_assigned_to(length($assigned_to)) if length($assigned_to) > $self->_max_assigned_to;
@@ -153,6 +163,8 @@ sub _issue_add {
     );
 
     $prj->{tasks}->{$task_id} = {
+        id => $task_id,
+        tracker => $tracker_name,
         title       => $title,
         assigned_to => $assigned_to,
         updated_on  => $updated_on,
@@ -229,6 +241,7 @@ sub _display_tree {
             $self->_format_str(
                 $p{columns},
                 "  " . $tab . $TRIANGLE . " ",
+                $p{tasks}{$task_id}{tracker},
                 $p{tasks}{$task_id}{title},
                 $p{tasks}{$task_id}{priority},
                 $p{tasks}{$task_id}{assigned_to},
@@ -264,7 +277,7 @@ sub _center_str {
 }
 
 sub _format_str {
-    my ( $self, $columns, $pad, $title, $priority, $assigned_to, $updated_on ) = @_;
+    my ( $self, $columns, $pad, $tracker, $title, $priority, $assigned_to, $updated_on ) = @_;
     $assigned_to //= 'nobody';
     my $date_str = DateTime->from_epoch( epoch => $updated_on )
         ->strftime('%Y/%m/%d %H:%M');
@@ -272,7 +285,7 @@ sub _format_str {
     $mtitle = length($pad) + 20 if $mtitle < length($pad) + 20;
     my $format_str = "%-" . ($mtitle) . "s [%-" .$self->_max_priority. "s] [%-" .$self->_max_assigned_to. "s] [%16s]";
     return sprintf( $format_str,
-        $self->_trunc_str( $pad . $title, $mtitle ),
+        $self->_trunc_str( $pad . sprintf("%-".$self->_max_tracker."s ", $tracker) . $title, $mtitle ),
         $self->_center_str($priority,$self->_max_priority),
         $self->_center_str($assigned_to,$self->_max_assigned_to),
         $date_str );
