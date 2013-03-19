@@ -1,8 +1,8 @@
 package GRS::App::TaskList;
 
 # ABSTRACT: List tasks
-
 =head1 DESCRIPTION
+
 
 List tasks
 
@@ -222,18 +222,24 @@ sub _trunc_str {
     }
 }
 
+sub _center_str {
+    my ($self, $str, $size) = @_;
+    return $str if length($str) >= $size;
+    my $left = int ( ( $size - length($str) ) / 2 );
+    return " "x$left . $str;
+}
+
 sub _format_str {
     my ( $self, $columns, $pad, $title, $assigned_to, $updated_on ) = @_;
     $assigned_to //= 'nobody';
     my $date_str = DateTime->from_epoch( epoch => $updated_on )
         ->strftime('%Y/%m/%d %H:%M');
-    my $mtitle = $columns - length($date_str) - $self->_max_assigned_to - 10;
+    my $mtitle = $columns - length($date_str) - $self->_max_assigned_to - 6;
     $mtitle = length($pad) + 20 if $mtitle < length($pad) + 20;
-    my $format_str = "%-" . ($mtitle) . "s [ %" . ($self->_max_assigned_to) . "s ] [ %16s ]";
-
+    my $format_str = "%-" . ($mtitle) . "s [%-" . ($self->_max_assigned_to) . "s] [%16s]";
     return sprintf( $format_str,
         $self->_trunc_str( $pad . $title, $mtitle ),
-        $self->_trunc_str( $assigned_to,  15 ), $date_str );
+        $self->_center_str($assigned_to,$self->_max_assigned_to), $date_str );
 }
 
 sub _display_project_name {
