@@ -122,3 +122,36 @@ You can add them "For all project". Otherwise the search will be a little bit sl
  * Celogeek (me@celogeek.com)
 
 =cut
+
+=head1 PRIORITY COLORS
+
+You can personalize the priority color.
+
+  git config --global redmine.priocolor "[PRIO_NAME]=[AINSI_COLOR_CODE]:[PRIO_NAME_2]=[AINSI_COLOR_CODE2]"
+
+Example :
+
+  git config --global redmine.priocolor "Immediate=1;41:Urgent=1;31:High=1;37:Normal=37:Low=34"
+
+That means :
+
+  Priority with name "Immediate" is background red bold white
+  Priority with name "Urgent" is bold red
+  Priority with name "High" is bold white
+  Priority with name "Normal" is white
+  Priority with name "Low" is blue
+
+The name of priority is in "Administration section / Enumeration"
+
+For the ainsi code, take a look here : L<http://pueblo.sourceforge.net/doc/manual/ansi_color_codes.html>
+
+You need to take the number between the "[" and the "m".
+
+Example :
+
+	[1m - bold => take 1
+	[31m - foreground red => take 31
+
+You can combine multiple attribute :
+
+	bold;foreground red;background white : 1;31;47
