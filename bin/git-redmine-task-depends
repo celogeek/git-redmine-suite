@@ -1,7 +1,7 @@
 #!/bin/bash
 source "$(dirname "$0")/../share/Git-Redmine-Suite/helpers/scripts/help.sh"
 
-help_command "DEPS1" "DEPS2" "..."
+help_command "[-f]" "DEPS1" "DEPS2" "..."
 
 source "$(dirname "$0")/../share/Git-Redmine-Suite/helpers/scripts/grs.sh"
 

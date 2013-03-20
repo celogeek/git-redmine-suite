@@ -24,5 +24,13 @@ else
         done
         echo ""
     fi
+    cat <<__EOF__
+[OPTIONS]
+    * -f => force         : don't ask question to start / finish / clear
+    * -r => rebase        : before starting the review, rebase on origin devel
+    * -c => chain         : chain review when finish a task, or finish the release after a start
+    * -a => auto reassign : reassign automatically the task
+    
+__EOF__
     exit 1
 fi
