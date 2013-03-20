@@ -60,7 +60,7 @@ __EOF__
 	git config "redmine.review.$TASK.branch" "$BRNAME"
 	git config "redmine.review.$TASK.project" "$PROJECT"
 
-	if ask_question --question="Do you want to rebase before review ?"; then
+	if [ -n "$REDMINE_REBASE" ] ; then
 	    git rebase origin/devel && (git diff --color origin/devel | less -R)
 	else
 	    git diff --color origin/devel | less -R
