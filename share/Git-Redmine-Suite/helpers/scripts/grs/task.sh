@@ -84,8 +84,8 @@ __EOF__
 function task_create {
 	TASK=$1
 
-	echo "Starting the task : "
-	if ! redmine-get-task-info --task_id=$TASK --with-extended-status; then
+	echo -n "Starting the task : "
+	if ! redmine-get-task-info --task_id=$TASK --with-status; then
 		exit 1
 	fi
 	if [ -z "$REDMINE_FORCE" ] && ! ask_question --question="Do you really want to start this task ?"; then
@@ -280,4 +280,15 @@ $(cat "$F")
 	fi
 
 
+}
+
+function task_info {
+	TASK=$1
+
+	if [ -z "$TASK" ]; then
+		HELP=1 $0
+	fi
+
+	echo "Information on the task $TASK : "
+	redmine-get-task-info --task_id=$TASK --with-extended-status
 }
