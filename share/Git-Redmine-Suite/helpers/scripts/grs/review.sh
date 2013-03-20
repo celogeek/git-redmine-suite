@@ -35,7 +35,7 @@ __EOF__
 		exit 1
 	fi
 
-	if [ -z "$REDMINE_FORCE" ] && [ -z "$REDMINE_CHAIN" ] && ! ask_question --question="Do you really want to start this task ?"; then
+	if [ -z "$REDMINE_FORCE" ] && [ -z "$REDMINE_CHAIN_FINISH" ] && ! ask_question --question="Do you really want to start this task ?"; then
 		exit 1
 	fi
 	
