@@ -3,11 +3,11 @@ function release_start {
 
 	if [ ${#TASKS[@]} -eq 0 ]; then
 		git redmine release pending
-		if ! ask_question --question="Do you want to release these task ?"; then
+		if [ -z "$REDMINE_FORCE" ] && ! ask_question --question="Do you want to release these task ?"; then
 			exit 1
 		fi
 		TASKS=($(redmine-get-task-list --status_ids="$REDMINE_RELEASE_TODO" --cf_id="$REDMINE_GIT_REPOS_ID" --cf_val="$REDMINE_GIT_REPOS_URL" --ids_only))
-		REDMINE_CHAIN=1
+		REDMINE_FORCE=1
 	fi
 
 	if [ ${#TASKS[@]} -eq 0 ]; then
@@ -21,10 +21,8 @@ function release_start {
 	fi
 
 	echo "Release V$VERSION with tasks ${TASKS[@]} ..."
-	if [ -z "$REDMINE_CHAIN" ]; then
-		if ! ask_question --question="Continue ?"; then
-			exit 1
-		fi
+	if [ -z "$REDMINE_FORCE" ] && ! ask_question --question="Continue ?"; then
+		exit 1
 	fi
 
 	for TASK in ${TASKS[@]}
@@ -89,8 +87,8 @@ git redmine release abort
 
 __EOF__
 
-	if ask_question --question="Do you want to finish the release now ?"; then
-    	REDMINE_CHAIN=1 exec git redmine release finish
+	if [ -n "$REDMINE_CHAIN_FINISH" ] ; then
+    	exec git redmine release finish
 	fi	
 
 }
@@ -105,7 +103,7 @@ function release_abort {
 	    exit 1
 	fi
 
-	if ! ask_question --question="Aborting release $BRNAME ?"; then
+	if [ -z "$REDMINE_FORCE" ] && ! ask_question --question="Aborting release $BRNAME ?"; then
 		exit 1
 	fi
 	git config --remove-section redmine.release
@@ -125,10 +123,8 @@ function release_finish {
 	    exit 1
 	fi
 
-	if [ -z "$REDMINE_CHAIN" ]; then
-		if ! ask_question --question="Do you want to finish the release these tasks : ${TASKS[*]} ?"; then
-			exit 1
-		fi
+	if [ -z "$REDMINE_CHAIN_FINISH" ] && [ -z "$REDMINE_FORCE" ] && ! ask_question --question="Do you want to finish the release these tasks : ${TASKS[*]} ?"; then
+		exit 1
 	fi
 
 	echo "Finish the release ${TASKS[@]} ..."

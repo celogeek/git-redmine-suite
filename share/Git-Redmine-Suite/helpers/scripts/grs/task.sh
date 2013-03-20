@@ -84,11 +84,11 @@ __EOF__
 function task_create {
 	TASK=$1
 
-	echo "Starting the task : "
-	if ! redmine-get-task-info --task_id=$TASK --with-extended-status; then
+	echo -n "Starting the task : "
+	if ! redmine-get-task-info --task_id=$TASK --with-status; then
 		exit 1
 	fi
-	if ! ask_question --question="Do you really want to start this task ?"; then
+	if [ -z "$REDMINE_FORCE" ] && ! ask_question --question="Do you really want to start this task ?"; then
 		exit 1
 	fi
 
@@ -141,7 +141,7 @@ function task_status {
     	T=$(redmine-get-task-info --task_id=$TASK --with-status)
 		echo "    $T"
     	if echo "$T" | grep -q ", Released with v"; then
-    		if ask_question --question="This task (# $TASK) has been released, clear it ?"; then
+    		if [ -n "$REDMINE_FORCE" ] || ask_question --question="This task (# $TASK) has been released, clear it ?"; then
     			git redmine task clear $TASK
     		fi
     	fi
@@ -194,11 +194,11 @@ function task_depends {
 	DEPS="$@"
 
 	if [ -z "$DEPS" ]; then
-		if ask_question --question "Do you want to clear the deps of this task ?"; then
+		if [ -n "$REDMINE_FORCE" ] || ask_question --question "Do you want to clear the deps of this task ?"; then
 			git config --unset redmine.task.$CURRENT_TASK.depends
 		fi
 	else
-		if ask_question --question "Do you want to set the deps of this task to '$DEPS' ?"; then
+		if [ -n "$REDMINE_FORCE" ] || ask_question --question "Do you want to set the deps of this task to '$DEPS' ?"; then
 			git config redmine.task.$CURRENT_TASK.depends "$DEPS"
 		fi
 	fi
@@ -212,7 +212,7 @@ function task_finish {
 		exit 1
 	fi
 
-	if ! ask_question --question="Do you really want to finish the task $CURRENT_TASK ?"; then
+	if [ -z "$REDMINE_FORCE" ] && ! ask_question --question="Do you really want to finish the task $CURRENT_TASK ?"; then
 		exit 1
 	fi
 
@@ -275,11 +275,20 @@ $(cat "$F")
 	echo ""
 	unlink "$F"
 
-	if [ "$ASSIGNED_TO_ID" = "$REDMINE_USER_ID" ]; then
-		if ask_question --question="You are the reviewer of this task. Do you want to review it now ?"; then
-			REDMINE_CHAIN=1 exec git redmine review start $CURRENT_TASK
-		fi
+	if [ -n "$REDMINE_CHAIN_FINISH" ] && [ "$ASSIGNED_TO_ID" = "$REDMINE_USER_ID" ]; then
+		exec git redmine review start $CURRENT_TASK
 	fi
 
 
+}
+
+function task_info {
+	TASK=$1
+
+	if [ -z "$TASK" ]; then
+		HELP=1 $0
+	fi
+
+	echo "Information on the task $TASK : "
+	redmine-get-task-info --task_id=$TASK --with-extended-status
 }

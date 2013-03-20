@@ -1,7 +1,7 @@
 #!/bin/bash
 source "$(dirname "$0")/../share/Git-Redmine-Suite/helpers/scripts/help.sh"
 
-POSSIBLE_ENV="[V=XXX]" help_command "TASK_1" "TASK_2" "..."
+POSSIBLE_ENV="[V=XXX]" help_command "[-f] [-c] [-a]" "TASK_1" "TASK_2" "..."
 
 source "$(dirname "$0")/../share/Git-Redmine-Suite/helpers/scripts/grs.sh"
 
