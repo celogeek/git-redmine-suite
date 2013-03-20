@@ -30,14 +30,13 @@ __EOF__
 	    exit 1
 	fi
 
-	echo "Starting the review : "
-	if ! redmine-get-task-info --task_id=$TASK --with-extended-status; then
+	echo -n "Starting the review : "
+	if ! redmine-get-task-info --task_id=$TASK --with-status; then
 		exit 1
 	fi
-	if [ -z "$REDMINE_CHAIN" ]; then
-		if ! ask_question --question="Do you really want to start this task ?"; then
-			exit 1
-		fi
+
+	if [ -z "$REDMINE_FORCE" ] && [ -z "$REDMINE_CHAIN" ] && ! ask_question --question="Do you really want to start this task ?"; then
+		exit 1
 	fi
 	
 	task=$TASK \
@@ -93,10 +92,6 @@ And don't forget to run your tests before !
 
 __EOF__
 
-	if ask_question --question="Do you want to finish the review now ?"; then
-	    REDMINE_CHAIN=1 exec git redmine review finish
-	fi
-
 }
 
 function review_abort {
@@ -111,7 +106,7 @@ function review_abort {
 	BRNAME=$(git config "redmine.review.$TASK.branch")
 	PR=$(git config "redmine.review.$TASK.pr")
 
-	if ! ask_question --question="Abort the review of $TASK_TITLE - PR:$PR ?"; then
+	if [ -z "$REDMINE_FORCE" ] && ! ask_question --question="Abort the review of $TASK_TITLE - PR:$PR ?"; then
 		exit 1
 	fi
 	
@@ -139,7 +134,7 @@ function review_reject {
 	BRNAME=$(git config "redmine.review.$TASK.branch")
 	PR=$(git config "redmine.review.$TASK.pr")
 
-	if ! ask_question --question="Reject the review of $TASK_TITLE - PR:$PR ?"; then
+	if [ -z "$REDMINE_FORCE" ] && ! ask_question --question="Reject the review of $TASK_TITLE - PR:$PR ?"; then
 		exit 1
 	fi
 
@@ -190,10 +185,8 @@ function review_finish {
 	CHANGELOG=$(get_change_log)
 
 
-	if [ -z "$REDMINE_CHAIN" ]; then
-		if ! ask_question --question="Finish the review of $TASK_TITLE - PR:$PR ?"; then
-			exit 1
-		fi
+	if [ -z "$REDMINE_FORCE" ] && ! ask_question --question="Finish the review of $TASK_TITLE - PR:$PR ?"; then
+		exit 1
 	fi
 
 	if ! reassigned_this "review" "$PROJECT"; then
