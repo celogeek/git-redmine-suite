@@ -3,7 +3,7 @@ function release_start {
 
 	if [ ${#TASKS[@]} -eq 0 ]; then
 		git redmine release pending
-		if [ -z "$REDMINE_FORCE" ] && ! ask_question --question="Do you want to release these task ?"; then
+		if [ -z "$REDMINE_FORCE" ] && ! ask_question --question="Do you want to release these task ?"; then
 			exit 1
 		fi
 		TASKS=($(redmine-get-task-list --status_ids="$REDMINE_RELEASE_TODO" --cf_id="$REDMINE_GIT_REPOS_ID" --cf_val="$REDMINE_GIT_REPOS_URL" --ids_only))
