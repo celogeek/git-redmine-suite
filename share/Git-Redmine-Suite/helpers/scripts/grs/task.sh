@@ -286,7 +286,7 @@ function task_info {
 	TASK=$1
 
 	if [ -z "$TASK" ]; then
-		HELP=1 $0
+		HELP=1 exec $0
 	fi
 
 	echo "Information on the task $TASK : "
