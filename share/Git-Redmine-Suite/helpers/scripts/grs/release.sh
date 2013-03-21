@@ -129,6 +129,7 @@ function release_finish {
 
 	echo "Finish the release ${TASKS[@]} ..."
 
+	set -e
 	git_refresh_local_repos
 	git checkout devel
 	git merge origin/devel
@@ -140,8 +141,10 @@ function release_finish {
 	git tag -m "release v$V: ${TASKS[*]}" "v$VERSION"
 	git push origin master
 	git push origin "tags/v$VERSION"
+	git checkout devel
 	git branch -d "$BRNAME"
 	git config --remove-section redmine.release
+	set +e
 
 	echo ""
 	echo "Update redmine"
