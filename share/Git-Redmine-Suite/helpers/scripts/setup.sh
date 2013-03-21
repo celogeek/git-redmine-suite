@@ -43,18 +43,18 @@ function help_setup_with_profile {
 function setup_upgrade {
 	URL=$(git config --local redmine.url)
 	AUTHKEY=$(git config --local redmine.authkey)
-	VERSION=$(git config --local redmine.version)
+	REPO_VERSION=$(git config --local redmine.version)
 	GLOBAL=""
 	if [ -z "$URL" ] || [ -z "$AUTHKEY" ]; then
 		URL=$(git config --global redmine.url)
 		AUTHKEY=$(git config --global redmine.authkey)
-		VERSION=$(git config --global redmine.version)
+		REPO_VERSION=$(git config --global redmine.version)
 		GLOBAL="--global"
 	fi
 
 	CURRENT_VERSION=$(cat "$ROOT_DIR/VERSION")
 
-	if [ "$VERSION" != "$CURRENT_VERSION" ]; then
+	if [ "$REPO_VERSION" != "$CURRENT_VERSION" ]; then
 		git config $GLOBAL redmine.version "$CURRENT_VERSION"
 		if [ -n "$URL" ] && [ -n "$AUTHKEY" ]; then
 			PROFILE=""
