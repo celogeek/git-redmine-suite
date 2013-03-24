@@ -1,3 +1,6 @@
+0.46  2013-03-24 18:40:34 GMT
+    * Feature #37 : start hotfix of a special branch (Celogeek San)
+
 0.45  2013-03-21 23:40:32 GMT
     * Feature #109 : add version param instead of env (Celogeek San)
     * Feature #110 : go to devel when release finish (Celogeek San)

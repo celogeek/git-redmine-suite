@@ -29,7 +29,7 @@ function reassigned_this {
 			REDMINE_NO_AUTO_REASSIGN="1"
 			reassigned_this $TYPE $PROJECT
 		else
-			if [ "$TYPE" != "release" ]; then
+			if [ "$TYPE" != "release" ] && [ "$TYPE" != "hotfix" ]; then
 				exit 1
 			fi
 		fi
