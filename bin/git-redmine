@@ -23,8 +23,8 @@ else
             HELP=1 $MODULE
         done
         echo ""
-    fi
-    cat <<__EOF__
+
+        cat <<__EOF__
 [OPTIONS]
     * -f => force         : don't ask question to start / finish / clear
     * -r => rebase        : before starting the review, rebase on origin devel
@@ -32,5 +32,6 @@ else
     * -a => auto reassign : reassign automatically the task
     
 __EOF__
+    fi
     exit 1
 fi
