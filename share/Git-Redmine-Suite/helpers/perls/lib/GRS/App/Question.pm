@@ -27,7 +27,7 @@ option 'answer_mode' => (
     is      => 'ro',
     format  => 's',
     default => sub {'yesno'},
-    doc     => 'Type of question / answer : yesno / id',
+    doc     => 'Type of question / answer : yesno / id / time',
 );
 
 option 'default_answer' => (
@@ -51,6 +51,8 @@ sub app {
         $question .= " ";
         $question .= "(default: $default_answer) " if length $default_answer;
         $self->answer_mode_id( $term, $question, $default_answer);
+    }elsif ( $self->answer_mode eq 'time') {
+        $self->answer_mode_time($term, $question);
     }
     else {
         croak "Bad answer_mode !";
@@ -85,5 +87,19 @@ sub answer_mode_id {
     say $answer;
     exit 0;
 }
+
+sub answer_mode_time {
+    my ( $self, $term, $prompt ) = @_;
+    my $answer;
+    print STDERR "\n";
+    while ( defined( $answer = $term->readline($prompt) ) ) {
+        $answer =~ s/,/\./g;
+        last if $answer =~ /^\d+(\.\d+)?$/
+    }
+    print STDERR "\n";
+    say $answer;
+    exit 0;
+}
+
 
 1;
