@@ -212,6 +212,16 @@ function task_finish {
 		exit 1
 	fi
 
+	if [ -n "$REDMINE_FORCE" ] && [ -z "$REDMINE_TIME" ]; then
+		echo "Please add a spent time thought parameter with the force option !"
+		HELP=1 exec $0
+	fi
+
+	if [ -n "$REDMINE_FORCE" ] && ! is_valid_hours --hours="$REDMINE_TIME"; then
+		echo "Please enter a valid hours params !"
+		HELP=1 exec $0
+	fi
+
 	if [ -z "$REDMINE_FORCE" ] && ! ask_question --question="Do you really want to finish the task $CURRENT_TASK ?"; then
 		exit 1
 	fi
