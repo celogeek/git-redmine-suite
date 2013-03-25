@@ -212,6 +212,16 @@ function task_finish {
 		exit 1
 	fi
 
+	if [ -n "$REDMINE_FORCE" ] && [ -z "$REDMINE_TIME" ]; then
+		echo "Please add a spent time thought parameter with the force option !"
+		HELP=1 exec $0
+	fi
+
+	if [ -n "$REDMINE_FORCE" ] && ! is_valid_hours --hours="$REDMINE_TIME"; then
+		echo "Please enter a valid hours params !"
+		HELP=1 exec $0
+	fi
+
 	if [ -z "$REDMINE_FORCE" ] && ! ask_question --question="Do you really want to finish the task $CURRENT_TASK ?"; then
 		exit 1
 	fi
@@ -274,6 +284,20 @@ $(cat "$F")
 
 	echo ""
 	unlink "$F"
+
+	if [ -z "$REDMINE_FORCE" ] || [ -n "$REDMINE_TIME" ]; then
+		if [ -z "$REDMINE_TIME" ]; then
+			REDMINE_TIME=$(ask_question --question="How much hours did you spend on the task ? " --answer_mode="time")
+		fi
+		echo "Updating time entry ..."
+		redmine-create-task-time --task_id=$CURRENT_TASK --hours=$REDMINE_TIME 2> /dev/null || cat <<__EOF__
+
+Impossible to add a time entry :
+
+	* Time tracking is disabled on this project. Please activate it !
+
+__EOF__
+	fi
 
 	if [ -n "$REDMINE_CHAIN_FINISH" ] && [ "$ASSIGNED_TO_ID" = "$REDMINE_USER_ID" ]; then
 		exec git redmine review start $CURRENT_TASK
