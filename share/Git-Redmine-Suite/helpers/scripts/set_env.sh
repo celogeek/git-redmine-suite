@@ -102,13 +102,14 @@ fi
 export REDMINE_GIT_REPOS_ID REDMINE_GIT_REPOS_URL REDMINE_GIT_PR_ID REDMINE_GIT_RELEASE_ID
 
 #export params vars
-while getopts frcav: opt; do
+while getopts frcav:t: opt; do
     case $opt in
         f) export REDMINE_FORCE=1 ;;
         r) export REDMINE_REBASE=1 ;;
         c) export REDMINE_CHAIN_FINISH=1 ;;
         a) export REDMINE_AUTO_REASSIGN=1 ;;
         v) export VERSION=$OPTARG ;;
+        t) export REDMINE_TIME=$OPTARG ;;
     esac
 done
 
