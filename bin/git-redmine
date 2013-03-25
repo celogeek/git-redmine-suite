@@ -30,6 +30,7 @@ else
     * -r => rebase        : before starting the review, rebase on origin devel
     * -c => chain         : chain review when finish a task, or finish the release after a start
     * -a => auto reassign : reassign automatically the task
+    * -t => hours spent   : hours spend on a task in decimal format (ex: 2.5, or 1)
     
 __EOF__
     fi
