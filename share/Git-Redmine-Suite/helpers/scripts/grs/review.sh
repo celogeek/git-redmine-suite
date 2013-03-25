@@ -31,7 +31,7 @@ __EOF__
 	fi
 
 	echo -n "Starting the review : "
-	if ! redmine-get-task-info --task_id=$TASK --with-status; then
+	if ! redmine-get-task-info --task_id=$TASK --with_status; then
 		exit 1
 	fi
 
