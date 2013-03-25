@@ -292,10 +292,9 @@ $(cat "$F")
 		echo "Updating time entry ..."
 		redmine-create-task-time --task_id=$CURRENT_TASK --hours=$REDMINE_TIME 2> /dev/null || cat <<__EOF__
 
-Impossible to add a time entry, possible reason :
+Impossible to add a time entry :
 
 	* Time tracking is disabled on this project. Please activate it !
-	* Bad value pass thought params
 
 __EOF__
 	fi
