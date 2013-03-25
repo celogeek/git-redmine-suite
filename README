@@ -14,5 +14,7 @@ Integrator should have the right to merge devel into master and create a tag 'vV
 Redmine need to be patched, and you need to add GIT_REPOS, GIT_PR, GIT_RELEASE as global custom fields (all project).
 GIT_REPOS need to be searchable / filterable.
 
+You also need to setup a default time entry (ex: Development), in Enumeration tab.
+
 You need to patch your redmine, to be able to setup project : see grs.patch
 
