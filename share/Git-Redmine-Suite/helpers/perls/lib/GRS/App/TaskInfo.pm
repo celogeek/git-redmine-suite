@@ -67,19 +67,22 @@ sub title_with_status {
 
 sub title_with_extended_status {
     my ( $self, $issue ) = @_;
+
     my %cf       = $self->_cf($issue);
 
     my $color = $self->prio_color->{lc($issue->{priority}->{name})} // 0;
     my @response = (
-        [ "Project"        => $self->project_fullname($issue->{project}->{id}) ],
-        [ "Priority"       => "\033[".$color."m".$issue->{priority}->{name}."\033[0m" ],
-        [ "Title"          => $self->title($issue) ],
-        [ "Status"         => $issue->{status}->{name} ],
-        [ "Last update"    => $self->_duration($issue) ],
-        [ "Assigned to"    => $issue->{assigned_to}->{name} ],
-        [ "Reported Repos" => $cf{GIT_REPOS} ],
-        [ "Last PR"        => $cf{GIT_PR} ],
-        [ "Released"       => $cf{GIT_RELEASE} ],
+        [ "Project"         => $self->project_fullname($issue->{project}->{id}) ],
+        [ "Priority"        => "\033[".$color."m".$issue->{priority}->{name}."\033[0m" ],
+        [ "Title"           => $self->title($issue) ],
+        [ "Status"          => $issue->{status}->{name} ],
+        [ "Last update"     => $self->_duration($issue) ],
+        [ "Assigned to"     => $issue->{assigned_to}->{name} ],
+        [ "Estimated hours" => $self->_hours($issue->{estimated_hours}) ],
+        [ "Spent hours"     => $self->_hours($issue->{spent_hours})],
+        [ "Reported Repos"  => $cf{GIT_REPOS} ],
+        [ "Last PR"         => $cf{GIT_PR} ],
+        [ "Released"        => $cf{GIT_RELEASE} ],
     );
     return @response;
 }
@@ -119,5 +122,11 @@ sub _duration {
     };
 
     return $duration_str;
+}
+
+sub _hours {
+    my ($self, $hours) = @_;
+    return unless defined $hours;
+    return sprintf("%.02f", $hours);
 }
 1;

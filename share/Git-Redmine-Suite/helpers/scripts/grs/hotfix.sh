@@ -34,7 +34,7 @@ function hotfix_start {
 	HOTFIX_VERSION=$(next_version --version="$HOTFIX_CURRENT_VERSION")
 
 	echo -n "Starting the hotfix : "
-	if ! redmine-get-task-info --task_id=$TASK --with-status; then
+	if ! redmine-get-task-info --task_id=$TASK --with_status; then
 		exit 1
 	fi
 
