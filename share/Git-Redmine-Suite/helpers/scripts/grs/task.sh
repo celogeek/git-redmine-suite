@@ -275,6 +275,21 @@ $(cat "$F")
 	echo ""
 	unlink "$F"
 
+	if [ -z "$REDMINE_FORCE" ] || [ -n "$REDMINE_TIME" ]; then
+		if [ -z "$REDMINE_TIME" ]; then
+			REDMINE_TIME=$(ask_question --question="How much hours did you spend on the task ? " --answer_mode="time")
+		fi
+		echo "Updating time entry ..."
+		redmine-create-task-time --task_id=$CURRENT_TASK --hours=$REDMINE_TIME 2> /dev/null || cat <<__EOF__
+
+Impossible to add a time entry, possible reason :
+
+	* Time tracking is disabled on this project. Please activate it !
+	* Bad value pass thought params
+
+__EOF__
+	fi
+
 	if [ -n "$REDMINE_CHAIN_FINISH" ] && [ "$ASSIGNED_TO_ID" = "$REDMINE_USER_ID" ]; then
 		exec git redmine review start $CURRENT_TASK
 	fi
