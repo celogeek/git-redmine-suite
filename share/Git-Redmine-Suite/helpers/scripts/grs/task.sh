@@ -85,7 +85,7 @@ function task_create {
 	TASK=$1
 
 	echo -n "Starting the task : "
-	if ! redmine-get-task-info --task_id=$TASK --with-status; then
+	if ! redmine-get-task-info --task_id=$TASK --with_status; then
 		exit 1
 	fi
 	if [ -z "$REDMINE_FORCE" ] && ! ask_question --question="Do you really want to start this task ?"; then
@@ -138,7 +138,7 @@ function task_status {
 		if [ "$TASK" == "$CURRENT_TASK" ]; then
 			continue
 		fi
-    	T=$(redmine-get-task-info --task_id=$TASK --with-status)
+    	T=$(redmine-get-task-info --task_id=$TASK --with_status)
 		echo "    $T"
     	if echo "$T" | grep -q ", Released with v"; then
     		if [ -n "$REDMINE_FORCE" ] || ask_question --question="This task (# $TASK) has been released, clear it ?"; then
@@ -314,5 +314,5 @@ function task_info {
 	fi
 
 	echo "Information on the task $TASK : "
-	redmine-get-task-info --task_id=$TASK --with-extended-status
+	redmine-get-task-info --task_id=$TASK --with_extended_status
 }

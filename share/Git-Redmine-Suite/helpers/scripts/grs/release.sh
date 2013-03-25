@@ -152,7 +152,7 @@ function release_finish {
 		echo ""
 		echo "Task # $TASK : "
 
-		redmine-get-task-info --task_id="$TASK" --with_extended_status
+		redmine-get-task-info --task_id="$TASK" --with_status
 		echo ""
 		PROJECT=$(redmine-get-task-project-identifier --task_id=$TASK)
 		
