@@ -19,7 +19,7 @@ use Date::Parse;
 
 with 'GRS::Role::API', 'GRS::Role::Project', 'GRS::Role::StatusIDS',
     'GRS::Role::AssignedToID', 'GRS::Role::IDSOnly', 'GRS::Role::CFSet', 'GRS::Role::CFFilter',
-    'GRS::Role::ProjectFullName', 'GRS::Role::PrioColor';
+    'GRS::Role::ProjectFullName', 'GRS::Role::PrioColor', 'GRS::Role::TaskID';
     
 has '_max_assigned_to' => (
     is => 'rw',
@@ -77,7 +77,6 @@ sub app {
 
     for my $identifier ( sort { $a cmp $b } keys %{ $self->_projects } ) {
         my $prj    = $self->_projects->{$identifier};
-        say "[", $self->project_fullname($prj->{id}), "]";
 
         my $tasks  = $prj->{tasks};
         my $parent = $prj->{parent};
@@ -87,14 +86,19 @@ sub app {
             $flip_parent{$parent_id} //= [];
             push @{ $flip_parent{$parent_id} }, $task_id;
         }
-        $self->_display_tree(
-            level       => 0,
-            parent_id   => 0,
-            flip_parent => \%flip_parent,
-            tasks       => $tasks,
-            columns     => $columns,
-        );
-        say "";
+        
+        if (exists $flip_parent{$self->task_id // 0}) {
+            say "[", $self->project_fullname($prj->{id}), "]";
+        
+            $self->_display_tree(
+                level       => 0,
+                parent_id   => $self->task_id // 0,
+                flip_parent => \%flip_parent,
+                tasks       => $tasks,
+                columns     => $columns,
+            );
+            say "";
+        }
     }
 }
 
@@ -199,6 +203,26 @@ sub _display_tree {
     my $tab = "  " x ( $p{level} );
 
     my $reset_color = "\033[0m";
+
+    if (!$p{level} && $p{parent_id}) {
+        my $task_id = $p{parent_id};
+        my $color = "\033[".$p{tasks}{$task_id}{color}."m";
+
+        say $color,
+            $self->_format_str(
+                $p{columns},
+                "  " . $tab . $TRIANGLE . " ",
+                $p{tasks}{$task_id}{tracker},
+                $p{tasks}{$task_id}{title},
+                $p{tasks}{$task_id}{priority},
+                $p{tasks}{$task_id}{assigned_to},
+                $p{tasks}{$task_id}{oldest_updated_on}
+            ),
+            $reset_color;
+
+        $p{level} += 1;
+        $tab = "  " x ( $p{level} );
+    }
 
     for my $task_id (
         sort {
