@@ -1,8 +1,15 @@
 #!/bin/bash
 source "$(dirname "$0")/../share/Git-Redmine-Suite/helpers/scripts/help.sh"
 
-help_command
+help_command [PARENT_TASK_ID]
 
 source "$(dirname "$0")/../share/Git-Redmine-Suite/helpers/scripts/grs.sh"
 
-redmine-get-task-list --assigned_to_id="$REDMINE_USER_ID" --status_ids="$REDMINE_TASK_TODO"
+PARENT_TASK_ID=$1
+declare -a PARAMS=()
+
+if [ -n "$PARENT_TASK_ID" ]; then
+	PARAMS+=(--task_id "$PARENT_TASK_ID")
+fi
+
+redmine-get-task-list --assigned_to_id="$REDMINE_USER_ID" --status_ids="$REDMINE_TASK_TODO" "${PARAMS[@]}"
