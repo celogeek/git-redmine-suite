@@ -271,7 +271,7 @@ function task_finish {
 	notes="
 You can start a review with :
 <pre>
-git redmine review start $TASK
+git redmine review start $CURRENT_TASK
 </pre>
 
 $MSG_DEPS
