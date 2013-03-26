@@ -1,3 +1,5 @@
+    * Feature #114 : Allow task pending to start with a specific parent (Celogeek San)
+
 0.49  2013-03-26 11:03:39 GMT
     * Bug #113 : Review finish doesnt give the task in the note message (Celogeek San)
 
