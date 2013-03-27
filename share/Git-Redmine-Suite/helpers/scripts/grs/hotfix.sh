@@ -133,7 +133,7 @@ function hotfix_abort {
 	    exit 1
 	fi
 
-	if [ -z "$REDMINE_FORCE" ] && ! ask_question --question="Aborting hotfix $BRNAME ?"; then
+	if [ -z "$REDMINE_FORCE" ] && ! ask_question --question="Do you really want to abort the hotfix $BRNAME ?"; then
 		exit 1
 	fi
 
