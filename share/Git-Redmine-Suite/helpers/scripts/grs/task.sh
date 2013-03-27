@@ -263,6 +263,18 @@ function task_finish {
 	F=$(mktemp /tmp/redmine.XXXXXX)
 	vim "$F"
 
+	ADDITIONAL_MESSAGE=""
+	if [ -s "$F" ]; then
+		ADDITIONAL_MESSAGE="
+
+Additional comments from the developer :
+
+$(cat "$F")
+
+"
+	fi
+
+
 	task=$CURRENT_TASK \
 	status=$REDMINE_REVIEW_TODO \
 	assigned_to=$ASSIGNED_TO_ID \
@@ -275,10 +287,7 @@ git redmine review start $CURRENT_TASK
 </pre>
 
 $MSG_DEPS
-
-Additional comments from the developer :
-
-$(cat "$F")
+$ADDITIONAL_MESSAGE
 " \
 	task_update || exit 1
 
