@@ -1,3 +1,5 @@
+    * Feature #123 : add help option -h (Celogeek San)
+
 0.54  2013-03-27 20:30:19 GMT
     * Bug #118 : the guide should not check the .git directory (Celogeek San)
 
