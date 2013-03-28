@@ -129,6 +129,7 @@ function review_reject {
 	    echo "You have not start any review !"
 	    exit 1
 	fi
+
 	
 	TASK_TITLE=$(git config "redmine.review.$TASK.title")
 	BRNAME=$(git config "redmine.review.$TASK.branch")
@@ -138,11 +139,13 @@ function review_reject {
 		exit 1
 	fi
 
+	check_valid_editor
+
 	echo "Fetching last developer ..."
 	declare -a TASK_DEV=($(redmine-get-task-developers --task_id="$TASK" --status_ids="$REDMINE_TASK_IN_PROGRESS" --ids_only))
 
 	F=$(mktemp /tmp/redmine.XXXXXX)
-	vim "$F"
+	"$EDITOR" "$F"
 
 	task=$TASK \
 	status=$REDMINE_TASK_TODO \
@@ -177,13 +180,14 @@ function review_finish {
 	    exit 1
 	fi
 	
+	check_valid_editor
+
 	PROJECT=$(git config "redmine.review.$TASK.project")
 	TASK_TITLE=$(git config "redmine.review.$TASK.title")
 	TASK_DEV=$(redmine-get-task-developers --task_id="$TASK" --status_ids="$REDMINE_TASK_IN_PROGRESS")
 	PR=$(git config "redmine.review.$TASK.pr")
 	BRNAME=$(git config "redmine.review.$TASK.branch")
 	CHANGELOG=$(get_change_log)
-
 
 	if [ -z "$REDMINE_FORCE" ] && ! ask_question --question="Do you really want to finish the review of this task : $TASK_TITLE - PR:$PR ?"; then
 		exit 1
@@ -201,7 +205,7 @@ function review_finish {
 	touch "$CHANGELOG"
 	cat "$CHANGELOG" >> "$CHANGELOG".new
 	mv "$CHANGELOG".new "$CHANGELOG"
-	vim "$CHANGELOG"
+	"$EDITOR" "$CHANGELOG"
 	git add "$CHANGELOG"
 	git commit -m "reflect changes" "$CHANGELOG" || true
 	git push origin devel

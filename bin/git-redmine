@@ -20,19 +20,11 @@ else
         fi
         for MODULE in $0-*
         do
-            HELP=1 $MODULE
+            HELP_NO_OPTION=1 HELP=1 $MODULE
         done
-        echo ""
 
-        cat <<__EOF__
-[OPTIONS]
-    * -f => force         : don't ask question to start / finish / clear
-    * -r => rebase        : before starting the review, rebase on origin devel
-    * -c => chain         : chain review when finish a task, or finish the release after a start
-    * -a => auto reassign : reassign automatically the task
-    * -t => hours spent   : hours spend on a task in decimal format (ex: 2.5, or 1)
-    
-__EOF__
+        source "$(dirname "$0")/../share/Git-Redmine-Suite/helpers/scripts/help.sh"
+        help_option_command
     fi
     exit 1
 fi

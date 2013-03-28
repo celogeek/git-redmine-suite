@@ -226,6 +226,8 @@ function task_finish {
 		exit 1
 	fi
 
+	check_valid_editor
+
 	task=$CURRENT_TASK \
 	status=$REDMINE_TASK_IN_PROGRESS \
 	assigned_to=$REDMINE_USER_ID \
@@ -260,20 +262,32 @@ function task_finish {
     	MSG_DEPS="Before reviewing this task, ensure you have already review : $DEPS"
 	fi
 
+	if [ -z "$NO_MESSAGE" ] && [ -z "$MESSAGE" ]; then
+
 	F=$(mktemp /tmp/redmine.XXXXXX)
-	vim "$F"
+	cat <<__EOF__ > "$F"
+
+###
+### Please indicate what the reviewer had to know to do properly your review
+### 
+__EOF__
+	"$EDITOR" "$F"
+
+	MESSAGE=$(cat "$F" | grep -v ^"###")
+	RET="
+"
+	fi
 
 	ADDITIONAL_MESSAGE=""
-	if [ -s "$F" ]; then
+	if [ "$MESSAGE" != "$RET" ] && [ -n "$MESSAGE" ]; then
 		ADDITIONAL_MESSAGE="
 
 Additional comments from the developer :
 
-$(cat "$F")
+$MESSAGE
 
 "
 	fi
-
 
 	task=$CURRENT_TASK \
 	status=$REDMINE_REVIEW_TODO \
@@ -292,7 +306,7 @@ $ADDITIONAL_MESSAGE
 	task_update || exit 1
 
 	echo ""
-	unlink "$F"
+	[ -e "$F" ] && unlink "$F"
 
 	if [ -z "$REDMINE_FORCE" ] || [ -n "$REDMINE_TIME" ]; then
 		if [ -z "$REDMINE_TIME" ]; then
