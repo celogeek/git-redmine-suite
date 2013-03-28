@@ -262,6 +262,8 @@ function task_finish {
     	MSG_DEPS="Before reviewing this task, ensure you have already review : $DEPS"
 	fi
 
+	if [ -z "$NO_MESSAGE" ] && [ -z "$MESSAGE" ]; then
+
 	F=$(mktemp /tmp/redmine.XXXXXX)
 	cat <<__EOF__ > "$F"
 
@@ -274,6 +276,7 @@ __EOF__
 	MESSAGE=$(cat "$F" | grep -v ^"###")
 	RET="
 "
+	fi
 
 	ADDITIONAL_MESSAGE=""
 	if [ "$MESSAGE" != "$RET" ] && [ -n "$MESSAGE" ]; then
@@ -285,7 +288,6 @@ $MESSAGE
 
 "
 	fi
-
 
 	task=$CURRENT_TASK \
 	status=$REDMINE_REVIEW_TODO \
@@ -304,7 +306,7 @@ $ADDITIONAL_MESSAGE
 	task_update || exit 1
 
 	echo ""
-	unlink "$F"
+	[ -e "$F" ] && unlink "$F"
 
 	if [ -z "$REDMINE_FORCE" ] || [ -n "$REDMINE_TIME" ]; then
 		if [ -z "$REDMINE_TIME" ]; then

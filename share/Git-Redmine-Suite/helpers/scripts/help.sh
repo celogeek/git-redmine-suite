@@ -1,13 +1,14 @@
 #export params vars
-while getopts frcav:t:h opt; do
+while getopts frcav:t:hnm: opt; do
     case $opt in
         f) export REDMINE_FORCE=1 ;;
         r) export REDMINE_REBASE=1 ;;
         c) export REDMINE_CHAIN_FINISH=1 ;;
         a) export REDMINE_AUTO_REASSIGN=1 ;;
         v) export VERSION=$OPTARG ;;
-        t) export REDMINE_TIME=$OPTARG ;;
+        t) export REDMINE_TIME="$OPTARG" ;;
         h) export HELP=1 ;;
+        n) export NO_MESSAGE=1 ;;
     esac
 done
 shift $((OPTIND-1))
@@ -39,6 +40,7 @@ function help_option_command {
     * -c => chain         : chain review when finish a task, or finish the release after a start
     * -a => auto reassign : reassign automatically the task
     * -t => hours spent   : hours spend on a task in decimal format (ex: 2.5, or 1)
+    * -n => no message    : skip message edition
     
 __EOF__
 }
