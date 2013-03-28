@@ -261,15 +261,25 @@ function task_finish {
 	fi
 
 	F=$(mktemp /tmp/redmine.XXXXXX)
+	cat <<__EOF__ > "$F"
+
+###
+### Please indicate what the reviewer had to know to do properly your review
+### 
+__EOF__
 	vim "$F"
 
+	MESSAGE=$(cat "$F" | grep -v ^"###")
+	RET="
+"
+
 	ADDITIONAL_MESSAGE=""
-	if [ -s "$F" ]; then
+	if [ "$MESSAGE" != "$RET" ] && [ -n "$MESSAGE" ]; then
 		ADDITIONAL_MESSAGE="
 
 Additional comments from the developer :
 
-$(cat "$F")
+$MESSAGE
 
 "
 	fi
