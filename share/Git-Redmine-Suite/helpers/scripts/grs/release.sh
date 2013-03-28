@@ -14,6 +14,8 @@ function release_start {
 		echo "Nothing to release !"
 	fi
 
+	check_valid_editor
+
 	git_refresh_local_repos
 
 	if [ -z "$VERSION" ]; then
@@ -51,7 +53,7 @@ function release_start {
 	tag_version --version="$VERSION" > "$CHANGELOG".new
 	cat "$CHANGELOG" >> "$CHANGELOG".new
 	mv "$CHANGELOG".new "$CHANGELOG"
-	vim "$CHANGELOG"
+	"$EDITOR" "$CHANGELOG"
 	git add "$CHANGELOG"
 	git ci -m "Add version in Changes"
 
@@ -59,7 +61,7 @@ function release_start {
 	then
 	    cat dist.ini | /usr/bin/perl -pe "s/version = (.*)/version = $VERSION/" > dist.ini.new
 	    mv dist.ini.new dist.ini
-	    vim dist.ini
+	    "$EDITOR" dist.ini
 	    git add dist.ini
 	    git ci -m 'Update version DistZilla'
 	fi

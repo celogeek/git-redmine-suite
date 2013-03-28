@@ -10,6 +10,7 @@ while getopts frcav:t:h opt; do
         h) export HELP=1 ;;
     esac
 done
+shift $((OPTIND-1))
 
 function help_command {
 	if [ -n "$HELP" ]; then
