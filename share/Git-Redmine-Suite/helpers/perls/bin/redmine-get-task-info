@@ -22,6 +22,7 @@ elsif ( $app->with_extended_status ) {
 		next unless length($value);
 		say $app->pad,sprintf($max_fmt, $title)," : ",$value;
 	}
+	say "";
 }
 else {
     say $app->title($issue);

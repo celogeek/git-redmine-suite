@@ -71,6 +71,9 @@ sub title_with_extended_status {
     my %cf       = $self->_cf($issue);
 
     my $color = $self->prio_color->{lc($issue->{priority}->{name})} // 0;
+    my $url = $self->server_url . "/issues/" . $issue->{id} ;
+    my $description = $issue->{description};
+    $description = "*" x length($url) . "\n\n" . $description if $description;
     my @response = (
         [ "Project"         => $self->project_fullname($issue->{project}->{id}) ],
         [ "Priority"        => "\033[".$color."m".$issue->{priority}->{name}."\033[0m" ],
@@ -83,6 +86,8 @@ sub title_with_extended_status {
         [ "Reported Repos"  => $cf{GIT_REPOS} ],
         [ "Last PR"         => $cf{GIT_PR} ],
         [ "Released"        => $cf{GIT_RELEASE} ],
+        [ "URL"             => $url ],
+        [ "Description"     => $description],
     );
     return @response;
 }
