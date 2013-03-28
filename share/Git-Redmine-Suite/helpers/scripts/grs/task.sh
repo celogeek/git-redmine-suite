@@ -226,6 +226,8 @@ function task_finish {
 		exit 1
 	fi
 
+	check_valid_editor
+
 	task=$CURRENT_TASK \
 	status=$REDMINE_TASK_IN_PROGRESS \
 	assigned_to=$REDMINE_USER_ID \
@@ -267,7 +269,7 @@ function task_finish {
 ### Please indicate what the reviewer had to know to do properly your review
 ### 
 __EOF__
-	vim "$F"
+	"$EDITOR" "$F"
 
 	MESSAGE=$(cat "$F" | grep -v ^"###")
 	RET="
