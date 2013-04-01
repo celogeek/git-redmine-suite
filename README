@@ -1,20 +1,15 @@
-This project will help you to link your git project to redmine.
+Git Redmine Suite is a complete solution to manage the development with redmine from git command line.
 
-The project structure should be :
+No more need to spend time in redmine, GRS do it for you.
 
-master - release branch
-devel  - where all integration goes
-redmine-TRACKER-ID-SLUD - all synchronized task
-pr-YYYMMDDHHmmSS-SLUG - all the pull request receive when a task is finished
+It speed up the developer tasks (start and finish a task)
 
-Developers should have the right to push redmine-* and pr-*.
-Reviewer should have the right to read redmine-* (and write on it), push to devel and remove the pr-*.
-Integrator should have the right to merge devel into master and create a tag 'vVERSION' on each release.
+It also simplify the review and release process.
 
-Redmine need to be patched, and you need to add GIT_REPOS, GIT_PR, GIT_RELEASE as global custom fields (all project).
-GIT_REPOS need to be searchable / filterable.
+Here a link to fully setup this amazing tools :
 
-You also need to setup a default time entry (ex: Development), in Enumeration tab.
+https://tasks.celogeek.com/projects/git-redmine-suite/wiki
 
-You need to patch your redmine, to be able to setup project : see grs.patch
+Enjoy !
 
+Celogeek
