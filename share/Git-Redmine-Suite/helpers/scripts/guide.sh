@@ -18,6 +18,15 @@ You can consult the wiki :
 
 __EOF__
 		;;
+
+		reviewers)
+			cat <<__EOF__
+You can consult the wiki :
+
+	* The reviewer's guide : https://tasks.celogeek.com/projects/git-redmine-suite/wiki/GuideOfReviewers
+
+__EOF__
+		;;
 		*)
 			man $MAN_DIR/$1.man
 		;;
