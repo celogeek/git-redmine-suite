@@ -1,3 +1,4 @@
+    * Feature #130 : detect profile change and run it again (Celogeek San)
     * Feature #128 : create profile update (Celogeek San)
     * Feature #127 : create profile export (Celogeek San)
     * Feature #126 : handle external profile in the name to run it again (Celogeek San)
