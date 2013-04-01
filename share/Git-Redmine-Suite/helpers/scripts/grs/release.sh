@@ -156,9 +156,8 @@ function release_finish {
 
 		redmine-get-task-info --task_id="$TASK" --with_status
 		echo ""
-		PROJECT=$(redmine-get-task-project-identifier --task_id=$TASK)
 		
-
+		PROJECT=$(redmine-get-task-project-identifier --task_id=$TASK)
 		while true; do
 			reassigned_this "release" "$PROJECT" || true
 			if [ -z "$ASSIGNED_TO_ID" ]; then

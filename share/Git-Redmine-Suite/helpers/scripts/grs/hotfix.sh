@@ -50,7 +50,6 @@ function hotfix_start {
 	progress=10 \
 	task_update || exit 1
 
-	PROJECT=$(redmine-get-task-project-identifier --task_id=$TASK)
 	TASK_TITLE=$(redmine-get-task-info --task_id=$TASK)
 	SLUG_TITLE=$(slug --this "$TASK_TITLE")
 	BRNAME="redmine-hotfix-$HOTFIX_VERSION-$SLUG_TITLE"
@@ -60,7 +59,6 @@ function hotfix_start {
 	git config "redmine.hotfix.current" "$TASK"
 	git config "redmine.hotfix.version" "$HOTFIX_VERSION"
 	git config "redmine.hotfix.branch" "$BRNAME"
-	git config "redmine.hotfix.project" "$PROJECT"
 	git push origin -u $BRNAME || exit 1
 
 	cat <<__EOF__
@@ -81,7 +79,6 @@ function hotfix_finish {
 	CURRENT_TASK=$(git config redmine.hotfix.current)
 	VERSION=$(git config redmine.hotfix.version)
 	BRNAME=$(git config redmine.hotfix.branch)
-	PROJECT=$(git config redmine.hotfix.project)
 
 	if [ -z "$CURRENT_TASK" ]; then
 		echo "No hotfix started !"
@@ -92,7 +89,7 @@ function hotfix_finish {
 		exit 1
 	fi
 
-
+	PROJECT=$(redmine-get-task-project-identifier --task_id=$CURRENT_TASK)
 	while true; do
 		reassigned_this "hotfix" "$PROJECT" || true
 		if [ -z "$ASSIGNED_TO_ID" ]; then
