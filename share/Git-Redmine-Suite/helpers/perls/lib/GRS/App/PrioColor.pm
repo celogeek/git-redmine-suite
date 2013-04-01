@@ -44,7 +44,7 @@ sub app {
     my $default = 0;
     for my $c(@content[0..$#content-3]) {
         $default = 1 if $c->{is_default};
-        my $current_color = $default ? 'Low' : 'Normal';
+        my $current_color = $default ? 'Normal' : 'Low';
         $res{$c->{name}} = $color->{$current_color};
     }
 
