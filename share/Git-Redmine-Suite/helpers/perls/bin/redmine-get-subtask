@@ -1,0 +1,6 @@
+#!/usr/bin/perl
+use GRS 'TaskSub';
+
+my ($self, $task_id) = GRS->run();
+
+say $task_id // "";

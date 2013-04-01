@@ -40,10 +40,19 @@ function task_start {
 		HELP=1 exec $0
 	fi
 
+	if [ -n "$REDMINE_TASK_IS_PARENT" ]; then
+		echo "Find or create subtask for $TASK ..."
+		TASK=$(redmine-get-subtask --task_id="$TASK" --status_ids="$REDMINE_TASK_TODO" --cf_id="$REDMINE_GIT_REPOS_ID" --cf_val="$REDMINE_GIT_REPOS_URL" --assigned_to_id="$REDMINE_USER_ID" 2>/dev/null)
+		if [ -z "$TASK" ]; then
+			echo "Can't find or create the subtask of $1 ..."
+			exit 1
+		fi
+	fi
+
 	if git config redmine.task.$TASK.branch > /dev/null; then
-		task_continue "$1"
+		task_continue "$TASK"
 	else
-		task_create "$1"
+		task_create "$TASK"
 	fi
 
 }
