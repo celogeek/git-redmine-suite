@@ -1,3 +1,6 @@
+0.57  2013-04-01 12:07:04 GMT
+    * Feature #131 : setup basic priocolor if missing (Celogeek San)
+
 0.56  2013-04-01 11:23:21 GMT
     * Feature #130 : detect profile change and run it again (Celogeek San)
     * Feature #128 : create profile update (Celogeek San)
