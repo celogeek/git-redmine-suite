@@ -27,7 +27,7 @@ fi
 
 cd "$(dirname "$0")"
 if [ -z "$SKIP_CPANM" ]; then
-	if ! sudo HOME=/tmp PERL_CPANM_OPT="" ./cpanm -nv Redmine::API Moo MooX::Options LWP::Protocol::https Version::Next DateTime Term::ReadLine Date::Parse LWP::Curl List::MoreUtils List::Util List::Util::XS autodie utf8::all Term::Size File::MkTemp; then
+	if ! sudo HOME=/tmp PERL_CPANM_OPT="" ./cpanm -nv Redmine::API Moo MooX::Options LWP::Protocol::https Version::Next DateTime Term::ReadLine Date::Parse LWP::Curl List::MoreUtils List::Util List::Util::XS autodie utf8::all Term::Size; then
 		echo "Fail to install dependencies !"
 		exit 1
 	fi
