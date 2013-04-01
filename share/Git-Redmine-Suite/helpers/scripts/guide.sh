@@ -1,26 +1,25 @@
 # guide
 function guide_show {
+	echo "You can consult the wiki :"
+	echo ""
+
 	case $1 in
 		setup)
-			cat <<__EOF__
-You can consult the wiki :
-
-    * Installation of Grs on Desktop : https://tasks.celogeek.com/projects/git-redmine-suite/wiki/InstallationGrsOnDesktop
-    * Setup Grs : https://tasks.celogeek.com/projects/git-redmine-suite/wiki/SetupGRS
-
-__EOF__
+			echo "    * Installation of Grs on Desktop : https://tasks.celogeek.com/projects/git-redmine-suite/wiki/InstallationGrsOnDesktop"
+    		echo "    * Setup Grs : https://tasks.celogeek.com/projects/git-redmine-suite/wiki/SetupGRS"
 		;;
 		developers)
-			cat <<__EOF__
-You can consult the wiki :
-
-	* The developers' guide : https://tasks.celogeek.com/projects/git-redmine-suite/wiki/GuideOfDevelopers
-
-__EOF__
+			echo "    * The developers' guide : https://tasks.celogeek.com/projects/git-redmine-suite/wiki/GuideOfDevelopers"
 		;;
-		*)
-			man $MAN_DIR/$1.man
+
+		reviewers)
+			echo "    * The reviewers' guide : https://tasks.celogeek.com/projects/git-redmine-suite/wiki/GuideOfReviewers"
+		;;
+		releasers)
+			echo "    * The releasers' guide : https://tasks.celogeek.com/projects/git-redmine-suite/wiki/GuideOfReleasers"
 		;;
 	esac
+
+	echo ""
 
 }
