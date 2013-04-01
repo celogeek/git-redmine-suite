@@ -34,7 +34,7 @@ sub app {
 
     for my $c (split /[\r\n]/, $content) {
     	$c =~ /^(.*?)\s+=\s+(.*)$/ or next;
-	    print $fh $c;
+	    print $fh $c,"\n";
     }
     close $fh;
 
