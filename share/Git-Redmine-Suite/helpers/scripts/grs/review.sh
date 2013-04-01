@@ -46,7 +46,6 @@ __EOF__
 	cf_val=$REDMINE_GIT_REPOS_URL \
 	task_update || exit 1
 	
-	PROJECT=$(redmine-get-task-project-identifier --task_id=$TASK)
 	TASK_TITLE=$(redmine-get-task-info --task_id=$TASK)
 	SLUG_TITLE=$(slug --this "$TASK_TITLE")
 	BRNAME="redmine-review-$SLUG_TITLE"
@@ -57,7 +56,6 @@ __EOF__
 	git config "redmine.review.$TASK.pr" "$PR"
 	git config "redmine.review.$TASK.title" "$TASK_TITLE"
 	git config "redmine.review.$TASK.branch" "$BRNAME"
-	git config "redmine.review.$TASK.project" "$PROJECT"
 
 	if [ -n "$REDMINE_REBASE" ] ; then
 	    git rebase origin/devel && (git diff --color origin/devel | less -R)
@@ -182,7 +180,6 @@ function review_finish {
 	
 	check_valid_editor
 
-	PROJECT=$(git config "redmine.review.$TASK.project")
 	TASK_TITLE=$(git config "redmine.review.$TASK.title")
 	TASK_DEV=$(redmine-get-task-developers --task_id="$TASK" --status_ids="$REDMINE_TASK_IN_PROGRESS")
 	PR=$(git config "redmine.review.$TASK.pr")
@@ -193,6 +190,7 @@ function review_finish {
 		exit 1
 	fi
 
+	PROJECT=$(redmine-get-task-project-identifier --task_id=$TASK)
 	if ! reassigned_this "review" "$PROJECT"; then
 		exit 1
 	fi
