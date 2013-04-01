@@ -13,7 +13,7 @@ description
 use Moo::Role;
 use MooX::Options;
 use LWP::Curl;
-use File::MkTemp;
+use DateTime;
 
 option 'url' => (
 	is => 'ro',
@@ -22,10 +22,18 @@ option 'url' => (
 	format => 's',	
 );
 
+option 'skip_if_exists' => (
+    is => 'ro',
+    doc => 'if file exists, skip fetch',
+);
+
 sub app {
     my ($self) = @_;
 
-    my ($fh, $file) = mkstempt('redmine_profile.XXXXXX', '/tmp');
+    my $file = '/tmp/redmine.profile.' . DateTime->now->ymd('');
+    return $file if -e $file && $self->skip_if_exists;
+
+    open my $fh, ">", $file or die "fail to open $file for writing.";
 
     my $content
         = LWP::Curl->new->get(
@@ -38,6 +46,6 @@ sub app {
     }
     close $fh;
 
-    return "/tmp/$file";
+    return $file;
 }
 1;

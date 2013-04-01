@@ -9,9 +9,11 @@ function setup_with_profile {
 	PROFILE=$2
 
 	if echo "$PROFILE" | grep -q ^"http"; then
-		PROFILE_FILE=$(get_profile --url="$PROFILE")
+		PROFILE_FILE=$(get_profile --url="$PROFILE" --skip_if_exists)
+		PROFILE_MD5=$(get_md5 --file="$PROFILE_FILE")
 	else
 		PROFILE_FILE="$ROOT_DIR/helpers/setup/$2.conf"
+		PROFILE_MD5=""
 	fi
 
 	if [ ! -f "$PROFILE_FILE" ]; then
@@ -31,6 +33,7 @@ function setup_with_profile {
 
 	(
 		echo "git config $GLOBAL redmine.profile '$PROFILE'"
+		echo "git config $GLOBAL redmine.profilemd5 '$PROFILE_MD5'"
 		cat $PROFILE_FILE | perl -pe 's/^(.*?)\s+=\s+(.*)$/git config '$GLOBAL' $1 "$2"/'
 	) | /bin/bash
 
@@ -66,10 +69,26 @@ function setup_upgrade {
 		GLOBAL="--global"
 	fi
 
+	declare -a P=($GLOBAL)
+
+	PROFILE_NEED_UPDATE=""
+	if [ -n "$PROFILE" ] && echo "$PROFILE" | grep -q ^http; then
+		PROFILE_FILE=$(get_profile --url="$PROFILE" --skip_if_exists)
+		PROFILE_MD5=$(git config ${P[*]} redmine.profilemd5)
+		if [ -z $PROFILE_MD5 ]; then
+			PROFILE_NEED_UPDATE=1
+		else
+			PROFILE_REMOTE_MD5=$(get_md5 --file="$PROFILE_FILE")
+			if [ "$PROFILE_MD5" != "$PROFILE_REMOTE_MD5" ]; then
+				PROFILE_NEED_UPDATE=1
+			fi
+		fi
+	fi
+
 	CURRENT_VERSION=$(cat "$ROOT_DIR/VERSION")
 
-	if [ "$REPO_VERSION" != "$CURRENT_VERSION" ]; then
-		git config $GLOBAL redmine.version "$CURRENT_VERSION"
+	if [ "$REPO_VERSION" != "$CURRENT_VERSION" ] || [ -n "$PROFILE_NEED_UPDATE" ]; then
+		git config ${P[*]} redmine.version "$CURRENT_VERSION"
 		if [ -z "$PROFILE" ] && [ -n "$URL" ] && [ -n "$AUTHKEY" ]; then
 			PROFILE=""
 			for i in "$ROOT_DIR/helpers/setup/"*.conf; do
