@@ -82,3 +82,32 @@ function setup_upgrade {
 	fi
 
 }
+
+function setup_export {
+	URL=$(git config --local redmine.url)
+	AUTHKEY=$(git config --local redmine.authkey)
+
+
+	if [ -z "$URL" ] || [ -z "$AUTHKEY" ]; then
+		URL=$(git config --global redmine.url)
+		AUTHKEY=$(git config --global redmine.authkey)
+		GLOBAL="--global"
+	fi
+
+	if [ -z "$URL" ] || [ -z "$AUTHKEY" ]; then
+		echo "No profile setup yet, nothing to export"
+		exit 1
+	fi
+
+	declare -a P=($GLOBAL)
+
+	cat <<__EOF__
+redmine.url = $URL
+redmine.authkey = \$AUTH_KEY
+__EOF__
+
+	(
+		git config ${P[*]} --get-regexp ^redmine.priocolor$
+		git config ${P[*]} --get-regexp ^redmine.statuses
+	) | /usr/bin/perl -pe 's/\s+/ = /'
+}
