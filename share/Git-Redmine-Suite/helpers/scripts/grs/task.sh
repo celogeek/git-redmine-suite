@@ -109,7 +109,6 @@ function task_create {
 	progress=10 \
 	task_update || exit 1
 
-	PROJECT=$(redmine-get-task-project-identifier --task_id=$TASK)
 	TASK_TITLE=$(redmine-get-task-info --task_id=$TASK)
 	SLUG_TITLE=$(slug --this "$TASK_TITLE")
 	BRNAME="redmine-$SLUG_TITLE"
@@ -120,7 +119,6 @@ function task_create {
 	git config "redmine.task.current" "$TASK"
 	git config "redmine.task.$TASK.title" "$TASK_TITLE"
 	git config "redmine.task.$TASK.branch" "$BRNAME"
-	git config "redmine.task.$TASK.project" "$PROJECT"
 	git push origin -u $BRNAME || cat <<__EOF__
 The remote branch $BRNAME already exist !
 You have 2 choice. 
@@ -245,7 +243,7 @@ function task_finish {
 	progress=100 \
 	task_update || exit 1
 
-	PROJECT=$(git config redmine.task.$CURRENT_TASK.project)
+	PROJECT=$(redmine-get-task-project-identifier --task_id=$CURRENT_TASK)
 	if ! reassigned_this "task" "$PROJECT"; then
 		exit 1
 	fi
