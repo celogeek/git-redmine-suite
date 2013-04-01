@@ -53,10 +53,6 @@ REDMINE_GIT_REPOS_ID=$(git config redmine.git.repos)
 REDMINE_GIT_PR_ID=$(git config redmine.git.pr)
 REDMINE_GIT_RELEASE_ID=$(git config redmine.git.release)
 
-REDMINE_PRIO_COLOR=$(git config redmine.priocolor)
-
-export REDMINE_PRIO_COLOR
-
 if [ -z "$REDMINE_AUTHKEY" ] || [ -z "$REDMINE_URL" ]; then
     redmine_help
     exit 1
@@ -109,3 +105,15 @@ if [ -z "$EDITOR" ]; then
         fi
     done
 fi
+
+REDMINE_PRIO_COLOR=$(git config redmine.priocolor)
+
+if [ -z "$REDMINE_PRIO_COLOR" ]; then
+    REDMINE_PRIO_COLOR=$(get_priocolor)
+    if [ -n "$REDMINE_PRIO_COLOR" ]; then
+        git config redmine.priocolor "$REDMINE_PRIO_COLOR"
+    fi
+fi
+
+export REDMINE_PRIO_COLOR
+
