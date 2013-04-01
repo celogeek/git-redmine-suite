@@ -7,7 +7,13 @@ function setup_with_profile {
 	fi
 
 	PROFILE=$2
-	PROFILE_FILE="$ROOT_DIR/helpers/setup/$2.conf"
+
+	if echo "$PROFILE" | grep -q ^"http"; then
+		PROFILE_FILE=$(get_profile --url="$PROFILE")
+	else
+		PROFILE_FILE="$ROOT_DIR/helpers/setup/$2.conf"
+	fi
+
 	if [ ! -f "$PROFILE_FILE" ]; then
 		help_setup_with_profile
 	fi
