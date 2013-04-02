@@ -18,7 +18,7 @@ use Date::Parse;
 with 'GRS::Role::API', 'GRS::Role::TaskID',
     'GRS::Role::ProjectFullName', 'GRS::Role::PrioColor', 'GRS::Role::Developers', 'GRS::Role::StatusIDS';
 
-sub required_options {qw/server_url auth_key task_id status_ids/}
+sub required_options {qw/server_url auth_key task_id/}
 
 option 'with_status'          => ( is => 'ro', );
 option 'with_extended_status' => ( is => 'ro', );
