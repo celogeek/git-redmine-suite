@@ -16,9 +16,9 @@ use DateTime;
 use Date::Parse;
 
 with 'GRS::Role::API', 'GRS::Role::TaskID',
-    'GRS::Role::ProjectFullName', 'GRS::Role::PrioColor';
+    'GRS::Role::ProjectFullName', 'GRS::Role::PrioColor', 'GRS::Role::Developers', 'GRS::Role::StatusIDS';
 
-sub required_options {qw/server_url auth_key task_id/}
+sub required_options {qw/server_url auth_key task_id status_ids/}
 
 option 'with_status'          => ( is => 'ro', );
 option 'with_extended_status' => ( is => 'ro', );
@@ -33,7 +33,7 @@ sub app {
     my ($self) = @_;
 
     my $issue = $self->API->issues->issue->get( $self->task_id,
-        include => 'custom_fields' )->content->{issue};
+        include => 'custom_fields,journals' )->content->{issue};
 
     my %cf = map { @$_{qw/name id/} } @{ $issue->{custom_fields} };
     return $self if grep { !exists $cf{$_} } qw/GIT_REPOS GIT_PR GIT_RELEASE/;
@@ -74,6 +74,8 @@ sub title_with_extended_status {
     my $url = $self->server_url . "/issues/" . $issue->{id} ;
     my $description = $issue->{description};
     $description = "*" x length($url) . "\n\n" . $description if $description;
+    my @developers = $self->get_developers($issue->{journals}, $self->status_ids);
+
     my @response = (
         [ "Project"         => $self->project_fullname($issue->{project}->{id}) ],
         [ "Priority"        => "\033[".$color."m".$issue->{priority}->{name}."\033[0m" ],
@@ -81,6 +83,7 @@ sub title_with_extended_status {
         [ "Status"          => $issue->{status}->{name} ],
         [ "Last update"     => $self->_duration($issue) ],
         [ "Assigned to"     => $issue->{assigned_to}->{name} ],
+        [ "Developers"      => join(', ', @developers)],
         [ "Estimated hours" => $self->_hours($issue->{estimated_hours}) ],
         [ "Spent hours"     => $self->_hours($issue->{spent_hours})],
         [ "Reported Repos"  => $cf{GIT_REPOS} ],

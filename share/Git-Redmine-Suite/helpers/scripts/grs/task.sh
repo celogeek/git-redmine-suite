@@ -344,5 +344,5 @@ function task_info {
 	fi
 
 	echo "Information on the task $TASK : "
-	redmine-get-task-info --task_id=$TASK --with_extended_status
+	redmine-get-task-info --task_id=$TASK --status_ids="$REDMINE_TASK_IN_PROGRESS" --with_extended_status
 }
