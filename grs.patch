@@ -1,5 +1,17 @@
+diff --git a/app/helpers/issues_helper.rb b/app/helpers/issues_helper.rb
+index b4b15a6..cc1b9e5 100644
+--- a/app/helpers/issues_helper.rb
++++ b/app/helpers/issues_helper.rb
+@@ -368,6 +368,7 @@ module IssuesHelper
+         api.issue(:id => child.id) do
+           api.tracker(:id => child.tracker_id, :name => child.tracker.name) unless child.tracker.nil?
+           api.subject child.subject
++	  render_api_custom_values child.custom_field_values, api
+           render_api_issue_children(child, api)
+         end
+       end
 diff --git a/app/views/issues/index.api.rsb b/app/views/issues/index.api.rsb
-index c25151a..43ae93d 100644
+index 5009ffa..4654e67 100644
 --- a/app/views/issues/index.api.rsb
 +++ b/app/views/issues/index.api.rsb
 @@ -2,7 +2,7 @@ api.array :issues, api_meta(:total_count => @issue_count, :offset => @offset, :l
@@ -12,7 +24,7 @@ index c25151a..43ae93d 100644
        api.status(:id => issue.status_id, :name => issue.status.name) unless issue.status.nil?
        api.priority(:id => issue.priority_id, :name => issue.priority.name) unless issue.priority.nil?
 diff --git a/app/views/issues/show.api.rsb b/app/views/issues/show.api.rsb
-index 441d144..827eef8 100644
+index ce788a7..230ede3 100644
 --- a/app/views/issues/show.api.rsb
 +++ b/app/views/issues/show.api.rsb
 @@ -1,6 +1,6 @@
