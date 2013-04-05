@@ -23,24 +23,16 @@ sub app {
     my ($self) = @_;
 
     my $issue = $self->API->issues->issue->get( $self->task_id,
-        include => 'custom_fields' )->content->{issue};
+        include => 'custom_fields,children' )->content->{issue};
 
-    my %cf = map { @$_{qw/name id/} } @{ $issue->{custom_fields} };
-    return $self if grep { !exists $cf{$_} } qw/GIT_REPOS GIT_PR GIT_RELEASE/;
+    my @issues = $self->cf_filter(@{$issue->{children}});
 
     my $task_id;
-
-    my %search = ();
-    my @issues = grep { $_->{parent} && $_->{parent}->{id} == $self->task_id } 
-    $self->API_fetchAll( 'issues', \%search, undef, $self->can('cf_filter') );
-
     if (@issues) {
         $task_id = $issues[0]->{id};
     } else {
         $task_id = $self->_create_subtask($issue);
     }
-
-
 
     return $self, $task_id;
 }
