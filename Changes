@@ -1,3 +1,5 @@
+    * Feature #168 : Record grs usage into piwik (Celogeek San)
+
 0.66  2013-04-05 23:17:48 GMT
     * Bug #160 : performance issue on start task with parent (Celogeek San)
 
