@@ -18,4 +18,5 @@ if [ -z "$SETUP" ]; then
 	for P in "$SCRIPT_DIR"/grs/*.sh; do
 		source "$P"
 	done
+	piwik_call
 fi
