@@ -1,4 +1,4 @@
 #!/usr/bin/perl
 use GRS 'Piwik';
 
-say GRS->run;
+GRS->run;

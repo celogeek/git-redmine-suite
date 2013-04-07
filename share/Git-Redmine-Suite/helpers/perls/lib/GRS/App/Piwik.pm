@@ -9,6 +9,7 @@ use MooX::Options;
 use Term::Size 'chars';
 use JSON::XS qw/encode_json/;
 use URI::Escape;
+use LWP::Curl;
 
 with 'GRS::Role::ServerURL', 'GRS::Role::UUID', 'GRS::Role::Version';
 
@@ -65,7 +66,9 @@ sub required_options {qw/server_url uuid action version git_version/}
 sub app {
     my ($self) = @_;
 
-    return $self->piwik_url . '?' . $self->_encode_params;
+    LWP::Curl->new->get($self->piwik_url . '?' . $self->_encode_params);
+
+    return;
 
 }
 
