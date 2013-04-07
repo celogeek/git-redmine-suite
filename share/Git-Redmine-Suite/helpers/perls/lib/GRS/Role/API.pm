@@ -22,12 +22,7 @@ option 'auth_key' => (
     doc     => 'your auth key',
 );
 
-option 'server_url' => (
-    is      => 'ro',
-    format  => 's',
-    default => sub { $ENV{REDMINE_URL} },
-    doc     => 'the redmine url of the server',
-);
+with 'GRS::Role::ServerURL';
 
 option 'trace' => (
     is      => 'ro',

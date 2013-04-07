@@ -117,3 +117,9 @@ fi
 
 export REDMINE_PRIO_COLOR
 
+REDMINE_UUID=$(git config --global redmine.uuid)
+
+if [ -z "$REDMINE_UUID" ]; then
+    REDMINE_UUID=$(generate_uuid)
+    git config --global redmine.uuid "$REDMINE_UUID"
+fi
