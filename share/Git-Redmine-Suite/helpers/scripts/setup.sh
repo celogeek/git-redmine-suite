@@ -100,6 +100,7 @@ function setup_upgrade {
 		fi
 	fi
 
+	export CURRENT_VERSION
 }
 
 function setup_export {
