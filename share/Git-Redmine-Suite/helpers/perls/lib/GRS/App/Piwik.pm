@@ -70,10 +70,14 @@ sub app {
     my ($self) = @_;
 
     my $ua
-        = 'GRS/'
-        . $self->version . ' ('
-        . ucfirst($Config{'osname'} // "") . '; rv:'
-        . ( $Config{'osvers'} // "" ) . ') '
+        = 'Mozilla/5.0'
+		. ' ('
+        . ucfirst($Config{'osname'} // "") 
+		. '; rv:' . ( $Config{'osvers'} // "" ) 
+		. ') '
+		. 'GRS/'
+        . $self->version 
+		. ' '
 		. $self->uuid;
 
     my $lwp = LWP::Curl->new( user_agent => $ua, );
