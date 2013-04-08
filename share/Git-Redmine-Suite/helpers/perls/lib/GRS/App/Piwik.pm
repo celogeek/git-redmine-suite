@@ -48,7 +48,7 @@ sub params {
         rec         => 1,
         url         => $self->server_url,
         action_name => $self->_clean_action,
-        _id         => $self->uuid,
+        _id         => substr($self->uuid, 0, 16),
         rand        => int( 1_000_000_000 * rand() ),
         apiv        => 1,
         _cvar       => {
