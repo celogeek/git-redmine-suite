@@ -275,7 +275,7 @@ function task_finish {
 	cat <<__EOF__ > "$F"
 
 ###
-### Please indicate what the reviewer had to know to do properly your review
+### Please indicate what the reviewer had to know to do properly his review.
 ### 
 __EOF__
 	"$EDITOR" "$F"
