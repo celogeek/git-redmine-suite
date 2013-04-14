@@ -142,22 +142,45 @@ function review_reject {
 	echo "Fetching last developer ..."
 	declare -a TASK_DEV=($(redmine-get-task-developers --task_id="$TASK" --status_ids="$REDMINE_TASK_IN_PROGRESS" --ids_only))
 
+	if [ -z "$NO_MESSAGE" ] && [ -z "$MESSAGE" ]; then
+
 	F=$(mktemp /tmp/redmine.XXXXXX)
+	cat <<__EOF__ > "$F"
+
+###
+### Please indicate what the reviewer had to know to do properly your review
+### 
+__EOF__
 	"$EDITOR" "$F"
+
+	MESSAGE=$(cat "$F" | grep -v ^"###")
+	RET="
+"
+	fi
+
+	ADDITIONAL_MESSAGE=""
+	if [ "$MESSAGE" != "$RET" ] && [ -n "$MESSAGE" ]; then
+		ADDITIONAL_MESSAGE="
+
+Here the reasons : 
+
+$MESSAGE
+
+"
+	fi
 
 	task=$TASK \
 	status=$REDMINE_TASK_TODO \
 	assigned_to=${TASK_DEV[0]} \
-	notes="This task has been rejected. Here the reasons :
-
-$(cat "$F")
+	notes="This task has been rejected.
+$ADDITIONAL_MESSAGE
 " \
 	cf_id=$REDMINE_GIT_PR_ID \
 	cf_val=" " \
 	task_update || exit 1
 
 	echo ""
-	unlink "$F"
+	[ -e "$F" ] && unlink "$F"
 
 	git_refresh_local_repos
 	git checkout devel
