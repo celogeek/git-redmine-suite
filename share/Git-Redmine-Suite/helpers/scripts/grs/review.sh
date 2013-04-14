@@ -148,7 +148,7 @@ function review_reject {
 	cat <<__EOF__ > "$F"
 
 ###
-### Please indicate what the reviewer had to know to do properly your review
+### Please indicate to the developer the reasons of your reject.
 ### 
 __EOF__
 	"$EDITOR" "$F"
