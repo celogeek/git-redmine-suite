@@ -1,3 +1,7 @@
+0.71  2013-04-14 22:31:44 GMT
+    * Feature #182 : Add comment for review reject (Celogeek San)
+    * Feature #184 : Detect if terminal can handle color (Celogeek San)
+
 0.70  2013-04-08 09:06:46 GMT
     * Feature #172 : Improve GRS UA (Celogeek San)
 
