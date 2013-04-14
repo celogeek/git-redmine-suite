@@ -70,15 +70,15 @@ sub title_with_extended_status {
 
     my %cf       = $self->_cf($issue);
 
-    my $color = $self->prio_color->{lc($issue->{priority}->{name})} // 0;
     my $url = $self->server_url . "/issues/" . $issue->{id} ;
     my $description = $issue->{description};
     $description = "*" x length($url) . "\n\n" . $description if $description;
     my @developers = $self->get_developers($issue->{journals}, $self->status_ids);
+    my $prio_name = $issue->{priority}->{name};
 
     my @response = (
         [ "Project"         => $self->project_fullname($issue->{project}->{id}) ],
-        [ "Priority"        => "\033[".$color."m".$issue->{priority}->{name}."\033[0m" ],
+        [ "Priority"        => $self->in_color($prio_name, $prio_name) ],
         [ "Title"           => $self->title($issue) ],
         [ "Status"          => $issue->{status}->{name} ],
         [ "Last update"     => $self->_duration($issue) ],
