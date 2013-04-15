@@ -38,11 +38,30 @@ sub app {
 	my ($self) = @_;
 	return "" if !defined $self->diff_url;
 
-	my ($server, $path) = split(/:/, $self->git_remote_url, 2);
+	#extract path
+	my ($user_and_server, $path) = split(/:/, $self->git_remote_url, 2);
 	$path =~ s/\.git$//;
 
+	my $proto = "";
+
+	#check if proto
+	if (substr($path, 0, 2) eq '//') {
+		$proto = $user_and_server;
+		($user_and_server, $path) = $path =~ /^\/\/(.*?)(\/.*)$/;
+	}
+
+	#split user and server
+	my ($user, $server) = split(/\@/, $user_and_server, 2);
+	if (!defined $server) {
+		$server = $user;
+		$user = "";
+	}
+
+
 	my %token = (
+		'PROTO' => $proto,
 		'SERVER' => $server,
+		'USER' => $user,
 		'PATH' => $path,
 		'REF_FROM' => $self->ref_from,
 		'REF_TO' => $self->ref_to,
