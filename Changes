@@ -1,3 +1,5 @@
+    * Bug #188 : add bracket for release start help command (Celogeek San)
+
 0.71  2013-04-14 22:31:44 GMT
     * Feature #182 : Add comment for review reject (Celogeek San)
     * Feature #184 : Detect if terminal can handle color (Celogeek San)
