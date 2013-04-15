@@ -24,11 +24,14 @@ function hotfix_start {
 		HELP=1 exec $0
 	fi
 
-	HOTFIX_CURRENT_VERSION=$(git tag | grep ^"v$VERSION" | /usr/bin/perl -pe 's/^v//' | tail -n 1)
-	HOTFIX_MERGE_FROM=$HOTFIX_CURRENT_VERSION
+	HOTFIX_CURRENT_VERSION=$(git tag | egrep ^"(v|hotfix-)$VERSION" |  /usr/bin/perl -pe 's/^(v|hotfix-)//' | sort -n | tail -n 1)
+	HOTFIX_PREFIX_VERSION="hotfix-"
+	HOTFIX_MERGE_FROM="$HOTFIX_PREFIX_VERSION$HOTFIX_CURRENT_VERSION"
 
 	if [ "$HOTFIX_CURRENT_VERSION" = "$VERSION" ]; then
-		HOTFIX_CURRENT_VERSION="${VERSION}000"
+		HOTFIX_CURRENT_VERSION="${VERSION}_000"
+		HOTFIX_PREFIX_VERSION="v"
+		HOTFIX_MERGE_FROM="v$VERSION"
 	fi
 
 	HOTFIX_VERSION=$(next_version --version="$HOTFIX_CURRENT_VERSION")
@@ -55,7 +58,7 @@ function hotfix_start {
 	BRNAME="redmine-hotfix-$HOTFIX_VERSION-$SLUG_TITLE"
 
 	echo "Creation local branch $BRNAME ..."
-	git checkout -b "$BRNAME" "tags/v$HOTFIX_MERGE_FROM" || exit 1
+	git checkout -b "$BRNAME" "tags/$HOTFIX_MERGE_FROM" || exit 1
 	git config "redmine.hotfix.current" "$TASK"
 	git config "redmine.hotfix.version" "$HOTFIX_VERSION"
 	git config "redmine.hotfix.branch" "$BRNAME"
@@ -103,9 +106,9 @@ function hotfix_finish {
 	set -e
 	git_refresh_local_repos
 	git checkout "$BRNAME" || exit 1
-	git tag -m "hotfix v$VERSION: $CURRENT_TASK" "v$VERSION"
+	git tag -m "hotfix v$VERSION: $CURRENT_TASK" "hotfix-$VERSION"
 	git push
-	git push origin "tags/v$VERSION"
+	git push origin "tags/hotfix-$VERSION"
 	git checkout devel
 	git branch -D "$BRNAME"
 	set +e
