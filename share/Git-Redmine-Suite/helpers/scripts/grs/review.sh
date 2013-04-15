@@ -169,11 +169,21 @@ $MESSAGE
 "
 	fi
 
+	TAG=$(tag_pr --name="$BRNAME")
+
 	task=$TASK \
 	status=$REDMINE_TASK_TODO \
 	assigned_to=${TASK_DEV[0]} \
 	notes="This task has been rejected.
 $ADDITIONAL_MESSAGE
+
+You can take from the review task with :
+
+<pre>
+	git redmine task start $TASK
+	git reset --hard $TAG
+	git push -f
+</pre>
 " \
 	cf_id=$REDMINE_GIT_PR_ID \
 	cf_val=" " \
@@ -183,6 +193,10 @@ $ADDITIONAL_MESSAGE
 	[ -e "$F" ] && unlink "$F"
 
 	git_refresh_local_repos
+	git checkout "$BRNAME"
+	git push -f origin HEAD:"$BRNAME"
+	git tag "$TAG"
+	git push origin tags/"$TAG"
 	git checkout devel
 	git merge origin/devel
 	git push origin :tags/"$PR"
@@ -233,6 +247,7 @@ function review_finish {
 	git push origin :tags/"$PR"
 	git tag -d "$PR"
 	git branch -D "$BRNAME"
+	git push origin :"$BRNAME"
 	git config --remove-section "redmine.review.$TASK"
 	git config --unset "redmine.review.current"
 
