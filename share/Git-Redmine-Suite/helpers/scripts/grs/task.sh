@@ -74,20 +74,6 @@ function task_continue {
     git_refresh_local_repos
     git checkout "$BRNAME"
     git config "redmine.task.current" "$TASK"
-    git rebase origin/"$BRNAME" || cat <<__EOF__
-Fix the conflict, and finish the rebase or remote branch
-
-__EOF__
-
-    cat <<__EOF__
-
-To update your branch :
-    git rebase origin/devel
-    #fix conflict, then
-    git push origin -f $BRNAME
-
-__EOF__
-
 }
 
 function task_create {
