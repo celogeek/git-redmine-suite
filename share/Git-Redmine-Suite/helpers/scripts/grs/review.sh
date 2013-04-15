@@ -233,6 +233,8 @@ function review_finish {
 	fi
 
 	git_refresh_local_repos
+	ADDITIONAL_MESSAGE=""
+	REV_FROM=$(git rev-parse origin/devel)
 	git checkout devel
 	git merge origin/devel
 	git merge --no-ff "$BRNAME" -m "Merge $BRNAME"
@@ -251,11 +253,20 @@ function review_finish {
 	git config --remove-section "redmine.review.$TASK"
 	git config --unset "redmine.review.current"
 
+	REV_TO=$(git rev-parse origin/devel)
+	DIFF_URL=$(get_full_diff_url "$REV_FROM" "$REV_TO")
+	if [ -n "$DIFF_URL" ]; then
+		ADDITIONAL_MESSAGE="To view the diff : \"$BRNAME\":$DIFF_URL"
+	fi
+
 	task=$TASK \
 	status=$REDMINE_RELEASE_TODO \
 	assigned_to=$ASSIGNED_TO_ID \
 	cf_id=$REDMINE_GIT_PR_ID \
 	cf_val=" " \
+	notes="
+	$ADDITIONAL_MESSAGE
+" \
 	task_update
 	echo ""
 
