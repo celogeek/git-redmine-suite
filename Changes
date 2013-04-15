@@ -1,3 +1,4 @@
+    * Bug #174 : Fix: hotfix release (Celogeek San)
     * Feature #187 : Review reject should push a pr (Celogeek San)
     * Bug #188 : add bracket for release start help command (Celogeek San)
 
