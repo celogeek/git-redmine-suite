@@ -249,7 +249,7 @@ function review_finish {
 	git push origin :tags/"$PR"
 	git tag -d "$PR"
 	git branch -D "$BRNAME"
-	git push origin :"$BRNAME"
+	git rev-parse --verify -q origin/"$BRNAME" > /dev/null && git push origin :"$BRNAME"
 	git config --remove-section "redmine.review.$TASK"
 	git config --unset "redmine.review.current"
 
