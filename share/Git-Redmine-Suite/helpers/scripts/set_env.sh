@@ -123,3 +123,7 @@ if [ -z "$REDMINE_UUID" ]; then
     REDMINE_UUID=$(generate_uuid)
     git config --global redmine.uuid "$REDMINE_UUID"
 fi
+
+REDMINE_GIT_DIFF=$(git config redmine.diff)
+
+export REDMINE_GIT_DIFF

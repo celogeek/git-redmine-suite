@@ -282,6 +282,18 @@ $MESSAGE
 "
 	fi
 
+	REV_FROM=$(git rev-parse origin/devel)
+	REV_TO=$(git rev-parse tags/"$TAG")
+	DIFF_URL=$(get_full_diff_url "$REV_FROM" "$REV_TO")
+
+	if [ -n "$DIFF_URL" ]; then
+		ADDITIONAL_MESSAGE="$ADDITIONAL_MESSAGE
+
+To view the diff : \"$TAG\":$DIFF_URL
+
+"
+	fi
+
 	task=$CURRENT_TASK \
 	status=$REDMINE_REVIEW_TODO \
 	assigned_to=$ASSIGNED_TO_ID \
