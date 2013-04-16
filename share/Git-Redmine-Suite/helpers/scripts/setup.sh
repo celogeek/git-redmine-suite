@@ -129,6 +129,7 @@ __EOF__
 	(
 		git config ${P[*]} --get-regexp ^redmine.priocolor$
 		git config ${P[*]} --get-regexp ^redmine.statuses
+		git config ${P[*]} --get-regexp ^redmine.diff$
 	) | /usr/bin/perl -pe 's/\s+/ = /'
 }
 
