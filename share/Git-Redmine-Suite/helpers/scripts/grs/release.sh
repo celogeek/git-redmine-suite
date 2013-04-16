@@ -133,6 +133,8 @@ function release_finish {
 
 	set -e
 	git_refresh_local_repos
+	ADDITIONAL_MESSAGE=""
+	REV_FROM=$(git rev-parse origin/master)
 	git checkout devel
 	git merge origin/devel
 	git merge --no-ff "$BRNAME" -m "Merge $BRNAME"
@@ -147,6 +149,12 @@ function release_finish {
 	git branch -d "$BRNAME"
 	git config --remove-section redmine.release
 	set +e
+
+	REV_TO=$(git rev-parse origin/devel)
+	DIFF_URL=$(get_full_diff_url "$REV_FROM" "$REV_TO")
+	if [ -n "$DIFF_URL" ]; then
+		ADDITIONAL_MESSAGE="To view the diff : \"v$VERSION\":$DIFF_URL"
+	fi
 
 	echo ""
 	echo "Update redmine"
@@ -172,6 +180,9 @@ function release_finish {
 	    assigned_to=$ASSIGNED_TO_ID \
 	    cf_id=$REDMINE_GIT_RELEASE_ID \
 	    cf_val="$VERSION" \
+		notes="
+$ADDITIONAL_MESSAGE
+" \
 	    task_update
 	done
 
