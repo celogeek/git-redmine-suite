@@ -1,3 +1,8 @@
+0.75  2013-05-16 20:05:08 GMT
+    * Feature #197 : Hotfix: fill the dist.ini, changes ... like a task finish (Celogeek San)
+    * Feature #196 : Improve review finish first insert (Celogeek San)
+    * Feature #212 : Parent task add the current path name (Celogeek San)
+
 0.74  2013-04-16 18:18:15 GMT
     * Feature #189 : Export redmine.diff with setup export (Celogeek San)
 

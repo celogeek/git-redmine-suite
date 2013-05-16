@@ -40,13 +40,15 @@ sub app {
 sub _create_subtask {
     my ($self, $issue) = @_;
 
+    my ($server, $path) = split(/:/, $self->cf_val, 2);
+    $path =~ s/\.git$//;
 
     my %create = (
         project_id => $issue->{project}->{id},
         tracker_id => $issue->{tracker}->{id},
         status_id => $self->status_ids->[0],
         assigned_to_id => $self->assigned_to_id,
-        subject => $issue->{subject},
+        subject => "[$path] " . $issue->{subject},
         description => 'subtask for the repos : ' . $self->cf_val,
         parent_issue_id => $self->task_id,
         custom_fields => [

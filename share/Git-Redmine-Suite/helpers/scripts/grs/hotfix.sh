@@ -53,9 +53,11 @@ function hotfix_start {
 	progress=10 \
 	task_update || exit 1
 
+	TASK_DEV=$(redmine-get-task-developers --task_id="$TASK" --status_ids="$REDMINE_TASK_IN_PROGRESS")
 	TASK_TITLE=$(redmine-get-task-info --task_id=$TASK)
 	SLUG_TITLE=$(slug --this "$TASK_TITLE")
 	BRNAME="redmine-hotfix-$HOTFIX_VERSION-$SLUG_TITLE"
+	CHANGELOG=$(get_change_log)
 
 	echo "Creation local branch $BRNAME ..."
 	git checkout -b "$BRNAME" "tags/$HOTFIX_MERGE_FROM" || exit 1
@@ -63,6 +65,33 @@ function hotfix_start {
 	git config "redmine.hotfix.version" "$HOTFIX_VERSION"
 	git config "redmine.hotfix.branch" "$BRNAME"
 	git push origin -u $BRNAME || exit 1
+
+	if [ -e 'dist.ini' ]
+	then
+	    cat dist.ini | /usr/bin/perl -pe "s/version = (.*)/version = $HOTFIX_VERSION/" > dist.ini.new
+	    mv dist.ini.new dist.ini
+	    "$EDITOR" dist.ini
+	    git add dist.ini
+	    git ci -m 'Update version DistZilla'
+	fi
+
+	if [ -e 'VERSION' ]
+	then
+	    echo "$HOTFIX_VERSION" > VERSION
+	    git add VERSION
+	    git ci -m 'Update version file'
+	fi
+
+	echo "    * Hotfix : $TASK_TITLE ($TASK_DEV)" > "$CHANGELOG".new
+	touch "$CHANGELOG"
+	if head -n1 "$CHANGELOG" | grep -q ^"[0-9]"; then
+		echo >> "$CHANGELOG".new
+	fi
+	cat "$CHANGELOG" >> "$CHANGELOG".new
+	mv "$CHANGELOG".new "$CHANGELOG"
+	"$EDITOR" "$CHANGELOG"
+	git add "$CHANGELOG"
+	git commit -m "reflect changes" "$CHANGELOG" || true
 
 	cat <<__EOF__
 When you have finish your hotfix, run
