@@ -240,6 +240,9 @@ function review_finish {
 	git merge --no-ff "$BRNAME" -m "Merge $BRNAME"
 	echo "    * $TASK_TITLE ($TASK_DEV)" > "$CHANGELOG".new
 	touch "$CHANGELOG"
+	if head -n1 "$CHANGELOG" | grep -q ^"[0-9]"; then
+		echo >> "$CHANGELOG".new
+	fi
 	cat "$CHANGELOG" >> "$CHANGELOG".new
 	mv "$CHANGELOG".new "$CHANGELOG"
 	"$EDITOR" "$CHANGELOG"
