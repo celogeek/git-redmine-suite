@@ -12,7 +12,7 @@ echo "Self-Upgrading git redmine ..."
 
 CURPWD=$PWD
 cd /tmp
-rm -rf redmine-suite
+rm -rf git-redmine-suite
 git clone https://github.com/celogeek/git-redmine-suite.git
 cd git-redmine-suite
 git checkout master
