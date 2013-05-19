@@ -24,7 +24,7 @@ sub app {
 
     my $content
         = LWP::Curl->new->get(
-        'https://gitorious.celogeek.com/git/redmine-suite/blobs/raw/master/Changes'
+        'https://raw.github.com/celogeek/git-redmine-suite/master/Changes'
         );
 
     $content =~ s/^$version\s+.*//ms;
