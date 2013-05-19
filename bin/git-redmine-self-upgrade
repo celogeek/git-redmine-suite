@@ -14,6 +14,6 @@ CURPWD=$PWD
 cd /tmp
 rm -rf redmine-suite
 git clone https://github.com/celogeek/git-redmine-suite.git
-cd redmine-suite
+cd git-redmine-suite
 git checkout master
 CURPWD=$CURPWD exec ./install.sh $*
