@@ -13,6 +13,9 @@ setup_upgrade
 
 source "$SCRIPT_DIR"/guide.sh
 
+source "$SCRIPT_DIR"/status.sh
+check_status_tasks
+
 if [ -z "$SETUP" ]; then
 	source "$SCRIPT_DIR"/set_env.sh
 	for P in "$SCRIPT_DIR"/grs/*.sh; do
