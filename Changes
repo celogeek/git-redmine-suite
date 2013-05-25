@@ -1,3 +1,6 @@
+0.79  2013-05-25 16:55:16 GMT
+    * Bug #217 : release start should not work without a real task (Celogeek San)
+
 0.78  2013-05-25 16:39:23 GMT
     * Feature #193 : Check once per week if we need to clear (Celogeek San)
 
