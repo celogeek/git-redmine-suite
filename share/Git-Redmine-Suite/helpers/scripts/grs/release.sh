@@ -12,6 +12,7 @@ function release_start {
 
 	if [ ${#TASKS[@]} -eq 0 ]; then
 		echo "Nothing to release !"
+		exit 0
 	fi
 
 	check_valid_editor
