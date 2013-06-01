@@ -165,11 +165,19 @@ sub _fetch_missing_tasks {
             while ($parent_id) {
                 $parent_id = $parent->{$parent_id};
                 if ( $parent_id && !$tasks->{$parent_id} ) {
-                    $self->_issue_add(
-                        $self->API->issues->issue->get($parent_id)
-                            ->content->{issue},
-                        missing => $identifier,
-                    );
+                    my $issue;
+                    if (eval {
+                        $issue = $self->API->issues->issue->get($parent_id)
+                            ->content->{issue}; 1
+                    }) {
+                        $self->_issue_add(
+                            $issue,
+                            missing => $identifier,
+                        );
+                    } else { 
+                        $parent->{$task_id} = 0;
+                        $parent_id = undef;
+                    };
                 }
             }
         }

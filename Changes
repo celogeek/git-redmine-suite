@@ -1,3 +1,7 @@
+0.80  2013-06-01 12:20:46 GMT
+    * Bug #219 : error 599 if no access to parent subtask (Celogeek San)
+    * Bug #220 : only check task.lastcheck if we are in a git repository (Celogeek San)
+
 0.79  2013-05-25 16:55:16 GMT
     * Bug #217 : release start should not work without a real task (Celogeek San)
 
