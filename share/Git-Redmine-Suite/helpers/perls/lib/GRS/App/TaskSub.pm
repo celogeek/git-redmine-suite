@@ -46,6 +46,7 @@ sub _create_subtask {
     my %create = (
         project_id => $issue->{project}->{id},
         tracker_id => $issue->{tracker}->{id},
+        priority_id => $issue->{priority}->{id},
         status_id => $self->status_ids->[0],
         assigned_to_id => $self->assigned_to_id,
         subject => "[$path] " . $issue->{subject},
