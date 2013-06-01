@@ -1,3 +1,4 @@
+    * Bug #219 : error 599 if no access to parent subtask (Celogeek San)
     * Bug #220 : only check task.lastcheck if we are in a git repository (Celogeek San)
 
 0.79  2013-05-25 16:55:16 GMT
