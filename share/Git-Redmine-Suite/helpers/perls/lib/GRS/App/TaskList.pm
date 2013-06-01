@@ -161,8 +161,9 @@ sub _fetch_missing_tasks {
         my $prj = $self->_projects->{$identifier};
         my ( $tasks, $parent ) = @$prj{qw/tasks parent/};
         foreach my $task_id ( keys %$parent ) {
-            my $parent_id = $task_id;
+            my $parent_id = my $prev_parent_id = $task_id;
             while ($parent_id) {
+                $prev_parent_id = $parent_id;
                 $parent_id = $parent->{$parent_id};
                 if ( $parent_id && !$tasks->{$parent_id} ) {
                     my $issue;
@@ -175,8 +176,7 @@ sub _fetch_missing_tasks {
                             missing => $identifier,
                         );
                     } else { 
-                        $parent->{$task_id} = 0;
-                        $parent_id = undef;
+                        $parent_id = $parent->{$prev_parent_id} = 0;
                     };
                 }
             }
