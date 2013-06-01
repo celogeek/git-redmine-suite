@@ -205,6 +205,15 @@ function task_finish {
 		exit 1
 	fi
 
+	if [ -z "$(git log origin/devel.. --oneline -n 1)" ]; then
+		echo "They is no commit in your branch !"
+		echo ""
+		echo "To cancel it :"
+		echo "    * git redmine task clear $CURRENT_TASK"
+		echo ""
+		exit 1
+	fi
+
 	if [ -n "$REDMINE_FORCE" ] && [ -z "$REDMINE_TIME" ]; then
 		echo "Please add a spent time thought parameter with the force option !"
 		HELP=1 exec $0
