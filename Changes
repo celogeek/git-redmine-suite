@@ -1,3 +1,5 @@
+    * Feature #222 : Child task should keep the parent priority (Celogeek San)
+
 0.80  2013-06-01 12:20:46 GMT
     * Bug #219 : error 599 if no access to parent subtask (Celogeek San)
     * Bug #220 : only check task.lastcheck if we are in a git repository (Celogeek San)
