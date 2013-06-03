@@ -116,13 +116,13 @@ sub _duration {
         my $updated_on_str  = $issue->{updated_on};
         my $updated_on_time = str2time($updated_on_str);
         my $updated_on = DateTime->from_epoch( epoch => $updated_on_time );
-        my %duration   = ( $now - $updated_on )->deltas;
-        if ( $duration{month} ) {
+        my $duration   = $now->delta_md($updated_on);
+        if ( $duration->{months} ) {
             $duration_str = sprintf( '%d months and %d days ago',
-                $duration{month}, $duration{days} );
+                $duration->{months}, $duration->{days} );
         }
-        elsif ( $duration{days} ) {
-            $duration_str = sprintf( '%d days ago', $duration{days} );
+        elsif ( $duration->{days} ) {
+            $duration_str = sprintf( '%d days ago', $duration->{days} );
         }
         else {
             $duration_str = 'today';
