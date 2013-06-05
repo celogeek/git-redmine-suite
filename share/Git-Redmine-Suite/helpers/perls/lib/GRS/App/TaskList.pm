@@ -21,7 +21,8 @@ use Date::Parse;
 with 'GRS::Role::API', 'GRS::Role::Project', 'GRS::Role::StatusIDS',
     'GRS::Role::AssignedToID', 'GRS::Role::IDSOnly', 'GRS::Role::CFSet',
     'GRS::Role::CFFilter',
-    'GRS::Role::ProjectFullName', 'GRS::Role::PrioColor', 'GRS::Role::TaskID';
+    'GRS::Role::ProjectFullName', 'GRS::Role::PrioColor', 'GRS::Role::TaskID',
+    'GRS::Role::Parent';
 
 has '_max_assigned_to' => (
     is      => 'rw',
@@ -34,6 +35,11 @@ has '_max_priority' => (
 );
 
 has '_max_tracker' => (
+    is      => 'rw',
+    default => sub {0},
+);
+
+has '_max_task_id' => (
     is      => 'rw',
     default => sub {0},
 );
@@ -123,13 +129,11 @@ sub _issue_add {
     $self->_max_priority( length($priority) )
         if length($priority) > $self->_max_priority;
 
-    my $title;
-    if ( $options{missing} ) {
-        $title = $issue->{subject};
-    }
-    else {
-        $title = join( "", "# ", $task_id, " : ", $issue->{subject} );
-    }
+    $self->_max_task_id(length($task_id))
+        if length($task_id) > $self->_max_task_id;
+
+    my $title = $issue->{subject};
+
     my $assigned_to = $issue->{assigned_to}->{name} // 'nobody';
     $self->_max_assigned_to( length($assigned_to) )
         if length($assigned_to) > $self->_max_assigned_to;
@@ -231,14 +235,13 @@ sub _display_tree {
         } @{ $p{flip_parent}{ $p{parent_id} } }
         )
     {
-
         $self->_display_task(
             $p{columns},
-            "  " . $tab . $TRIANGLE . " ",
+            $tab . $TRIANGLE . " ",
             $p{tasks}{$task_id}
         );
 
-        if ( $p{flip_parent}{$task_id} ) {
+        if ( $p{flip_parent}{$task_id} && !$self->no_parent) {
             $self->_display_tree(
                 %p,
                 level     => $p{level} + 1,
@@ -267,7 +270,7 @@ sub _center_str {
 }
 
 sub _format_str {
-    my ( $self, $columns, $pad, $tracker, $title, $priority, $assigned_to,
+    my ( $self, $columns, $pad, $task_id, $tracker, $title, $priority, $assigned_to,
         $updated_on )
         = @_;
     $assigned_to //= 'nobody';
@@ -276,11 +279,15 @@ sub _format_str {
     my $mtitle
         = $columns
         - length($date_str)
+        - $self->_max_task_id
         - $self->_max_priority
-        - $self->_max_assigned_to - 9;
+        - $self->_max_assigned_to - 12;
     $mtitle = length($pad) + 20 if $mtitle < length($pad) + 20;
     my $format_str
-        = "%-"
+        = "[%"
+        . ($self->_max_task_id)
+        . "d] "
+        . "%-"
         . ($mtitle) . "s [%-"
         . $self->_max_priority
         . "s] [%-"
@@ -288,6 +295,7 @@ sub _format_str {
         . "s] [%16s]";
     return sprintf(
         $format_str,
+        $task_id,
         $self->_trunc_str(
             $pad
                 . sprintf( "%-" . $self->_max_tracker . "s ", $tracker )
@@ -307,6 +315,7 @@ sub _display_task {
         $task->{priority},
         $self->_format_str(
             $columns,          $prefix,
+            $task->{id},
             $task->{tracker},  $task->{title},
             $task->{priority}, $task->{assigned_to},
             $task->{oldest_updated_on},
