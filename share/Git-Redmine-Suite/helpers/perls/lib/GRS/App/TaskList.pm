@@ -220,7 +220,7 @@ sub _display_tree {
     if ( !$p{level} && $p{parent_id} ) {
         $self->_display_task(
             $p{columns},
-            "  " . $tab . $TRIANGLE . " ",
+            $tab . $TRIANGLE . " ",
             $p{tasks}{$p{parent_id}}
         );
 
