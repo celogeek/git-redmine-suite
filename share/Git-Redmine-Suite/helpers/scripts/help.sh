@@ -1,5 +1,5 @@
 #export params vars
-while getopts frcav:t:hnm:p opt; do
+while getopts frcav:t:hnm:pe opt; do
     case $opt in
         f) export REDMINE_FORCE=1 ;;
         r) export REDMINE_REBASE=1 ;;
@@ -10,6 +10,7 @@ while getopts frcav:t:hnm:p opt; do
         h) export HELP=1 ;;
         n) export NO_MESSAGE=1 ;;
         p) export REDMINE_TASK_IS_PARENT=1 ;;
+        e) export REDMINE_TASK_WITHOUT_PARENT=1 ;;
     esac
 done
 shift $((OPTIND-1))
@@ -43,6 +44,7 @@ function help_option_command {
     * -t => hours spent   : hours spend on a task in decimal format (ex: 2.5, or 1)
     * -n => no message    : skip message edition
     * -p => parent        : indicate that the task is a parent task
+    * -e => no parent     : display task without parent
     
 __EOF__
 }
