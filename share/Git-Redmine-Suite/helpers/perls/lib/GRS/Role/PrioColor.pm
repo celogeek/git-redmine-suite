@@ -31,4 +31,16 @@ sub in_color {
 	return "\033[".$color."m" . $str . "\033[0m";
 }
 
+sub in_bold {
+    my ($self, $str) = @_;
+    return $str if ! is_interactive;
+    return "\033[1m" . $str . "\033[0m";
+}
+
+sub in_low {
+    my ($self, $str) = @_;
+    return $str if ! is_interactive;
+    return "\033[34m" . $str . "\033[0m";
+}
+
 1;
