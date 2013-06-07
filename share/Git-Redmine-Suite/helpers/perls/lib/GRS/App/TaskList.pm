@@ -153,6 +153,7 @@ sub _issue_add {
         assigned_to => $assigned_to,
         updated_on  => $updated_on,
         priority    => $priority,
+        missing     => $options{missing},
     };
     $prj->{parent}->{$task_id} = $parent_id;
 
@@ -270,7 +271,7 @@ sub _center_str {
 }
 
 sub _format_str {
-    my ( $self, $columns, $pad, $task_id, $tracker, $title, $priority, $assigned_to,
+    my ( $self, $columns, $pad, $task_id, $missing, $tracker, $title, $priority, $assigned_to,
         $updated_on )
         = @_;
     $assigned_to //= 'nobody';
@@ -283,43 +284,47 @@ sub _format_str {
         - $self->_max_priority
         - $self->_max_assigned_to - 12;
     $mtitle = length($pad) + 20 if $mtitle < length($pad) + 20;
-    my $format_str
+    my $format_str_task
         = "[%"
         . ($self->_max_task_id)
-        . "d] "
-        . "%-"
+        . "s] ";
+    my $format_str =
+        "%-"
         . ($mtitle) . "s [%-"
         . $self->_max_priority
         . "s] [%-"
         . $self->_max_assigned_to
         . "s] [%16s]";
-    return sprintf(
-        $format_str,
-        $task_id,
-        $self->_trunc_str(
-            $pad
-                . sprintf( "%-" . $self->_max_tracker . "s ", $tracker )
-                . $title,
-            $mtitle
-        ),
-        $self->_center_str( $priority,    $self->_max_priority ),
-        $self->_center_str( $assigned_to, $self->_max_assigned_to ),
-        $date_str
+
+    my $task_id_str = sprintf($format_str_task, $task_id);
+    $task_id_str = $missing ?  $self->in_low($task_id_str) : $self->in_bold($task_id_str);
+
+    my $task_str = $self->in_color($priority, sprintf(
+            $format_str,
+            $self->_trunc_str(
+                $pad
+                    . sprintf( "%-" . $self->_max_tracker . "s ", $tracker )
+                    . $title,
+                $mtitle
+            ),
+            $self->_center_str( $priority,    $self->_max_priority ),
+            $self->_center_str( $assigned_to, $self->_max_assigned_to ),
+            $date_str
+        )
     );
+
+    return $task_id_str . $task_str;
 }
 
 sub _display_task {
     my ( $self, $columns, $prefix, $task ) = @_;
 
-    say $self->in_color(
-        $task->{priority},
-        $self->_format_str(
+    say $self->_format_str(
             $columns,          $prefix,
-            $task->{id},
+            $task->{id}, $task->{missing},
             $task->{tracker},  $task->{title},
             $task->{priority}, $task->{assigned_to},
             $task->{oldest_updated_on},
-        )
     );
 }
 
