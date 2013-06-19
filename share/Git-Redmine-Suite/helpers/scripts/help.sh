@@ -1,5 +1,5 @@
 #export params vars
-while getopts frcav:t:hnm:pe opt; do
+while getopts frcav:t:hnm:peH opt; do
     case $opt in
         f) export REDMINE_FORCE=1 ;;
         r) export REDMINE_REBASE=1 ;;
@@ -11,6 +11,7 @@ while getopts frcav:t:hnm:pe opt; do
         n) export NO_MESSAGE=1 ;;
         p) export REDMINE_TASK_IS_PARENT=1 ;;
         e) export REDMINE_TASK_WITHOUT_PARENT=1 ;;
+        H) export REDMINE_HIGHEST_PRIO_ONLY=1 ;;
     esac
 done
 shift $((OPTIND-1))
@@ -36,15 +37,16 @@ function help_option_command {
     cat <<__EOF__
 
 [OPTIONS]
-    * -h => help          : display the help message
-    * -f => force         : don't ask question to start / finish / clear
-    * -r => rebase        : before starting the review, rebase on origin devel
-    * -c => chain         : chain review when finish a task, or finish the release after a start
-    * -a => auto reassign : reassign automatically the task
-    * -t => hours spent   : hours spend on a task in decimal format (ex: 2.5, or 1)
-    * -n => no message    : skip message edition
-    * -p => parent        : indicate that the task is a parent task
-    * -e => no parent     : display task without parent
+    * -h => help              : display the help message
+    * -f => force             : don't ask question to start / finish / clear
+    * -r => rebase            : before starting the review, rebase on origin devel
+    * -c => chain             : chain review when finish a task, or finish the release after a start
+    * -a => auto reassign     : reassign automatically the task
+    * -t => hours spent       : hours spend on a task in decimal format (ex: 2.5, or 1)
+    * -n => no message        : skip message edition
+    * -p => parent            : indicate that the task is a parent task
+    * -e => no parent         : display task without parent
+    * -H => highest prio only : display the highest priority of each project only
     
 __EOF__
 }
