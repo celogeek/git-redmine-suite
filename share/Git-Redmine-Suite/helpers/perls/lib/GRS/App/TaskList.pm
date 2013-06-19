@@ -22,7 +22,7 @@ with 'GRS::Role::API', 'GRS::Role::Project', 'GRS::Role::StatusIDS',
     'GRS::Role::AssignedToID', 'GRS::Role::IDSOnly', 'GRS::Role::CFSet',
     'GRS::Role::CFFilter',
     'GRS::Role::ProjectFullName', 'GRS::Role::PrioColor', 'GRS::Role::TaskID',
-    'GRS::Role::Parent';
+    'GRS::Role::Parent', 'GRS::Role::Prio';
 
 has '_max_assigned_to' => (
     is      => 'rw',
@@ -48,6 +48,21 @@ has '_projects' => (
     is      => 'ro',
     default => sub { {} }
 );
+
+has '_prio_order' => (
+    is => 'lazy',
+);
+
+sub _build__prio_order {
+    my ($self) = @_;
+    my $prio_content = $self->ENUMERATIONS->issue_priorities->list->all->content->{issue_priorities};
+    my %order;
+    my $n = 0;
+    for my $prio(@$prio_content) {
+        $order{$prio->{name}} = $n++
+    }
+    return \%order;
+}
 
 sub required_options {qw/server_url auth_key/}
 
@@ -78,6 +93,19 @@ sub app {
     }
 
     $self->_issue_add($_) for @issues;
+
+    if ($self->highest_prio_only) {
+        for my $prj_name(keys %{$self->_projects}){
+            my $prj = $self->_projects->{$prj_name};
+            for my $task_id(keys %{$prj->{tasks}}) {
+                if ($prj->{tasks}->{$task_id}->{priority} ne $prj->{max_prio}) {
+                    delete $prj->{tasks}->{$task_id} ;
+                    delete $prj->{parent}->{$task_id} ;
+                }
+
+            }
+        }
+    }
 
     $self->_fetch_missing_tasks;
 
@@ -146,6 +174,7 @@ sub _issue_add {
         }
     );
 
+    $prj->{max_prio} = $priority if !defined $prj->{max_prio} || $self->_prio_order->{$prj->{max_prio}} < $self->_prio_order->{$priority};
     $prj->{tasks}->{$task_id} = {
         id          => $task_id,
         tracker     => $tracker_name,

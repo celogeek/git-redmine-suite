@@ -48,6 +48,17 @@ sub _build_API {
     );
 }
 
+has 'ENUMERATIONS' => ( is => 'lazy', );
+
+sub _build_ENUMERATIONS {
+    my ($self) = @_;
+    my $r = Redmine::API->new(
+        'auth_key' => $self->auth_key,
+        'base_url' => $self->server_url . '/enumerations',
+        'trace'    => $self->trace,
+    );
+}
+
 sub API_fetchAll {
     my ( $self, $what, $search, $progress, $filter ) = @_;
 

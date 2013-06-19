@@ -16,4 +16,8 @@ if [ -n "$REDMINE_TASK_WITHOUT_PARENT" ]; then
 	PARAMS+=(--no-parent)
 fi
 
+if [ -n "$REDMINE_HIGHEST_PRIO_ONLY" ]; then
+	PARAMS+=(--highest-prio-only)
+fi
+
 redmine-get-task-list --assigned_to_id="$REDMINE_USER_ID" --status_ids="$REDMINE_TASK_TODO" "${PARAMS[@]}"
