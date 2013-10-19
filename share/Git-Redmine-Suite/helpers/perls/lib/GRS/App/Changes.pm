@@ -12,7 +12,7 @@ description
 
 use Moo::Role;
 use MooX::Options;
-use LWP::Curl;
+use LWP::UserAgent;
 
 with 'GRS::Role::Version';
 
@@ -23,9 +23,9 @@ sub app {
     my $version = $self->version;
 
     my $content
-        = LWP::Curl->new->get(
+        = LWP::UserAgent->new->get(
         'https://raw.github.com/celogeek/git-redmine-suite/master/Changes'
-        );
+        )->content;
 
     $content =~ s/^$version\s+.*//ms;
 
