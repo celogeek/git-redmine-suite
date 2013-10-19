@@ -3,8 +3,10 @@ SCRIPT_DIR=$ROOT_DIR/helpers/scripts
 PERL_DIR=$ROOT_DIR/helpers/perls
 MAN_DIR=$ROOT_DIR/helpers/pod/guide
 
+source $ROOT_DIR/../../../perl5/bin/localenv-bashrc
+
 export PATH=$PERL_DIR/bin:$PATH
-export PERL5LIB=$PERL_DIR/lib
+export PERL5LIB=$PERL_DIR/lib:$PERL5LIB
 
 source "$SCRIPT_DIR"/check_update.sh
 

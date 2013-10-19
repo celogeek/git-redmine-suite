@@ -26,20 +26,35 @@ if [ "$GIT_VERSION_OK" = "0" ]; then
 fi
 
 cd "$(dirname "$0")"
-if [ -z "$SKIP_CPANM" ]; then
-	if ! sudo HOME=/tmp PERL_CPANM_OPT="" ./cpanm -nv Redmine::API Moo MooX::Options LWP::Protocol::https Version::Next DateTime Term::ReadLine Date::Parse LWP::Curl List::MoreUtils List::Util List::Util::XS autodie utf8::all Term::Size Digest::MD5 Data::UUID JSON::XS URI::Escape IO::Interactive; then
-		echo "Fail to install dependencies !"
-		exit 1
-	fi
-fi
+
+export GRS_ROOT=$HOME/.grs
+export GRS_ROOT_LIB=$GRS_ROOT/perl5
+export GRS_ROOT_INSTALL=$GRS_ROOT/grs
+
+export PERL_CPANM_OPT="--mirror-only --mirror http://cpan.celogeek.fr --mirror http://cpan.org -l $GRS_ROOT_LIB -L $GRS_ROOT_LIB -nq --self-contained"
 
 sudo rm -rf /usr/local/share/Git-Redmine-Suite /usr/local/bin/git-redmine /usr/local/bin/git-redmine-*
 
-sudo cp -RvL share/* /usr/local/share/
-sudo cp -av bin/* /usr/local/bin/
+set -e
 
-sudo chown -R 0:0 /usr/local/share/Git-Redmine-Suite/ /usr/local/bin/git-redmine /usr/local/bin/git-redmine-*
-sudo chmod -R 755 /usr/local/share/Git-Redmine-Suite/ /usr/local/bin/git-redmine /usr/local/bin/git-redmine-*
+rm -rf "$GRS_ROOT_INSTALL"
+mkdir -p "$GRS_ROOT" "$GRS_ROOT_LIB" "$GRS_ROOT_INSTALL"
+
+curl -sL http://cpanmin.us/ | /usr/bin/perl - App::local::lib::helper Redmine::API Moo MooX::Options LWP::Protocol::https Version::Next DateTime Term::ReadLine Date::Parse LWP::Curl List::MoreUtils List::Util List::Util::XS autodie utf8::all Term::Size Digest::MD5 Data::UUID JSON::XS URI::Escape IO::Interactive
+
+cp -RvL share "$GRS_ROOT_INSTALL"
+cp -av bin "$GRS_ROOT_INSTALL"
+
+set +e
+
+cat <<EOF
+
+The installation of Git Redmine Suite is done.
+Please add this to your bashrc file :
+
+export PATH=\$HOME/.grs/grs/bin:\$PATH
+
+EOF
 
 if [ -n "$CURPWD" ] && [ -n "$1" ]
 then
