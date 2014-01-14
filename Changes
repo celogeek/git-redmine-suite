@@ -1,3 +1,4 @@
+    * Bug #191 : Improve editor detection (Celogeek San)
     * Bug #342 : Remove usage of LWP::Curl (Celogeek San)
 	* More remove
 
