@@ -97,13 +97,12 @@ fi
 
 export REDMINE_GIT_REPOS_ID REDMINE_GIT_REPOS_URL REDMINE_GIT_PR_ID REDMINE_GIT_RELEASE_ID
 
+export EDITOR=$(git var GIT_EDITOR)
+
 if [ -z "$EDITOR" ]; then
-    for e in nano vi vim emacs; do
-        if [ -x "/usr/bin/$e" ]; then
-            EDITOR="/usr/bin/$e"
-            break
-        fi
-    done
+	echo 'Can'"'"'t find a valid editor !'
+	echo 'Please setup the EDITOR vars manually'
+	exit 1
 fi
 
 REDMINE_PRIO_COLOR=$(git config redmine.priocolor)
