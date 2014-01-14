@@ -1,3 +1,6 @@
+    * Bug #342 : Remove usage of LWP::Curl (Celogeek San)
+	* More remove
+
 0.90  2013-10-19 23:38:51 GMT
     * Bug #342 : Remove usage of LWP::Curl (Celogeek San)
 

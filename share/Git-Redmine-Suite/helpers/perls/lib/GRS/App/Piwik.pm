@@ -9,7 +9,7 @@ use MooX::Options;
 use Term::Size 'chars';
 use JSON::XS qw/encode_json/;
 use URI::Escape;
-use LWP::Curl;
+use LWP::UserAgent;
 use Config;
 
 with 'GRS::Role::ServerURL', 'GRS::Role::UUID', 'GRS::Role::Version';
@@ -80,9 +80,9 @@ sub app {
 		. ' '
 		. $self->uuid;
 
-    my $lwp = LWP::Curl->new( user_agent => $ua, );
+    my $lwp = LWP::UserAgent->new( agent => $ua, );
 
-    $lwp->get( $self->piwik_url . '?' . $self->_encode_params );
+	$lwp->get( $self->piwik_url . '?' . $self->_encode_params );
 
     return;
 

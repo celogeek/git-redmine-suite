@@ -12,7 +12,7 @@ description
 
 use Moo::Role;
 use MooX::Options;
-use LWP::Curl;
+use LWP::UserAgent;
 use DateTime;
 
 option 'url' => (
@@ -36,9 +36,9 @@ sub app {
     open my $fh, ">", $file or die "fail to open $file for writing.";
 
     my $content
-        = LWP::Curl->new->get(
+        = LWP::UserAgent->new->get(
         	$self->url
-        );
+        )->content;
 
     for my $c (split /[\r\n]/, $content) {
     	$c =~ /^(.*?)\s+=\s+(.*)$/ or next;
