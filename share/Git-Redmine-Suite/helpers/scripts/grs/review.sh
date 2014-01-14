@@ -137,8 +137,6 @@ function review_reject {
 		exit 1
 	fi
 
-	check_valid_editor
-
 	echo "Fetching last developer ..."
 	declare -a TASK_DEV=($(redmine-get-task-developers --task_id="$TASK" --status_ids="$REDMINE_TASK_IN_PROGRESS" --ids_only))
 
@@ -151,7 +149,7 @@ function review_reject {
 ### Please indicate to the developer the reasons of your reject.
 ### 
 __EOF__
-	"$EDITOR" "$F"
+	$EDITOR "$F"
 
 	MESSAGE=$(cat "$F" | grep -v ^"###")
 	RET="
@@ -220,8 +218,6 @@ function review_finish {
 		HELP=1 exec $0
 	fi
 	
-	check_valid_editor
-
 	TASK_TITLE=$(git config "redmine.review.$TASK.title")
 	TASK_DEV=$(redmine-get-task-developers --task_id="$TASK" --status_ids="$REDMINE_TASK_IN_PROGRESS")
 	PR=$(git config "redmine.review.$TASK.pr")
@@ -250,7 +246,7 @@ function review_finish {
 	fi
 	cat "$CHANGELOG" >> "$CHANGELOG".new
 	mv "$CHANGELOG".new "$CHANGELOG"
-	"$EDITOR" "$CHANGELOG"
+	$EDITOR "$CHANGELOG"
 	git add "$CHANGELOG"
 	git commit -m "reflect changes" "$CHANGELOG" || true
 	git push origin devel

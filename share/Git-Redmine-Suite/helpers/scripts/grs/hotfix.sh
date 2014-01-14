@@ -70,7 +70,7 @@ function hotfix_start {
 	then
 	    cat dist.ini | /usr/bin/perl -pe "s/version(\\s*)=(\\s*)(.*)/version\${1}=\${2}$HOTFIX_VERSION/" > dist.ini.new
 	    mv dist.ini.new dist.ini
-	    "$EDITOR" dist.ini
+	    $EDITOR dist.ini
 	    git add dist.ini
 	    git ci -m 'Update version DistZilla'
 	fi
@@ -89,7 +89,7 @@ function hotfix_start {
 	fi
 	cat "$CHANGELOG" >> "$CHANGELOG".new
 	mv "$CHANGELOG".new "$CHANGELOG"
-	"$EDITOR" "$CHANGELOG"
+	$EDITOR "$CHANGELOG"
 	git add "$CHANGELOG"
 	git commit -m "reflect changes" "$CHANGELOG" || true
 
