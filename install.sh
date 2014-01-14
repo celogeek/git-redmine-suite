@@ -33,8 +33,6 @@ export GRS_ROOT_INSTALL=$GRS_ROOT/grs
 
 export PERL_CPANM_OPT="--mirror-only --mirror http://cpan.celogeek.fr --mirror http://cpan.org -l $GRS_ROOT_LIB -L $GRS_ROOT_LIB -nq --self-contained"
 
-sudo rm -rf /usr/local/share/Git-Redmine-Suite /usr/local/bin/git-redmine /usr/local/bin/git-redmine-*
-
 set -e
 
 rm -rf "$GRS_ROOT_INSTALL"
