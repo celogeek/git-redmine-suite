@@ -18,7 +18,7 @@ function release_start {
 	git_refresh_local_repos
 
 	if [ -z "$VERSION" ]; then
-	    VERSION=$(next_version --version=$(((git tag | grep ^v) || echo "v0.00") | /usr/bin/perl -pe 's/^v//' | sort -n | tail -n1))
+	    VERSION=$(next_version --version=$(((git describe --tags --match=v* --abbrev=0 origin/master 2>/dev/null) || echo "v0.00") | /usr/bin/perl -pe 's/^v//' | sort -n | tail -n1))
 	fi
 
 	echo "Release V$VERSION with tasks ${TASKS[@]} ..."
