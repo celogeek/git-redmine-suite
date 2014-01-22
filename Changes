@@ -1,3 +1,5 @@
+    * Feature #404 : Improve detection of the last version using git describe (Celogeek San)
+
 0.91  2014-01-14 17:09:21 GMT
     * Bug #191 : Improve editor detection (Celogeek San)
     * Bug #342 : Remove usage of LWP::Curl (Celogeek San)
