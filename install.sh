@@ -31,7 +31,7 @@ export GRS_ROOT=$HOME/.grs
 export GRS_ROOT_LIB=$GRS_ROOT/perl5
 export GRS_ROOT_INSTALL=$GRS_ROOT/grs
 
-export PERL_CPANM_OPT="--mirror-only --mirror http://cpan.celogeek.fr --mirror http://cpan.org -l $GRS_ROOT_LIB -L $GRS_ROOT_LIB -nq --self-contained"
+export PERL_CPANM_OPT="--mirror-only --mirror http://pinto.celogeek.fr  --mirror http://cpan.celogeek.fr --mirror http://cpan.org -l $GRS_ROOT_LIB -L $GRS_ROOT_LIB -nq --self-contained"
 
 set -e
 
