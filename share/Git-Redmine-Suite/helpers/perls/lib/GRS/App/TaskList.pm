@@ -55,7 +55,7 @@ has '_prio_order' => (
 
 sub _build__prio_order {
     my ($self) = @_;
-    my $prio_content = $self->ENUMERATIONS->issue_priorities->list->all->content->{issue_priorities};
+    my $prio_content = $self->ENUMERATIONS->issue_priorities->list->all->{issue_priorities};
     my %order;
     my $n = 0;
     for my $prio(@$prio_content) {
@@ -203,7 +203,7 @@ sub _fetch_missing_tasks {
                     my $issue;
                     if (eval {
                         $issue = $self->API->issues->issue->get($parent_id)
-                            ->content->{issue}; 1
+                            ->{issue}; 1
                     }) {
                         $self->_issue_add(
                             $issue,

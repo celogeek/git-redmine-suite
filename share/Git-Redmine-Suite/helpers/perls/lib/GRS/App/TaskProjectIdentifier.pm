@@ -22,7 +22,7 @@ sub app {
 
     my $id      = $self->task_id;
     my $resp    = $self->API->issues->issue->get($id);
-    my $content = $resp->content->{issue};
+    my $content = $resp->{issue};
 
     return $content->{project}->{identifier} // "";
 }

@@ -38,7 +38,7 @@ sub app {
     };
 
     my $resp = $self->API->issue_priorities->list->all();
-    my @content = @{$resp->content->{issue_priorities}};
+    my @content = @{$resp->{issue_priorities}};
 
     my %res;
     my $default = 0;

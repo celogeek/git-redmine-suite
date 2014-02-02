@@ -1,3 +1,6 @@
+0.93  2014-02-02 21:34:18 GMT
+    * Feature #415 : use Redmine API 0.04 (Celogeek San)
+
 0.92  2014-01-22 13:41:11 GMT
     * Feature #404 : Improve detection of the last version using git describe (Celogeek San)
 
