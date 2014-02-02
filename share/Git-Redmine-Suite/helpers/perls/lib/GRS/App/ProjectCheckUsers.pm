@@ -22,7 +22,7 @@ sub app {
 
     my $resp = $self->API->projects->project->get( $self->project,
         include => 'members' );
-    my $content = $resp->content->{project}->{members} // [];
+    my $content = $resp->{project}->{members} // [];
 
     return
         grep { $_->{id} == $self->assigned_to_id } @$content;

@@ -70,11 +70,10 @@ sub API_fetchAll {
     $search //= {};
 
     for ( ;; ) {
-        my $resp = $self->API->$what->list->all(
+        my $content = $self->API->$what->list->all(
             offset => $offset,
             %$search
         );
-        my $content = $resp->content;
         $total_count //= $content->{total_count} // 0;
 
         if ( ref $filter eq 'CODE' ) {

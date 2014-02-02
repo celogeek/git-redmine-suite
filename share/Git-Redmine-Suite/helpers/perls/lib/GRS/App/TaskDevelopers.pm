@@ -28,7 +28,7 @@ sub app {
 
     my $sep        = $self->ids_only ? ' ' : ', ';
 
-    my @res = $self->get_developers($resp->content->{issue}->{journals}, $self->status_ids, $self->ids_only);
+    my @res = $self->get_developers($resp->{issue}->{journals}, $self->status_ids, $self->ids_only);
 
     return join( $sep, @res );
 }

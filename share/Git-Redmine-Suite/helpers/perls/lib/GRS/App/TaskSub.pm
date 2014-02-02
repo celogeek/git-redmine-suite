@@ -23,7 +23,7 @@ sub app {
     my ($self) = @_;
 
     my $issue = $self->API->issues->issue->get( $self->task_id,
-        include => 'custom_fields,children' )->content->{issue};
+        include => 'custom_fields,children' )->{issue};
 
     my @issues = $self->cf_filter(@{$issue->{children}});
 
@@ -60,7 +60,7 @@ sub _create_subtask {
     my $subissue = $self->API->issues->issue->create(%create);
     return unless defined $subissue;
 
-    return $subissue->content->{issue}->{id};
+    return $subissue->{issue}->{id};
 }
 
 1;
