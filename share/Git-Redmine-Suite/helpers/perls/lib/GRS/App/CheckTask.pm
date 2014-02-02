@@ -35,7 +35,7 @@ sub app {
     my $id         = $self->task_id;
     my @status_ids = @{ $self->status_ids };
     my $resp       = $self->API->issues->issue->get($id);
-    my $issue      = $resp->content->{issue};
+    my $issue      = $resp->{issue};
     my $is_valid   = $issue->{assigned_to}
         && $issue->{assigned_to}->{id} eq $self->assigned_to_id;
 

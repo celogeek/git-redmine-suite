@@ -38,7 +38,7 @@ set -e
 rm -rf "$GRS_ROOT_INSTALL"
 mkdir -p "$GRS_ROOT" "$GRS_ROOT_LIB" "$GRS_ROOT_INSTALL"
 
-curl -sL http://cpanmin.us/ | /usr/bin/perl - App::local::lib::helper Redmine::API Moo MooX::Options LWP::Protocol::https Version::Next DateTime Term::ReadLine Date::Parse LWP::UserAgent List::MoreUtils List::Util List::Util::XS autodie utf8::all Term::Size Digest::MD5 Data::UUID JSON::XS URI::Escape IO::Interactive
+curl -sL http://cpanmin.us/ | /usr/bin/perl - App::local::lib::helper Redmine::API Moo MooX::Options LWP::Protocol::https Version::Next DateTime Term::ReadLine Date::Parse LWP::UserAgent List::MoreUtils List::Util List::Util::XS autodie utf8::all Term::Size Digest::MD5 Data::UUID JSON::XS URI::Escape IO::Interactive REST::Client URI DDP
 
 cp -RvL share "$GRS_ROOT_INSTALL"
 cp -av bin "$GRS_ROOT_INSTALL"

@@ -33,7 +33,7 @@ sub app {
     my ($self) = @_;
 
     my $issue = $self->API->issues->issue->get( $self->task_id,
-        include => 'custom_fields,journals' )->content->{issue};
+        include => 'custom_fields,journals' )->{issue};
 
     my %cf = map { @$_{qw/name id/} } @{ $issue->{custom_fields} };
     return $self if grep { !exists $cf{$_} } qw/GIT_REPOS GIT_PR GIT_RELEASE/;

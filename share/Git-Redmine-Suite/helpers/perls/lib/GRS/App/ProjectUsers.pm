@@ -22,7 +22,7 @@ sub app {
 
     my $resp = $self->API->projects->project->get( $self->project,
         include => 'members' );
-    my $content = $resp->content->{project}->{members} // [];
+    my $content = $resp->{project}->{members} // [];
 
     return
         $self, map { [ @$_{qw/id name/} ] } sort { $a->{name} cmp $b->{name} } @$content;
