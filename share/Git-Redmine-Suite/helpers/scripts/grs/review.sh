@@ -192,7 +192,7 @@ You can take from the review task with :
 
 	git_refresh_local_repos
 	git checkout "$BRNAME"
-	git push -f origin HEAD:"$BRNAME"
+	git push -f origin "$BRNAME":"$BRNAME"
 	git tag "$TAG"
 	git push origin tags/"$TAG"
 	git checkout devel
@@ -249,7 +249,7 @@ function review_finish {
 	$EDITOR "$CHANGELOG"
 	git add "$CHANGELOG"
 	git commit -m "reflect changes" "$CHANGELOG" || true
-	git push origin devel
+	git push origin devel:devel
 	git push origin :tags/"$PR"
 	git tag -d "$PR"
 	git branch -D "$BRNAME"

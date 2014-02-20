@@ -105,18 +105,18 @@ function task_create {
 	git config "redmine.task.current" "$TASK"
 	git config "redmine.task.$TASK.title" "$TASK_TITLE"
 	git config "redmine.task.$TASK.branch" "$BRNAME"
-	git push origin -u $BRNAME || cat <<__EOF__
+	git push origin -u "$BRNAME":"$BRNAME" || cat <<__EOF__
 The remote branch $BRNAME already exist !
 You have 2 choice. 
 
 Or you take control of this branch :
 
-    git push -fu origin "$BRNAME"
+    git push -fu origin "$BRNAME":"$BRNAME"
 
 Or you get that branch and continue the devel :
 
     git reset --hard "origin/$BRNAME"
-    git push -u origin "$BRNAME"
+    git push -u origin "$BRNAME":"$BRNAME"
 
 __EOF__
 
@@ -247,7 +247,7 @@ function task_finish {
 	set -e
 	git_refresh_local_repos
 	git checkout "$BRNAME"
-	git push origin "$BRNAME"
+	git push origin "$BRNAME":"$BRNAME"
 	git tag "$TAG"
 	git push origin tags/"$TAG"
 	git checkout devel

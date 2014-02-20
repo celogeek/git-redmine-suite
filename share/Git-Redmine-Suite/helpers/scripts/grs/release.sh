@@ -137,12 +137,12 @@ function release_finish {
 	git checkout devel
 	git merge origin/devel
 	git merge --no-ff "$BRNAME" -m "Merge $BRNAME"
-	git push origin devel
+	git push origin devel:devel
 	git checkout master
 	git merge origin/master
 	git merge --no-ff devel -m "Merge $BRNAME"
 	git tag -m "release v$V: ${TASKS[*]}" "v$VERSION"
-	git push origin master
+	git push origin master:master
 	git push origin "tags/v$VERSION"
 	git checkout devel
 	git branch -d "$BRNAME"

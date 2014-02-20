@@ -64,7 +64,7 @@ function hotfix_start {
 	git config "redmine.hotfix.current" "$TASK"
 	git config "redmine.hotfix.version" "$HOTFIX_VERSION"
 	git config "redmine.hotfix.branch" "$BRNAME"
-	git push origin -u $BRNAME || exit 1
+	git push origin -u "$BRNAME":"$BRNAME" || exit 1
 
 	if [ -e 'dist.ini' ]
 	then
@@ -136,7 +136,7 @@ function hotfix_finish {
 	git_refresh_local_repos
 	git checkout "$BRNAME" || exit 1
 	git tag -m "hotfix v$VERSION: $CURRENT_TASK" "hotfix-$VERSION"
-	git push
+	git push origin "$BRNAME":"$BRNAME"
 	git push origin "tags/hotfix-$VERSION"
 	git checkout devel
 	git branch -D "$BRNAME"
