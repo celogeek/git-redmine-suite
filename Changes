@@ -1,3 +1,5 @@
+    * Bug #420 : git 1.9.0 has changed default behavior of push (Celogeek San)
+
 0.93  2014-02-02 21:34:18 GMT
     * Feature #415 : use Redmine API 0.04 (Celogeek San)
 
