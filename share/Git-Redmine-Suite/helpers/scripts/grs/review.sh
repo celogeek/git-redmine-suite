@@ -283,7 +283,7 @@ function review_finish {
 
 	if [ -z "$REDMINE_FORCE" ] || [ -n "$REDMINE_TIME" ]; then
 		if [ -z "$REDMINE_TIME" ]; then
-			REDMINE_TIME=$(ask_question --question="How much hours did you spend on the task ? " --answer_mode="time")
+			REDMINE_TIME=$(ask_question --question="How many hours did you spend on the review? " --answer_mode="time")
 		fi
 		echo "Updating time entry ..."
 		redmine-create-task-time --task_id=$TASK --hours=$REDMINE_TIME 2> /dev/null || cat <<__EOF__
