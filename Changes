@@ -1,3 +1,5 @@
+    * Bug #446 : Remove 'git ci' command (Celogeek San)
+
 0.94  2014-02-20 13:41:11 GMT
     * Bug #420 : git 1.9.0 has changed default behavior of push (Celogeek San)
 
