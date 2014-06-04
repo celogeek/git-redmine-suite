@@ -3,7 +3,7 @@ if [ ! -f "$UPDATE_CHECK_FILE" ]
 then
     touch "$UPDATE_CHECK_FILE"
     echo "Checking update ..."
-    MASTER_VERSION=$(curl -s "https://raw.github.com/celogeek/git-redmine-suite/master/VERSION")
+    MASTER_VERSION=$(curl -Ls "https://raw.github.com/celogeek/git-redmine-suite/master/VERSION")
     CURRENT_VERSION=$(cat "$ROOT_DIR/VERSION")
     if [ -n "$MASTER_VERSION" ] && [ "$MASTER_VERSION" != "$CURRENT_VERSION" ]
     then
