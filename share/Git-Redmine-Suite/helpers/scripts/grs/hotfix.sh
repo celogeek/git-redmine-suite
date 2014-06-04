@@ -82,7 +82,8 @@ function hotfix_start {
 	    git commit -m 'Update version file'
 	fi
 
-	echo "    * Hotfix : $TASK_TITLE ($TASK_DEV)" > "$CHANGELOG".new
+	tag_version --version="hotfix-$HOTFIX_VERSION" > "$CHANGELOG".new
+	echo "    * Hotfix : $TASK_TITLE ($TASK_DEV)" >> "$CHANGELOG".new
 	touch "$CHANGELOG"
 	if head -n1 "$CHANGELOG" | grep -q ^"[0-9]"; then
 		echo >> "$CHANGELOG".new
