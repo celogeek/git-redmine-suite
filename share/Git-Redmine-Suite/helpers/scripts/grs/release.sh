@@ -54,7 +54,7 @@ function release_start {
 	mv "$CHANGELOG".new "$CHANGELOG"
 	$EDITOR "$CHANGELOG"
 	git add "$CHANGELOG"
-	git ci -m "Add version in Changes"
+	git commit -m "Add version in Changes"
 
 	if [ -e 'dist.ini' ]
 	then
@@ -62,14 +62,14 @@ function release_start {
 	    mv dist.ini.new dist.ini
 	    $EDITOR dist.ini
 	    git add dist.ini
-	    git ci -m 'Update version DistZilla'
+	    git commit -m 'Update version DistZilla'
 	fi
 
 	if [ -e 'VERSION' ]
 	then
 	    echo "$VERSION" > VERSION
 	    git add VERSION
-	    git ci -m 'Update version file'
+	    git commit -m 'Update version file'
 	fi
 
 	git diff --color origin/master | less -R

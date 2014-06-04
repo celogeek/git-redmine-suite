@@ -72,17 +72,18 @@ function hotfix_start {
 	    mv dist.ini.new dist.ini
 	    $EDITOR dist.ini
 	    git add dist.ini
-	    git ci -m 'Update version DistZilla'
+	    git commit -m 'Update version DistZilla'
 	fi
 
 	if [ -e 'VERSION' ]
 	then
 	    echo "$HOTFIX_VERSION" > VERSION
 	    git add VERSION
-	    git ci -m 'Update version file'
+	    git commit -m 'Update version file'
 	fi
 
-	echo "    * Hotfix : $TASK_TITLE ($TASK_DEV)" > "$CHANGELOG".new
+	tag_version --version="hotfix-$HOTFIX_VERSION" > "$CHANGELOG".new
+	echo "    * Hotfix : $TASK_TITLE ($TASK_DEV)" >> "$CHANGELOG".new
 	touch "$CHANGELOG"
 	if head -n1 "$CHANGELOG" | grep -q ^"[0-9]"; then
 		echo >> "$CHANGELOG".new

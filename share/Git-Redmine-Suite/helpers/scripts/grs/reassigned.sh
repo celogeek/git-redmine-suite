@@ -7,7 +7,7 @@ function reassigned_this {
 
 	PREVIOUS_ASSIGNED_TO_ID=$(git config redmine.project.$PROJECT.$TYPE)
 
-	declare -a PARAMS=(--question "Who do you want to assign the $TYPE ?" --answer_mode "id")
+	declare -a PARAMS=(--question "To whom do you want to assign the $TYPE ?" --answer_mode "id")
 	if [ -n "$PREVIOUS_ASSIGNED_TO_ID" ]; then
 		PARAMS+=(--default_answer "$PREVIOUS_ASSIGNED_TO_ID")
 	fi
