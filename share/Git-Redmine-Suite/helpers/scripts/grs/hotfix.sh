@@ -68,7 +68,7 @@ function hotfix_start {
 
 	if [ -e 'dist.ini' ]
 	then
-	    cat dist.ini | /usr/bin/perl -pe "s/version(\\s*)=(\\s*)(.*)/version\${1}=\${2}$HOTFIX_VERSION/" > dist.ini.new
+	    cat dist.ini | /usr/bin/perl -pe "s/^version(\\s*)=(\\s*)(.*)/version\${1}=\${2}$HOTFIX_VERSION/" > dist.ini.new
 	    mv dist.ini.new dist.ini
 	    $EDITOR dist.ini
 	    git add dist.ini
