@@ -1,8 +1,17 @@
+commit f8628310bf840177387ccdafc3bd69bfc2a122ee
+Author: Celogeek <me@celogeek.com>
+Date:   Sat Nov 15 13:11:25 2014 +0100
+
+    GRS v2.6.0
+    
+    Conflicts:
+    	app/views/projects/show.api.rsb
+
 diff --git a/app/helpers/issues_helper.rb b/app/helpers/issues_helper.rb
-index b4b15a6..cc1b9e5 100644
+index 8d7f964..7cce69c 100644
 --- a/app/helpers/issues_helper.rb
 +++ b/app/helpers/issues_helper.rb
-@@ -368,6 +368,7 @@ module IssuesHelper
+@@ -422,6 +422,7 @@ module IssuesHelper
          api.issue(:id => child.id) do
            api.tracker(:id => child.tracker_id, :name => child.tracker.name) unless child.tracker.nil?
            api.subject child.subject
@@ -11,7 +20,7 @@ index b4b15a6..cc1b9e5 100644
          end
        end
 diff --git a/app/views/issues/index.api.rsb b/app/views/issues/index.api.rsb
-index 5009ffa..4654e67 100644
+index 7660ccb..fa85c04 100644
 --- a/app/views/issues/index.api.rsb
 +++ b/app/views/issues/index.api.rsb
 @@ -2,7 +2,7 @@ api.array :issues, api_meta(:total_count => @issue_count, :offset => @offset, :l
@@ -24,7 +33,7 @@ index 5009ffa..4654e67 100644
        api.status(:id => issue.status_id, :name => issue.status.name) unless issue.status.nil?
        api.priority(:id => issue.priority_id, :name => issue.priority.name) unless issue.priority.nil?
 diff --git a/app/views/issues/show.api.rsb b/app/views/issues/show.api.rsb
-index ce788a7..230ede3 100644
+index f057b4c..4efe67f 100644
 --- a/app/views/issues/show.api.rsb
 +++ b/app/views/issues/show.api.rsb
 @@ -1,6 +1,6 @@
@@ -36,10 +45,10 @@ index ce788a7..230ede3 100644
    api.status(:id => @issue.status_id, :name => @issue.status.name) unless @issue.status.nil?
    api.priority(:id => @issue.priority_id, :name => @issue.priority.name) unless @issue.priority.nil?
 diff --git a/app/views/projects/index.api.rsb b/app/views/projects/index.api.rsb
-index 8fdea9b..c579ef4 100644
+index d309af2..34d5e90 100644
 --- a/app/views/projects/index.api.rsb
 +++ b/app/views/projects/index.api.rsb
-@@ -11,6 +11,13 @@ api.array :projects, api_meta(:total_count => @project_count, :offset => @offset
+@@ -14,6 +14,13 @@ api.array :projects, api_meta(:total_count => @project_count, :offset => @offset
  
        api.created_on  project.created_on
        api.updated_on  project.updated_on
@@ -54,13 +63,13 @@ index 8fdea9b..c579ef4 100644
    end
  end
 diff --git a/app/views/projects/show.api.rsb b/app/views/projects/show.api.rsb
-index a6f26f8..f1fdfa9 100644
+index 6e1958a..3d4b1fa 100644
 --- a/app/views/projects/show.api.rsb
 +++ b/app/views/projects/show.api.rsb
-@@ -22,4 +22,16 @@ api.project do
-       api.issue_category(:id => category.id, :name => category.name)
-     end
-   end if include_in_api_response?('issue_categories')
+@@ -13,4 +13,16 @@ api.project do
+ 
+   api.created_on @project.created_on
+   api.updated_on @project.updated_on
 +
 +  api.array :members do
 +    @project.members.each do |member|
