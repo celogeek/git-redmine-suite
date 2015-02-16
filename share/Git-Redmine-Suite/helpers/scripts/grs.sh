@@ -7,6 +7,7 @@ source $ROOT_DIR/../../../perl5/bin/localenv-bashrc
 
 export PATH=$PERL_DIR/bin:$PATH
 export PERL5LIB=$PERL_DIR/lib:$PERL5LIB
+export PERL_LWP_SSL_VERIFY_HOSTNAME=0
 
 source "$SCRIPT_DIR"/check_update.sh
 
