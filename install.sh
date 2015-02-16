@@ -31,14 +31,14 @@ export GRS_ROOT=$HOME/.grs
 export GRS_ROOT_LIB=$GRS_ROOT/perl5
 export GRS_ROOT_INSTALL=$GRS_ROOT/grs
 
-export PERL_CPANM_OPT="--mirror-only --mirror http://pinto.celogeek.fr  --mirror http://cpan.celogeek.fr --mirror http://cpan.org -l $GRS_ROOT_LIB -L $GRS_ROOT_LIB -nq --self-contained"
+export PERL_CPANM_OPT="--mirror-only --mirror http://cpan.celogeek.fr --mirror http://cpan.org -l $GRS_ROOT_LIB -L $GRS_ROOT_LIB -nq --self-contained"
 
 set -e
 
 rm -rf "$GRS_ROOT_INSTALL"
 mkdir -p "$GRS_ROOT" "$GRS_ROOT_LIB" "$GRS_ROOT_INSTALL"
 
-curl -sL http://cpanmin.us/ | /usr/bin/perl - App::local::lib::helper Redmine::API Moo MooX::Options LWP::Protocol::https Version::Next DateTime Term::ReadLine Date::Parse LWP::UserAgent List::MoreUtils List::Util List::Util::XS autodie utf8::all Term::Size Digest::MD5 Data::UUID JSON::XS URI::Escape IO::Interactive REST::Client URI DDP
+curl -sL http://cpanmin.us/ | /usr/bin/perl - -v App::local::lib::helper IO::Socket::SSL LWP::Protocol::https Redmine::API Moo MooX::Options Version::Next DateTime Term::ReadLine Date::Parse LWP::UserAgent List::MoreUtils List::Util List::Util::XS autodie utf8::all Term::Size Digest::MD5 Data::UUID JSON::XS URI::Escape IO::Interactive REST::Client URI DDP
 
 cp -RvL share "$GRS_ROOT_INSTALL"
 cp -av bin "$GRS_ROOT_INSTALL"
