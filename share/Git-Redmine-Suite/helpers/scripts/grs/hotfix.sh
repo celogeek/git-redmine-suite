@@ -24,9 +24,8 @@ function hotfix_start {
 		HELP=1 exec $0
 	fi
 
-  [ -z $HOTFIX_PREFIX_TAG ] && HOTFIX_PREFIX_TAG=hotfix
-	HOTFIX_CURRENT_VERSION=$(git tag | egrep ^"(v|hotfix-)$VERSION" |  /usr/bin/perl -pe 's/^(v|hotfix-)//' | sort -n | tail -n 1)
-	HOTFIX_PREFIX_VERSION="hotfix-"
+	HOTFIX_CURRENT_VERSION=$(git tag | egrep ^"(v|${HOTFIX_PREFIX_TAG}-)$VERSION" |  /usr/bin/perl -pe 's/^(v|'${HOTFIX_PREFIX_TAG}'-)//' | sort -n | tail -n 1)
+	HOTFIX_PREFIX_VERSION="${HOTFIX_PREFIX_TAG}-"
 	HOTFIX_MERGE_FROM="$HOTFIX_PREFIX_VERSION$HOTFIX_CURRENT_VERSION"
 
 	if [ "$HOTFIX_CURRENT_VERSION" = "$VERSION" ]; then
@@ -37,12 +36,12 @@ function hotfix_start {
 
 	HOTFIX_VERSION=$(next_version --version="$HOTFIX_CURRENT_VERSION")
 
-	echo -n "Starting the hotfix : "
+	echo -n "Starting the ${HOTFIX_PREFIX_TAG} : "
 	if ! redmine-get-task-info --task_id=$TASK --with_status; then
 		exit 1
 	fi
 
-	if [ -z "$REDMINE_FORCE" ] && ! ask_question --question="Do you really want to start this hotfix ?"; then
+	if [ -z "$REDMINE_FORCE" ] && ! ask_question --question="Do you really want to start this ${HOTFIX_PREFIX_TAG} ?"; then
 		exit 1
 	fi
 
@@ -57,14 +56,14 @@ function hotfix_start {
 	TASK_DEV=$(redmine-get-task-developers --task_id="$TASK" --status_ids="$REDMINE_TASK_IN_PROGRESS")
 	TASK_TITLE=$(redmine-get-task-info --task_id=$TASK)
 	SLUG_TITLE=$(slug --this "$TASK_TITLE")
-	BRNAME="redmine-hotfix-$HOTFIX_VERSION-$SLUG_TITLE"
+	BRNAME="redmine-${HOTFIX_PREFIX_TAG}-$HOTFIX_VERSION-$SLUG_TITLE"
 	CHANGELOG=$(get_change_log)
 
 	echo "Creation local branch $BRNAME ..."
 	git checkout -b "$BRNAME" "tags/$HOTFIX_MERGE_FROM" || exit 1
-	git config "redmine.hotfix.current" "$TASK"
-	git config "redmine.hotfix.version" "$HOTFIX_VERSION"
-	git config "redmine.hotfix.branch" "$BRNAME"
+	git config "redmine.${HOTFIX_PREFIX_TAG}.current" "$TASK"
+	git config "redmine.${HOTFIX_PREFIX_TAG}.version" "$HOTFIX_VERSION"
+	git config "redmine.${HOTFIX_PREFIX_TAG}.branch" "$BRNAME"
 	git push origin -u "$BRNAME":"$BRNAME" || exit 1
 
 	if [ -e 'dist.ini' ]
@@ -83,7 +82,7 @@ function hotfix_start {
 	    git commit -m 'Update version file'
 	fi
 
-	tag_version --version="hotfix-$HOTFIX_VERSION" > "$CHANGELOG".new
+	tag_version --version="${HOTFIX_PREFIX_TAG}-$HOTFIX_VERSION" > "$CHANGELOG".new
 	echo "    * Hotfix : $TASK_TITLE ($TASK_DEV)" >> "$CHANGELOG".new
 	touch "$CHANGELOG"
 	if head -n1 "$CHANGELOG" | grep -q ^"[0-9]"; then
@@ -96,9 +95,9 @@ function hotfix_start {
 	git commit -m "reflect changes" "$CHANGELOG" || true
 
 	cat <<__EOF__
-When you have finish your hotfix, run
+When you have finish your ${HOTFIX_PREFIX_TAG}, run
 
-	* git hotfix finish
+	* git hotfix finish -T ${HOTFIX_PREFIX_TAG}
 
 This will only tag the current branch and push it.
 
@@ -110,17 +109,16 @@ __EOF__
 
 function hotfix_finish {
 
-  [ -z $HOTFIX_PREFIX_TAG ] && HOTFIX_PREFIX_TAG=hotfix
-	CURRENT_TASK=$(git config redmine.hotfix.current)
-	VERSION=$(git config redmine.hotfix.version)
-	BRNAME=$(git config redmine.hotfix.branch)
+	CURRENT_TASK=$(git config redmine.${HOTFIX_PREFIX_TAG}.current)
+	VERSION=$(git config redmine.${HOTFIX_PREFIX_TAG}.version)
+	BRNAME=$(git config redmine.${HOTFIX_PREFIX_TAG}.branch)
 
 	if [ -z "$CURRENT_TASK" ]; then
-		echo "No hotfix started !"
+		echo "No ${HOTFIX_PREFIX_TAG} started !"
 		exit 1
 	fi
 
-	if [ -z "$REDMINE_FORCE" ] && ! ask_question --question="Do you really want to finish the hotfix $CURRENT_TASK ?"; then
+	if [ -z "$REDMINE_FORCE" ] && ! ask_question --question="Do you really want to finish the ${HOTFIX_PREFIX_TAG} $CURRENT_TASK ?"; then
 		exit 1
 	fi
 
@@ -138,12 +136,14 @@ function hotfix_finish {
 	set -e
 	git_refresh_local_repos
 	git checkout "$BRNAME" || exit 1
-	git tag -m "hotfix v$VERSION: $CURRENT_TASK" "hotfix-$VERSION"
+	git tag -m "${HOTFIX_PREFIX_TAG} v$VERSION: $CURRENT_TASK" "${HOTFIX_PREFIX_TAG}-$VERSION"
 	git push origin "$BRNAME":"$BRNAME"
-	git push origin "tags/hotfix-$VERSION"
+	git push origin "tags/${HOTFIX_PREFIX_TAG}-$VERSION"
 	git checkout devel
 	git branch -D "$BRNAME"
 	set +e
+
+  git config --remove-section redmine.${HOTFIX_PREFIX_TAG}
 
 	task=$CURRENT_TASK \
 	status=$REDMINE_RELEASE_FINISH \
@@ -157,19 +157,19 @@ function hotfix_finish {
 
 function hotfix_abort {
 
-	CURRENT_TASK=$(git config redmine.hotfix.current)
-	BRNAME=$(git config redmine.hotfix.branch)
+	CURRENT_TASK=$(git config redmine.${HOTFIX_PREFIX_TAG}.current)
+	BRNAME=$(git config redmine.${HOTFIX_PREFIX_TAG}.branch)
 
 	if [ -z "$CURRENT_TASK" ]; then
-		echo "No hotfix started !"
+		echo "No ${HOTFIX_PREFIX_TAG} started !"
 	    exit 1
 	fi
 
-	if [ -z "$REDMINE_FORCE" ] && ! ask_question --question="Do you really want to abort the hotfix $BRNAME ?"; then
+	if [ -z "$REDMINE_FORCE" ] && ! ask_question --question="Do you really want to abort the ${HOTFIX_PREFIX_TAG} $BRNAME ?"; then
 		exit 1
 	fi
 
-	git config --remove-section redmine.hotfix
+	git config --remove-section redmine.${HOTFIX_PREFIX_TAG}
 
 	git_refresh_local_repos
 	git checkout devel

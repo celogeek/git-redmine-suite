@@ -17,6 +17,8 @@ while getopts frcav:t:hnm:peHT: opt; do
 done
 shift $((OPTIND-1))
 
+[ -z $HOTFIX_PREFIX_TAG ] && HOTFIX_PREFIX_TAG=hotfix
+
 function help_command {
 	if [ -n "$HELP" ]; then
 		CMD=$(basename $0 | /usr/bin/perl -pe 's/\-/ /g')
