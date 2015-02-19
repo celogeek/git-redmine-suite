@@ -24,6 +24,7 @@ function hotfix_start {
 		HELP=1 exec $0
 	fi
 
+  [ -z $HOTFIX_PREFIX_TAG ] && HOTFIX_PREFIX_TAG=hotfix
 	HOTFIX_CURRENT_VERSION=$(git tag | egrep ^"(v|hotfix-)$VERSION" |  /usr/bin/perl -pe 's/^(v|hotfix-)//' | sort -n | tail -n 1)
 	HOTFIX_PREFIX_VERSION="hotfix-"
 	HOTFIX_MERGE_FROM="$HOTFIX_PREFIX_VERSION$HOTFIX_CURRENT_VERSION"
@@ -109,6 +110,7 @@ __EOF__
 
 function hotfix_finish {
 
+  [ -z $HOTFIX_PREFIX_TAG ] && HOTFIX_PREFIX_TAG=hotfix
 	CURRENT_TASK=$(git config redmine.hotfix.current)
 	VERSION=$(git config redmine.hotfix.version)
 	BRNAME=$(git config redmine.hotfix.branch)
