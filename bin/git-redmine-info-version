@@ -1,0 +1,11 @@
+#!/bin/bash
+
+if [ -n "$HELP" ]
+then
+    echo "    * git redmine info version"
+    exit 1
+fi
+
+set -e
+
+cat $(dirname "$0")/../share/Git-Redmine-Suite/VERSION
