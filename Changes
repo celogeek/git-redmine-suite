@@ -1,3 +1,8 @@
+0.99  2015-02-19 11:57:09 GMT
+    * Feature #469 : Git redmine preprodfix (Celogeek San)
+    * Bug #473 : Remove pinto, fix SSL (Celogeek San)
+    * -------- : Upgrade weborama conf (Celogeek San)
+
 0.98  2014-09-30 17:39:37 GMT
     * Feature #454 : create weboramang profile (Celogeek San)
 

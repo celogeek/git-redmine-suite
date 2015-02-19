@@ -1,7 +1,7 @@
 #!/bin/bash
 source "$(dirname "$0")/../share/Git-Redmine-Suite/helpers/scripts/help.sh"
 
-help_command "[-f] [-a]"
+help_command "[-f] [-a] [-T TAG_PREFIX=hotfix]"
 
 source "$(dirname "$0")/../share/Git-Redmine-Suite/helpers/scripts/grs.sh"
 
