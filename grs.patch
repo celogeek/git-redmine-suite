@@ -1,17 +1,14 @@
-commit f8628310bf840177387ccdafc3bd69bfc2a122ee
-Author: Celogeek <me@celogeek.com>
-Date:   Sat Nov 15 13:11:25 2014 +0100
+commit a36df6d1c878fe5db87b5302b936b978f36ea116
+Author: celogeek <me@celogeek.com>
+Date:   Mon Mar 21 18:26:46 2016 +0000
 
-    GRS v2.6.0
-    
-    Conflicts:
-    	app/views/projects/show.api.rsb
+    GRS v3.2.1
 
 diff --git a/app/helpers/issues_helper.rb b/app/helpers/issues_helper.rb
-index 8d7f964..7cce69c 100644
+index e04888e..2c07dab 100644
 --- a/app/helpers/issues_helper.rb
 +++ b/app/helpers/issues_helper.rb
-@@ -422,6 +422,7 @@ module IssuesHelper
+@@ -508,6 +508,7 @@ module IssuesHelper
          api.issue(:id => child.id) do
            api.tracker(:id => child.tracker_id, :name => child.tracker.name) unless child.tracker.nil?
            api.subject child.subject
@@ -33,7 +30,7 @@ index 7660ccb..fa85c04 100644
        api.status(:id => issue.status_id, :name => issue.status.name) unless issue.status.nil?
        api.priority(:id => issue.priority_id, :name => issue.priority.name) unless issue.priority.nil?
 diff --git a/app/views/issues/show.api.rsb b/app/views/issues/show.api.rsb
-index f057b4c..4efe67f 100644
+index 577a885..0552419 100644
 --- a/app/views/issues/show.api.rsb
 +++ b/app/views/issues/show.api.rsb
 @@ -1,6 +1,6 @@
