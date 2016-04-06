@@ -14,13 +14,17 @@ function git_has_local_changes {
     exit 1
   fi
 
-  git_cherry=$(git cherry -v --abbrev)
-  if [ -n "$git_cherry" ]
-  then
-    echo "There is pending commit:"
-    echo "$git_cherry"
-    echo ""
-    echo "Please push this first ..."
-    exit 1
+  git_remote_tracking=$(git config branch.$(git name-rev --name-only HEAD).remote)
+  if [ -n "$git_remote_tracking" ]
+    then
+    git_cherry=$(git cherry -v --abbrev)
+    if [ -n "$git_cherry" ]
+    then
+      echo "There is pending commit:"
+      echo "$git_cherry"
+      echo ""
+      echo "Please push this first ..."
+      exit 1
+    fi
   fi
 }
