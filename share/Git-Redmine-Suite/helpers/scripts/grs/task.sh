@@ -40,6 +40,9 @@ function task_start {
     HELP=1 exec $0
   fi
 
+  git_refresh_local_repos || exit 1
+  git_local_repos_is_clean || exit 1
+
   if [ -n "$REDMINE_TASK_IS_PARENT" ]; then
     echo "Find or create subtask for $TASK ..."
     TASK=$(redmine-get-subtask --task_id="$TASK" --status_ids="$REDMINE_TASK_TODO" --cf_id="$REDMINE_GIT_REPOS_ID" --cf_val="$REDMINE_GIT_REPOS_URL" --assigned_to_id="$REDMINE_USER_ID" 2>/dev/null)
@@ -48,8 +51,6 @@ function task_start {
       exit 1
     fi
   fi
-
-  git_local_repos_is_clean || exit 1
 
   if git config redmine.task.$TASK.branch > /dev/null; then
     task_continue "$TASK"
@@ -73,7 +74,6 @@ function task_continue {
   task_update || exit 1
     echo ""
     echo "Checkout local branch $BRNAME ..."
-    git_refresh_local_repos
     git checkout "$BRNAME"
     git config "redmine.task.current" "$TASK"
 }
@@ -102,7 +102,6 @@ function task_create {
   BRNAME="redmine-$SLUG_TITLE"
 
   echo "Creation local branch $BRNAME ..."
-  git_refresh_local_repos
   git checkout -b "$BRNAME" origin/devel || git checkout "$BRNAME" || exit 1
   git config "redmine.task.current" "$TASK"
   git config "redmine.task.$TASK.title" "$TASK_TITLE"
@@ -161,10 +160,10 @@ function task_clear {
   fi
 
   git_local_repos_is_clean || exit 1
+  git_refresh_local_repos || exit 1  
 
   echo "Cleaning local and remote dev for task $TASK..."
 
-  git_refresh_local_repos  
   git checkout devel
   git merge origin/devel
   git branch -D "$BRNAME"
@@ -209,6 +208,8 @@ function task_finish {
     exit 1
   fi
 
+  git_refresh_local_repos || exit 1
+
   if [ -z "$(git log origin/devel.. --oneline -n 1)" ]; then
     echo "They is no commit in your branch !"
     echo ""
@@ -217,8 +218,6 @@ function task_finish {
     echo ""
     exit 1
   fi
-
-  git_refresh_local_repos || exit 1
 
   BRNAME=$(git config redmine.task.$CURRENT_TASK.branch)
   git checkout "$BRNAME" || exit 1
