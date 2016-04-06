@@ -218,8 +218,22 @@ function task_finish {
     exit 1
   fi
 
+  git_refresh_local_repos || exit 1
+
+  BRNAME=$(git config redmine.task.$CURRENT_TASK.branch)
+  git checkout "$BRNAME" || exit 1
+  echo ""
   git_local_repos_is_clean || exit 1
   git_local_repos_is_sync || exit 1
+
+  if [ -n "$(git log ..origin/devel --oneline -n 1)" ]; then
+    echo "You branch is out of sync with devel. Please rebase"
+    echo ""
+    echo "    * git rebase origin/devel"
+    echo ""
+    exit 1
+  fi
+
 
   if [ -n "$REDMINE_FORCE" ] && [ -z "$REDMINE_TIME" ]; then
     echo "Please add a spent time thought parameter with the force option !"
@@ -248,13 +262,9 @@ function task_finish {
     exit 1
   fi
 
-  BRNAME=$(git config redmine.task.$CURRENT_TASK.branch)
   TAG=$(tag_pr --name="$BRNAME")
 
   set -e
-  git_refresh_local_repos
-  git checkout "$BRNAME"
-  git push origin "$BRNAME":"$BRNAME"
   git tag "$TAG"
   git push origin tags/"$TAG"
   git checkout devel
