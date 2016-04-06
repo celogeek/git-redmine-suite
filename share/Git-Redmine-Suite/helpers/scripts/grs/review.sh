@@ -21,6 +21,9 @@ __EOF__
       exit 1
   fi
 
+  git_refresh_local_repos || exit 1
+  git_local_repos_is_clean || exit 1
+
   PR=$(redmine-get-task-pr --task_id=$TASK --cf_names=GIT_PR)
   if [ -z "$PR" ]
       then
@@ -50,7 +53,6 @@ __EOF__
   SLUG_TITLE=$(slug --this "$TASK_TITLE")
   BRNAME="redmine-review-$SLUG_TITLE"
   
-  git_refresh_local_repos
   git checkout -b "$BRNAME" "$PR" || exit 1
   git config "redmine.review.current" "$TASK"
   git config "redmine.review.$TASK.pr" "$PR"
@@ -99,6 +101,9 @@ function review_abort {
       echo "You have not start any review !"
       exit 1
   fi
+
+  git_refresh_local_repos || exit 1
+  git_local_repos_is_clean || exit 1
   
   TASK_TITLE=$(git config "redmine.review.$TASK.title")
   BRNAME=$(git config "redmine.review.$TASK.branch")
@@ -108,8 +113,10 @@ function review_abort {
     exit 1
   fi
   
+  set -e
   git checkout devel
   git branch -D "$BRNAME"
+  set +e
   git config --remove-section "redmine.review.$TASK"
   git config --unset redmine.review.current
 
@@ -128,7 +135,10 @@ function review_reject {
       exit 1
   fi
 
-  
+  git_refresh_local_repos || exit 1
+  git_local_repos_is_clean || exit 1
+  git_local_repos_is_sync_from_devel || exit 1
+
   TASK_TITLE=$(git config "redmine.review.$TASK.title")
   BRNAME=$(git config "redmine.review.$TASK.branch")
   PR=$(git config "redmine.review.$TASK.pr")
@@ -190,7 +200,7 @@ You can take from the review task with :
   echo ""
   [ -e "$F" ] && unlink "$F"
 
-  git_refresh_local_repos
+  set -e
   git checkout "$BRNAME"
   git push -f origin "$BRNAME":"$BRNAME"
   git tag "$TAG"
@@ -202,6 +212,7 @@ You can take from the review task with :
   git branch -D "$BRNAME"
   git config --remove-section "redmine.review.$TASK"
   git config --unset "redmine.review.current"
+  set +e
 
 }
 
@@ -218,10 +229,15 @@ function review_finish {
     HELP=1 exec $0
   fi
   
+  BRNAME=$(git config "redmine.review.$TASK.branch")
+  git checkout "$BRNAME" || exit 1
+  git_refresh_local_repos || exit 1
+  git_local_repos_is_clean || exit 1
+  git_local_repos_is_sync_from_devel || exit 1
+
   TASK_TITLE=$(git config "redmine.review.$TASK.title")
   TASK_DEV=$(redmine-get-task-developers --task_id="$TASK" --status_ids="$REDMINE_TASK_IN_PROGRESS")
   PR=$(git config "redmine.review.$TASK.pr")
-  BRNAME=$(git config "redmine.review.$TASK.branch")
   CHANGELOG=$(get_change_log)
 
   if [ -z "$REDMINE_FORCE" ] && ! ask_question --question="Do you really want to finish the review of this task : $TASK_TITLE - PR:$PR ?"; then
@@ -233,9 +249,10 @@ function review_finish {
     exit 1
   fi
 
-  git_refresh_local_repos
   ADDITIONAL_MESSAGE=""
   REV_FROM=$(git rev-parse origin/devel)
+
+  set -e
   git checkout devel
   git merge origin/devel
   git merge --no-ff "$BRNAME" -m "Merge $BRNAME"
@@ -253,6 +270,7 @@ function review_finish {
   git push origin :tags/"$PR"
   git tag -d "$PR"
   git branch -D "$BRNAME"
+  set +e
   git rev-parse --verify -q origin/"$BRNAME" > /dev/null && git push origin :"$BRNAME"
   git config --remove-section "redmine.review.$TASK"
   git config --unset "redmine.review.current"
