@@ -49,6 +49,8 @@ function task_start {
     fi
   fi
 
+  git_local_repos_is_clean || exit 1
+
   if git config redmine.task.$TASK.branch > /dev/null; then
     task_continue "$TASK"
   else
@@ -107,7 +109,7 @@ function task_create {
   git config "redmine.task.$TASK.branch" "$BRNAME"
   git push origin -u "$BRNAME":"$BRNAME" || cat <<__EOF__
 The remote branch $BRNAME already exist !
-You have 2 choice. 
+You have 2 choices. 
 
 Or you take control of this branch :
 
@@ -157,6 +159,8 @@ function task_clear {
     echo "Invalid task !"
     exit 1
   fi
+
+  git_local_repos_is_clean || exit 1
 
   echo "Cleaning local and remote dev for task $TASK..."
 
@@ -213,6 +217,9 @@ function task_finish {
     echo ""
     exit 1
   fi
+
+  git_local_repos_is_clean || exit 1
+  git_local_repos_is_sync || exit 1
 
   if [ -n "$REDMINE_FORCE" ] && [ -z "$REDMINE_TIME" ]; then
     echo "Please add a spent time thought parameter with the force option !"
