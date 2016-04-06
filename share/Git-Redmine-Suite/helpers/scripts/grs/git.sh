@@ -6,6 +6,7 @@ function git_local_repos_is_clean {
   git_status=$(git status --untracked-files=no --porcelain)
   if [ -n "$git_status" ]
   then
+    echo ""
     echo "Your local branch is not clean:"
     echo "$git_status"
     echo ""
@@ -24,6 +25,7 @@ function git_local_repos_is_sync {
     git_cherry=$(git cherry -v --abbrev)
     if [ -n "$git_cherry" ]
     then
+      echo ""
       echo "There are pending commits:"
       echo "$git_cherry"
       echo ""
@@ -38,6 +40,7 @@ function git_local_repos_is_sync {
 
 function git_local_repos_is_sync_from_devel {
   if [ -n "$(git log ..origin/devel --oneline -n 1)" ]; then
+    echo ""
     echo "You branch is out of sync with devel. Please rebase"
     echo ""
     echo "    * git rebase origin/devel"
