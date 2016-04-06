@@ -11,7 +11,7 @@ function git_has_local_changes {
     echo "$git_status"
     echo ""
     echo "Please commit and push first."
-    exit 1
+    return 1
   fi
 
   git_remote_tracking=$(git config branch.$(git name-rev --name-only HEAD).remote)
@@ -24,7 +24,9 @@ function git_has_local_changes {
       echo "$git_cherry"
       echo ""
       echo "Please push this first ..."
-      exit 1
+      return 1
     fi
   fi
+
+  return 0
 }
