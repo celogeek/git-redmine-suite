@@ -224,6 +224,7 @@ function task_finish {
   echo ""
   git_local_repos_is_clean || exit 1
   git_local_repos_is_sync || exit 1
+  git_local_repos_is_sync_from_devel || exit 1
 
   if [ -n "$(git log ..origin/devel --oneline -n 1)" ]; then
     echo "You branch is out of sync with devel. Please rebase"
