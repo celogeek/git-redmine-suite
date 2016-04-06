@@ -35,3 +35,14 @@ function git_local_repos_is_sync {
 
   return 0
 }
+
+function git_local_repos_is_sync_from_devel {
+  if [ -n "$(git log ..origin/devel --oneline -n 1)" ]; then
+    echo "You branch is out of sync with devel. Please rebase"
+    echo ""
+    echo "    * git rebase origin/devel"
+    echo ""
+    return 1
+  fi
+  return 0
+}
