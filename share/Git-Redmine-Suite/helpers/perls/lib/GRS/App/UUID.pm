@@ -7,10 +7,10 @@ use Moo::Role;
 use Data::UUID;
 
 sub app {
-	my ($self) = @_;
+  my ($self) = @_;
 
 
-	return lc(substr(Data::UUID->new->create_hex(), 2));
+  return lc(substr(Data::UUID->new->create_hex(), 2));
 }
 
 1;

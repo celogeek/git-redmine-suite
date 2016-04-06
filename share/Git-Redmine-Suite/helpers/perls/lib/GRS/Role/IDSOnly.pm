@@ -12,7 +12,7 @@ use Moo::Role;
 use MooX::Options;
 
 option 'ids_only' => (
-		is => 'ro',
-		doc => 'Display only the IDS',
+    is => 'ro',
+    doc => 'Display only the IDS',
 );
 1;

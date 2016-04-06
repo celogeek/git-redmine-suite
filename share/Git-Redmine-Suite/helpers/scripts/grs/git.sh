@@ -1,6 +1,6 @@
 function git_refresh_local_repos {
-	git fetch -ap
-	git fetch --tags -p
+  git fetch -ap
+  git fetch --tags -p
 }
 
 function git_has_local_changes {

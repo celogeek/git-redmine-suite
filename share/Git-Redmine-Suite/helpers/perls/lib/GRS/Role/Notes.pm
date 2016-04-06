@@ -12,8 +12,8 @@ use Moo::Role;
 use MooX::Options;
 
 option 'notes' => (
-		is => 'ro',
-		doc => 'notes of a task',
-		format => 's',
+    is => 'ro',
+    doc => 'notes of a task',
+    format => 's',
 );
 1;

@@ -16,21 +16,21 @@ with 'GRS::Role::API', 'GRS::Role::TaskID', 'GRS::Role::Notes';
 sub required_options { qw/server_url auth_key task_id/ }
 
 option 'hours' => (
-	is => 'ro',
-	required => 1,
-	doc => 'number of hours spent on the task',
-	format => 'f',
+  is => 'ro',
+  required => 1,
+  doc => 'number of hours spent on the task',
+  format => 'f',
 );
 
 sub app {
-	my ($self) = @_;
-	my %create = (
-		issue_id => $self->task_id,
-		hours => $self->hours,
-	);
+  my ($self) = @_;
+  my %create = (
+    issue_id => $self->task_id,
+    hours => $self->hours,
+  );
 
-	$create{comments} = $self->notes if $self->notes;
+  $create{comments} = $self->notes if $self->notes;
 
-	$self->API->time_entries->time_entry->create(%create);
+  $self->API->time_entries->time_entry->create(%create);
 }
 1;

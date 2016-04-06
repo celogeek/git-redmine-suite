@@ -71,18 +71,18 @@ sub app {
 
     my $ua
         = 'Mozilla/5.0'
-		. ' ('
+    . ' ('
         . ucfirst($Config{'osname'} // "") 
-		. '; rv:' . ( $Config{'osvers'} // "" ) 
-		. ') '
-		. 'GRS/'
+    . '; rv:' . ( $Config{'osvers'} // "" ) 
+    . ') '
+    . 'GRS/'
         . $self->version 
-		. ' '
-		. $self->uuid;
+    . ' '
+    . $self->uuid;
 
     my $lwp = LWP::UserAgent->new( agent => $ua, );
 
-	$lwp->get( $self->piwik_url . '?' . $self->_encode_params );
+  $lwp->get( $self->piwik_url . '?' . $self->_encode_params );
 
     return;
 

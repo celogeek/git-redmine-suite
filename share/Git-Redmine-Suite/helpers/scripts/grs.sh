@@ -20,9 +20,9 @@ source "$SCRIPT_DIR"/status.sh
 check_status_tasks
 
 if [ -z "$SETUP" ]; then
-	source "$SCRIPT_DIR"/set_env.sh
-	for P in "$SCRIPT_DIR"/grs/*.sh; do
-		source "$P"
-	done
-	piwik_call
+  source "$SCRIPT_DIR"/set_env.sh
+  for P in "$SCRIPT_DIR"/grs/*.sh; do
+    source "$P"
+  done
+  piwik_call
 fi

@@ -15,10 +15,10 @@ use MooX::Options;
 use Digest::MD5;
 
 option 'file' => (
-	is => 'ro',
-	required => 1,
-	doc => 'file to check md5',
-	format => 's',
+  is => 'ro',
+  required => 1,
+  doc => 'file to check md5',
+  format => 's',
 );
 
 sub app {

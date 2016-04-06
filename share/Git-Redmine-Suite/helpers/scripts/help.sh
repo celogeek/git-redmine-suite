@@ -20,20 +20,20 @@ shift $((OPTIND-1))
 [ -z $HOTFIX_PREFIX_TAG ] && HOTFIX_PREFIX_TAG=hotfix
 
 function help_command {
-	if [ -n "$HELP" ]; then
-		CMD=$(basename $0 | /usr/bin/perl -pe 's/\-/ /g')
-		if [ -n "$POSSIBLE_ENV" ]; then
-			CMD="$POSSIBLE_ENV $CMD"
-		fi
-		if [ -z "$HELP_NO_OPTION" ]; then
-			echo ""
-		fi
-		echo "    * $CMD $*"
-		if [ -z "$HELP_NO_OPTION" ]; then
-			help_option_command
-		fi
-		exit 1
-	fi
+  if [ -n "$HELP" ]; then
+    CMD=$(basename $0 | /usr/bin/perl -pe 's/\-/ /g')
+    if [ -n "$POSSIBLE_ENV" ]; then
+      CMD="$POSSIBLE_ENV $CMD"
+    fi
+    if [ -z "$HELP_NO_OPTION" ]; then
+      echo ""
+    fi
+    echo "    * $CMD $*"
+    if [ -z "$HELP_NO_OPTION" ]; then
+      help_option_command
+    fi
+    exit 1
+  fi
 }
 
 function help_option_command {
