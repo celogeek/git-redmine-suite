@@ -14,7 +14,8 @@ function hotfix_start {
     HELP=1 exec $0
   fi
 
-  git_refresh_local_repos
+  git_refresh_local_repos || exit 1
+  git_local_repos_is_clean || exit 1
 
   if ! git tag | grep -q ^"v$VERSION"$; then
     echo "'$VERSION' is not a valid version : "
@@ -112,6 +113,10 @@ function hotfix_finish {
   CURRENT_TASK=$(git config redmine.${HOTFIX_PREFIX_TAG}.current)
   VERSION=$(git config redmine.${HOTFIX_PREFIX_TAG}.version)
   BRNAME=$(git config redmine.${HOTFIX_PREFIX_TAG}.branch)
+  git checkout "$BRNAME" || exit 1
+  git_refresh_local_repos || exit 1
+  git_local_repos_is_clean || exit 1
+  git_local_repos_is_sync || exit 1
 
   if [ -z "$CURRENT_TASK" ]; then
     echo "No ${HOTFIX_PREFIX_TAG} started !"
@@ -132,13 +137,9 @@ function hotfix_finish {
     fi
   done
 
-
   set -e
-  git_refresh_local_repos
-  git checkout "$BRNAME" || exit 1
-  git tag -m "${HOTFIX_PREFIX_TAG} v$VERSION: $CURRENT_TASK" "${HOTFIX_PREFIX_TAG}-$VERSION"
-  git push origin "$BRNAME":"$BRNAME"
-  git push origin "tags/${HOTFIX_PREFIX_TAG}-$VERSION"
+  git tag -fm "${HOTFIX_PREFIX_TAG} v$VERSION: $CURRENT_TASK" "${HOTFIX_PREFIX_TAG}-$VERSION"
+  git push origin -f "tags/${HOTFIX_PREFIX_TAG}-$VERSION"
   git checkout devel
   git branch -D "$BRNAME"
   set +e
@@ -165,13 +166,14 @@ function hotfix_abort {
       exit 1
   fi
 
+  git_refresh_local_repos || exit 1
+  git_local_repos_is_clean || exit 1
+
   if [ -z "$REDMINE_FORCE" ] && ! ask_question --question="Do you really want to abort the ${HOTFIX_PREFIX_TAG} $BRNAME ?"; then
     exit 1
   fi
 
   git config --remove-section redmine.${HOTFIX_PREFIX_TAG}
-
-  git_refresh_local_repos
   git checkout devel
   git push origin :"$BRNAME"
   git branch -D "$BRNAME"
