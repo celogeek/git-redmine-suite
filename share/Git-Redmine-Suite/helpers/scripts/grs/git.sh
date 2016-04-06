@@ -11,6 +11,7 @@ function git_has_local_changes {
     echo "$git_status"
     echo ""
     echo "Please commit and push first."
+    echo ""
     return 1
   fi
 
@@ -24,6 +25,7 @@ function git_has_local_changes {
       echo "$git_cherry"
       echo ""
       echo "Please push this first ..."
+      echo ""
       return 1
     fi
   fi
