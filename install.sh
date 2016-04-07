@@ -11,18 +11,18 @@ echo "Version  : $GIT_VERSION"
 echo ""
 
 if [ -z "$GIT_VERSION" ]; then
-	echo "Unable to detect git version"
-	echo "Canceling installation ..."
-	echo ""
-	exit 1
+  echo "Unable to detect git version"
+  echo "Canceling installation ..."
+  echo ""
+  exit 1
 fi
 
 GIT_VERSION_OK=$(echo "$GIT_VERSION >= $GIT_REQUIRED_VERSION" | bc)
 if [ "$GIT_VERSION_OK" = "0" ]; then
-	echo "You need at least git version $GIT_REQUIRED_VERSION !"
-	echo "Canceling installation ..."
-	echo ""
-	exit 1
+  echo "You need at least git version $GIT_REQUIRED_VERSION !"
+  echo "Canceling installation ..."
+  echo ""
+  exit 1
 fi
 
 cd "$(dirname "$0")"
@@ -56,11 +56,11 @@ EOF
 
 if [ -n "$CURPWD" ] && [ -n "$1" ]
 then
-	echo ""
-	echo "Move to $CURPWD"
-	cd "$CURPWD"
-	echo ""
-	echo "Run : $*"
-	echo ""
-	exec $*
+  echo ""
+  echo "Move to $CURPWD"
+  cd "$CURPWD"
+  echo ""
+  echo "Run : $*"
+  echo ""
+  exec $*
 fi

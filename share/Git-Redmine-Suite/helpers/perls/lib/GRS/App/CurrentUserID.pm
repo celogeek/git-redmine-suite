@@ -18,7 +18,7 @@ sub server_suburl { '/users' }
 sub required_options { qw/server_url auth_key/ }
 
 sub app {
-	my ($self) = @_;
-	return $self->API->current->list->all()->{user}->{id};
+  my ($self) = @_;
+  return $self->API->current->list->all()->{user}->{id};
 }
 1;

@@ -4,25 +4,25 @@ use List::Util qw/max/;
 use GRS 'TaskInfo';
 my ( $app, $issue ) = GRS->run();
 if (!$issue) {
-	say "Task # ", $app->task_id, ": Invalid task (missing or project without the CF) !";
-	exit 1;
+  say "Task # ", $app->task_id, ": Invalid task (missing or project without the CF) !";
+  exit 1;
 }
 if ( $app->with_status ) {
-	say $app->title_with_status($issue);
+  say $app->title_with_status($issue);
 }
 elsif ( $app->with_extended_status ) {
-	my @res = $app->title_with_extended_status($issue);
-	my $max = max map { length $_->[0] } @res;
-	my $max_fmt = "%-" . $max . "s";
+  my @res = $app->title_with_extended_status($issue);
+  my $max = max map { length $_->[0] } @res;
+  my $max_fmt = "%-" . $max . "s";
 
-	for my $r(@res) {
-		my ($title, $value) = @$r;
-		$value //= "";
-		$value =~ s/^\s+|\s+$//g;
-		next unless length($value);
-		say $app->pad,sprintf($max_fmt, $title)," : ",$value;
-	}
-	say "";
+  for my $r(@res) {
+    my ($title, $value) = @$r;
+    $value //= "";
+    $value =~ s/^\s+|\s+$//g;
+    next unless length($value);
+    say $app->pad,sprintf($max_fmt, $title)," : ",$value;
+  }
+  say "";
 }
 else {
     say $app->title($issue);

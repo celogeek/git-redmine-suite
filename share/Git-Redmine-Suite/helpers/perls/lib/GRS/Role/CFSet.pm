@@ -12,15 +12,15 @@ use Moo::Role;
 use MooX::Options;
 
 option 'cf_id' => (
-		is => 'ro',
-		doc => 'ID of the CF',
-		format => 'i',
+    is => 'ro',
+    doc => 'ID of the CF',
+    format => 'i',
 );
 
 option 'cf_val' => (
-		is => 'ro',
-		doc => 'VAL of the CF',
-		format => 's',
+    is => 'ro',
+    doc => 'VAL of the CF',
+    format => 's',
 );
 
 1;
