@@ -35,7 +35,7 @@ function setup_with_profile {
     echo "git config $GLOBAL redmine.profile '$PROFILE'"
     echo "git config $GLOBAL redmine.profilemd5 '$PROFILE_MD5'"
     cat $PROFILE_FILE | perl -pe 's/^(.*?)\s+=\s+(.*)$/git config '$GLOBAL' $1 "$2"/'
-  ) | /bin/bash
+  ) | /usr/bin/env bash
 
   echo ""
 }
