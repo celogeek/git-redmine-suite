@@ -159,11 +159,12 @@ function task_clear {
     exit 1
   fi
 
-  git_local_repos_is_clean || exit 1
   git_refresh_local_repos || exit 1  
+  git_local_repos_is_clean || exit 1
 
   echo "Cleaning local and remote dev for task $TASK..."
 
+  git checkout devel
   git branch -D "$BRNAME"
   git push origin :"$BRNAME"
   git config --remove-section "redmine.task.$TASK"
@@ -218,11 +219,12 @@ function task_finish {
   fi
 
   BRNAME=$(git config redmine.task.$CURRENT_TASK.branch)
-  git checkout "$BRNAME" || exit 1
-  echo ""
-  git_local_repos_is_clean || exit 1
-  git_local_repos_is_sync || exit 1
-  git_local_repos_is_sync_from_devel || exit 1
+  set -e
+  git checkout "$BRNAME"
+  git_local_repos_is_clean
+  git_local_repos_is_sync
+  git_local_repos_is_sync_from_devel
+  set +e
 
   if [ -n "$(git log ..origin/devel --oneline -n 1)" ]; then
     echo "You branch is out of sync with devel. Please rebase"
