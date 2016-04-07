@@ -89,7 +89,7 @@ fi
 export REDMINE_USER_ID
 
 if [ -z "$REDMINE_GIT_REPOS_ID" ] || [ -z "$REDMINE_GIT_PR_ID" ] || [ -z "$REDMINE_GIT_RELEASE_ID" ]; then
-    redmine-get-project-cf | grep "^git config" | /bin/bash
+    redmine-get-project-cf | grep "^git config" | /usr/bin/env bash
     REDMINE_GIT_REPOS_ID=$(git config redmine.git.repos)
     REDMINE_GIT_PR_ID=$(git config redmine.git.pr)
     REDMINE_GIT_RELEASE_ID=$(git config redmine.git.release)
