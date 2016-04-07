@@ -147,9 +147,7 @@ function review_reject {
     exit 1
   fi
 
-  echo "Fetching last developer ..."
-  declare -a TASK_DEV=($(redmine-get-task-developers --task_id="$TASK" --status_ids="$REDMINE_TASK_IN_PROGRESS" --ids_only))
-
+  set -e
   if [ -z "$NO_MESSAGE" ] && [ -z "$MESSAGE" ]; then
 
   F=$(mktemp /tmp/redmine.XXXXXX)
@@ -165,6 +163,10 @@ __EOF__
   RET="
 "
   fi
+  set +e
+
+  echo "Fetching last developer ..."
+  declare -a TASK_DEV=($(redmine-get-task-developers --task_id="$TASK" --status_ids="$REDMINE_TASK_IN_PROGRESS" --ids_only))
 
   ADDITIONAL_MESSAGE=""
   if [ "$MESSAGE" != "$RET" ] && [ -n "$MESSAGE" ]; then
