@@ -1,16 +1,16 @@
 function review_start {
-	TASK=$1
-	if [ -z "$TASK" ]; then
-		echo "Missing TASK_NUMBER : "
-		echo ""
-		HELP=1 exec $0
-	fi
+  TASK=$1
+  if [ -z "$TASK" ]; then
+    echo "Missing TASK_NUMBER : "
+    echo ""
+    HELP=1 exec $0
+  fi
 
-	CURRENT_TASK=$(git config redmine.review.current)
+  CURRENT_TASK=$(git config redmine.review.current)
 
-	if [ -n "$CURRENT_TASK" ]
-	then
-    	cat<<__EOF__
+  if [ -n "$CURRENT_TASK" ]
+  then
+      cat<<__EOF__
 This review is already in progress.
 You have to abort the review before and start it again.
 
@@ -18,52 +18,54 @@ You have to abort the review before and start it again.
     git redmine review start $TASK
 
 __EOF__
-    	exit 1
-	fi
+      exit 1
+  fi
 
-	PR=$(redmine-get-task-pr --task_id=$TASK --cf_names=GIT_PR)
-	if [ -z "$PR" ]
-	    then
-	    echo "No PR found in the task $TASK"
-	    echo "Fill the GIT_PR field if you have one."
-	    echo ""
-	    exit 1
-	fi
+  git_refresh_local_repos || exit 1
+  git_local_repos_is_clean || exit 1
 
-	echo -n "Starting the review : "
-	if ! redmine-get-task-info --task_id=$TASK --with_status; then
-		exit 1
-	fi
+  PR=$(redmine-get-task-pr --task_id=$TASK --cf_names=GIT_PR)
+  if [ -z "$PR" ]
+      then
+      echo "No PR found in the task $TASK"
+      echo "Fill the GIT_PR field if you have one."
+      echo ""
+      exit 1
+  fi
 
-	if [ -z "$REDMINE_FORCE" ] && [ -z "$REDMINE_CHAIN_FINISH" ] && ! ask_question --question="Do you really want to start this task ?"; then
-		exit 1
-	fi
-	
-	task=$TASK \
-	status=$REDMINE_REVIEW_IN_PROGRESS \
-	assigned_to=$REDMINE_USER_ID \
-	cf_id=$REDMINE_GIT_REPOS_ID \
-	cf_val=$REDMINE_GIT_REPOS_URL \
-	task_update || exit 1
-	
-	TASK_TITLE=$(redmine-get-task-info --task_id=$TASK)
-	SLUG_TITLE=$(slug --this "$TASK_TITLE")
-	BRNAME="redmine-review-$SLUG_TITLE"
-	
-	git_refresh_local_repos
-	git checkout -b "$BRNAME" "$PR" || exit 1
-	git config "redmine.review.current" "$TASK"
-	git config "redmine.review.$TASK.pr" "$PR"
-	git config "redmine.review.$TASK.title" "$TASK_TITLE"
-	git config "redmine.review.$TASK.branch" "$BRNAME"
+  echo -n "Starting the review : "
+  if ! redmine-get-task-info --task_id=$TASK --with_status; then
+    exit 1
+  fi
 
-	if [ -n "$REDMINE_REBASE" ] ; then
-	    git rebase origin/devel && (git diff --color origin/devel | less -R)
-	else
-	    git diff --color origin/devel | less -R
-	fi
-	
-	cat <<__EOF__
+  if [ -z "$REDMINE_FORCE" ] && [ -z "$REDMINE_CHAIN_FINISH" ] && ! ask_question --question="Do you really want to start this task ?"; then
+    exit 1
+  fi
+  
+  task=$TASK \
+  status=$REDMINE_REVIEW_IN_PROGRESS \
+  assigned_to=$REDMINE_USER_ID \
+  cf_id=$REDMINE_GIT_REPOS_ID \
+  cf_val=$REDMINE_GIT_REPOS_URL \
+  task_update || exit 1
+  
+  TASK_TITLE=$(redmine-get-task-info --task_id=$TASK)
+  SLUG_TITLE=$(slug --this "$TASK_TITLE")
+  BRNAME="redmine-review-$SLUG_TITLE"
+  
+  git checkout -b "$BRNAME" "$PR" || exit 1
+  git config "redmine.review.current" "$TASK"
+  git config "redmine.review.$TASK.pr" "$PR"
+  git config "redmine.review.$TASK.title" "$TASK_TITLE"
+  git config "redmine.review.$TASK.branch" "$BRNAME"
+
+  if [ -n "$REDMINE_REBASE" ] ; then
+      git rebase origin/devel && (git diff --color origin/devel | less -R)
+  else
+      git diff --color origin/devel | less -R
+  fi
+  
+  cat <<__EOF__
 
 You can squash / rebase ... 
 but please keep the name $BRNAME 
@@ -93,206 +95,223 @@ __EOF__
 }
 
 function review_abort {
-	TASK=$(git config redmine.review.current)
+  TASK=$(git config redmine.review.current)
 
-	if [ -z "$TASK" ]; then
-	    echo "You have not start any review !"
-	    exit 1
-	fi
-	
-	TASK_TITLE=$(git config "redmine.review.$TASK.title")
-	BRNAME=$(git config "redmine.review.$TASK.branch")
-	PR=$(git config "redmine.review.$TASK.pr")
+  if [ -z "$TASK" ]; then
+      echo "You have not start any review !"
+      exit 1
+  fi
 
-	if [ -z "$REDMINE_FORCE" ] && ! ask_question --question="Do you really want to abort the review of this task : $TASK_TITLE - PR:$PR ?"; then
-		exit 1
-	fi
-	
-	git checkout devel
-	git branch -D "$BRNAME"
-	git config --remove-section "redmine.review.$TASK"
-	git config --unset redmine.review.current
+  git_refresh_local_repos || exit 1
+  git_local_repos_is_clean || exit 1
+  
+  TASK_TITLE=$(git config "redmine.review.$TASK.title")
+  BRNAME=$(git config "redmine.review.$TASK.branch")
+  PR=$(git config "redmine.review.$TASK.pr")
 
-	task=$TASK \
-	status=$REDMINE_REVIEW_TODO \
-	assigned_to=$REDMINE_USER_ID \
-	task_update || exit 1
+  if [ -z "$REDMINE_FORCE" ] && ! ask_question --question="Do you really want to abort the review of this task : $TASK_TITLE - PR:$PR ?"; then
+    exit 1
+  fi
+  
+  set -e
+  git checkout devel
+  git branch -D "$BRNAME"
+  set +e
+  git config --remove-section "redmine.review.$TASK"
+  git config --unset redmine.review.current
+
+  task=$TASK \
+  status=$REDMINE_REVIEW_TODO \
+  assigned_to=$REDMINE_USER_ID \
+  task_update || exit 1
 
 }
 
 function review_reject {
-	TASK=$(git config redmine.review.current)
+  TASK=$(git config redmine.review.current)
 
-	if [ -z "$TASK" ]; then
-	    echo "You have not start any review !"
-	    exit 1
-	fi
+  if [ -z "$TASK" ]; then
+      echo "You have not start any review !"
+      exit 1
+  fi
 
-	
-	TASK_TITLE=$(git config "redmine.review.$TASK.title")
-	BRNAME=$(git config "redmine.review.$TASK.branch")
-	PR=$(git config "redmine.review.$TASK.pr")
+  git_refresh_local_repos || exit 1
+  git_local_repos_is_clean || exit 1
+  git_local_repos_is_sync_from_devel || exit 1
 
-	if [ -z "$REDMINE_FORCE" ] && ! ask_question --question="Do you really want to reject the review of this task : $TASK_TITLE - PR:$PR ?"; then
-		exit 1
-	fi
+  TASK_TITLE=$(git config "redmine.review.$TASK.title")
+  BRNAME=$(git config "redmine.review.$TASK.branch")
+  PR=$(git config "redmine.review.$TASK.pr")
 
-	echo "Fetching last developer ..."
-	declare -a TASK_DEV=($(redmine-get-task-developers --task_id="$TASK" --status_ids="$REDMINE_TASK_IN_PROGRESS" --ids_only))
+  if [ -z "$REDMINE_FORCE" ] && ! ask_question --question="Do you really want to reject the review of this task : $TASK_TITLE - PR:$PR ?"; then
+    exit 1
+  fi
 
-	if [ -z "$NO_MESSAGE" ] && [ -z "$MESSAGE" ]; then
+  echo "Fetching last developer ..."
+  declare -a TASK_DEV=($(redmine-get-task-developers --task_id="$TASK" --status_ids="$REDMINE_TASK_IN_PROGRESS" --ids_only))
 
-	F=$(mktemp /tmp/redmine.XXXXXX)
-	cat <<__EOF__ > "$F"
+  if [ -z "$NO_MESSAGE" ] && [ -z "$MESSAGE" ]; then
+
+  F=$(mktemp /tmp/redmine.XXXXXX)
+  cat <<__EOF__ > "$F"
 
 ###
 ### Please indicate to the developer the reasons of your reject.
 ### 
 __EOF__
-	$EDITOR "$F"
+  $EDITOR "$F"
 
-	MESSAGE=$(cat "$F" | grep -v ^"###")
-	RET="
+  MESSAGE=$(cat "$F" | grep -v ^"###")
+  RET="
 "
-	fi
+  fi
 
-	ADDITIONAL_MESSAGE=""
-	if [ "$MESSAGE" != "$RET" ] && [ -n "$MESSAGE" ]; then
-		ADDITIONAL_MESSAGE="
+  ADDITIONAL_MESSAGE=""
+  if [ "$MESSAGE" != "$RET" ] && [ -n "$MESSAGE" ]; then
+    ADDITIONAL_MESSAGE="
 
 Here the reasons : 
 
 $MESSAGE
 
 "
-	fi
+  fi
 
-	TAG=$(tag_pr --name="$BRNAME")
+  TAG=$(tag_pr --name="$BRNAME")
 
-	task=$TASK \
-	status=$REDMINE_TASK_TODO \
-	assigned_to=${TASK_DEV[0]} \
-	notes="This task has been rejected.
+  task=$TASK \
+  status=$REDMINE_TASK_TODO \
+  assigned_to=${TASK_DEV[0]} \
+  notes="This task has been rejected.
 $ADDITIONAL_MESSAGE
 
 You can take from the review task with :
 
 <pre>
-	git redmine task start $TASK
-	git reset --hard $TAG
-	git push -f
+  git redmine task start $TASK
+  git reset --hard $TAG
+  git push -f
 </pre>
 " \
-	cf_id=$REDMINE_GIT_PR_ID \
-	cf_val=" " \
-	task_update || exit 1
+  cf_id=$REDMINE_GIT_PR_ID \
+  cf_val=" " \
+  task_update || exit 1
 
-	echo ""
-	[ -e "$F" ] && unlink "$F"
+  echo ""
+  [ -e "$F" ] && unlink "$F"
 
-	git_refresh_local_repos
-	git checkout "$BRNAME"
-	git push -f origin "$BRNAME":"$BRNAME"
-	git tag "$TAG"
-	git push origin tags/"$TAG"
-	git checkout devel
-	git merge origin/devel
-	git push origin :tags/"$PR"
-	git tag -d "$PR"
-	git branch -D "$BRNAME"
-	git config --remove-section "redmine.review.$TASK"
-	git config --unset "redmine.review.current"
+  set -e
+  git checkout "$BRNAME"
+  git push -f origin "$BRNAME":"$BRNAME"
+  git tag "$TAG"
+  git push origin tags/"$TAG"
+  git checkout devel
+  git push origin :tags/"$PR"
+  git tag -d "$PR"
+  git branch -D "$BRNAME"
+  git config --remove-section "redmine.review.$TASK"
+  git config --unset "redmine.review.current"
+  set +e
 
 }
 
 function review_finish {
-	TASK=$(git config redmine.review.current)
+  TASK=$(git config redmine.review.current)
 
-	if [ -z "$TASK" ]; then
-	    echo "You have not start any review !"
-	    exit 1
-	fi
+  if [ -z "$TASK" ]; then
+      echo "You have not start any review !"
+      exit 1
+  fi
 
-	if [ -n "$REDMINE_FORCE" ] && [ -z "$REDMINE_TIME" ]; then
-		echo "Please add a spent time thought parameter with the force option !"
-		HELP=1 exec $0
-	fi
-	
-	TASK_TITLE=$(git config "redmine.review.$TASK.title")
-	TASK_DEV=$(redmine-get-task-developers --task_id="$TASK" --status_ids="$REDMINE_TASK_IN_PROGRESS")
-	PR=$(git config "redmine.review.$TASK.pr")
-	BRNAME=$(git config "redmine.review.$TASK.branch")
-	CHANGELOG=$(get_change_log)
+  if [ -n "$REDMINE_FORCE" ] && [ -z "$REDMINE_TIME" ]; then
+    echo "Please add a spent time thought parameter with the force option !"
+    HELP=1 exec $0
+  fi
+  
+  BRNAME=$(git config "redmine.review.$TASK.branch")
+  set -e
+  git checkout "$BRNAME"
+  git_refresh_local_repos
+  git_local_repos_is_clean
+  git_local_repos_is_sync_from_devel
+  git checkout devel
+  git_local_repos_is_sync
+  set +e
 
-	if [ -z "$REDMINE_FORCE" ] && ! ask_question --question="Do you really want to finish the review of this task : $TASK_TITLE - PR:$PR ?"; then
-		exit 1
-	fi
+  TASK_TITLE=$(git config "redmine.review.$TASK.title")
+  TASK_DEV=$(redmine-get-task-developers --task_id="$TASK" --status_ids="$REDMINE_TASK_IN_PROGRESS")
+  PR=$(git config "redmine.review.$TASK.pr")
+  CHANGELOG=$(get_change_log)
 
-	PROJECT=$(redmine-get-task-project-identifier --task_id=$TASK)
-	if ! reassigned_this "review" "$PROJECT"; then
-		exit 1
-	fi
+  if [ -z "$REDMINE_FORCE" ] && ! ask_question --question="Do you really want to finish the review of this task : $TASK_TITLE - PR:$PR ?"; then
+    exit 1
+  fi
 
-	git_refresh_local_repos
-	ADDITIONAL_MESSAGE=""
-	REV_FROM=$(git rev-parse origin/devel)
-	git checkout devel
-	git merge origin/devel
-	git merge --no-ff "$BRNAME" -m "Merge $BRNAME"
-	echo "    * $TASK_TITLE ($TASK_DEV)" > "$CHANGELOG".new
-	touch "$CHANGELOG"
-	if head -n1 "$CHANGELOG" | grep -q ^"[0-9]"; then
-		echo >> "$CHANGELOG".new
-	fi
-	cat "$CHANGELOG" >> "$CHANGELOG".new
-	mv "$CHANGELOG".new "$CHANGELOG"
-	$EDITOR "$CHANGELOG"
-	git add "$CHANGELOG"
-	git commit -m "reflect changes" "$CHANGELOG" || true
-	git push origin devel:devel
-	git push origin :tags/"$PR"
-	git tag -d "$PR"
-	git branch -D "$BRNAME"
-	git rev-parse --verify -q origin/"$BRNAME" > /dev/null && git push origin :"$BRNAME"
-	git config --remove-section "redmine.review.$TASK"
-	git config --unset "redmine.review.current"
+  PROJECT=$(redmine-get-task-project-identifier --task_id=$TASK)
+  if ! reassigned_this "review" "$PROJECT"; then
+    exit 1
+  fi
 
-	REV_TO=$(git rev-parse origin/devel)
-	DIFF_URL=$(get_full_diff_url "$REV_FROM" "$REV_TO")
-	if [ -n "$DIFF_URL" ]; then
-		ADDITIONAL_MESSAGE="To view the diff : \"$BRNAME\":$DIFF_URL"
-	fi
+  ADDITIONAL_MESSAGE=""
+  REV_FROM=$(git rev-parse origin/devel)
 
-	task=$TASK \
-	status=$REDMINE_RELEASE_TODO \
-	assigned_to=$ASSIGNED_TO_ID \
-	cf_id=$REDMINE_GIT_PR_ID \
-	cf_val=" " \
-	notes="
-	$ADDITIONAL_MESSAGE
+  set -e
+  git merge --no-ff "$BRNAME" -m "Merge $BRNAME"
+  echo "    * $TASK_TITLE ($TASK_DEV)" > "$CHANGELOG".new
+  touch "$CHANGELOG"
+  if head -n1 "$CHANGELOG" | grep -q ^"[0-9]"; then
+    echo >> "$CHANGELOG".new
+  fi
+  cat "$CHANGELOG" >> "$CHANGELOG".new
+  mv "$CHANGELOG".new "$CHANGELOG"
+  $EDITOR "$CHANGELOG"
+  git add "$CHANGELOG"
+  git commit -m "reflect changes" "$CHANGELOG" || true
+  git push origin devel:devel
+  git push origin :tags/"$PR"
+  git tag -d "$PR"
+  git branch -D "$BRNAME"
+  set +e
+  git rev-parse --verify -q origin/"$BRNAME" > /dev/null && git push origin :"$BRNAME"
+  git config --remove-section "redmine.review.$TASK"
+  git config --unset "redmine.review.current"
+
+  REV_TO=$(git rev-parse origin/devel)
+  DIFF_URL=$(get_full_diff_url "$REV_FROM" "$REV_TO")
+  if [ -n "$DIFF_URL" ]; then
+    ADDITIONAL_MESSAGE="To view the diff : \"$BRNAME\":$DIFF_URL"
+  fi
+
+  task=$TASK \
+  status=$REDMINE_RELEASE_TODO \
+  assigned_to=$ASSIGNED_TO_ID \
+  cf_id=$REDMINE_GIT_PR_ID \
+  cf_val=" " \
+  notes="
+  $ADDITIONAL_MESSAGE
 " \
-	task_update
-	echo ""
+  task_update
+  echo ""
 
-	echo "Removing old pr ..."
-	for tag in $(git tag | grep pr-.*-redmine-.*-$TASK-)
-	do
-    	git push origin :tags/"$tag"
-    	git tag -d "$tag"
-	done
+  echo "Removing old pr ..."
+  for tag in $(git tag | grep pr-.*-redmine-.*-$TASK-)
+  do
+      git push origin :tags/"$tag"
+      git tag -d "$tag"
+  done
 
-	if [ -z "$REDMINE_FORCE" ] || [ -n "$REDMINE_TIME" ]; then
-		if [ -z "$REDMINE_TIME" ]; then
-			REDMINE_TIME=$(ask_question --question="How many hours did you spend on the review? " --answer_mode="time")
-		fi
-		echo "Updating time entry ..."
-		redmine-create-task-time --task_id=$TASK --hours=$REDMINE_TIME 2> /dev/null || cat <<__EOF__
+  if [ -z "$REDMINE_FORCE" ] || [ -n "$REDMINE_TIME" ]; then
+    if [ -z "$REDMINE_TIME" ]; then
+      REDMINE_TIME=$(ask_question --question="How many hours did you spend on the review? " --answer_mode="time")
+    fi
+    echo "Updating time entry ..."
+    redmine-create-task-time --task_id=$TASK --hours=$REDMINE_TIME 2> /dev/null || cat <<__EOF__
 
 Impossible to add a time entry :
 
-	* Time tracking is disabled on this project. Please activate it !
+  * Time tracking is disabled on this project. Please activate it !
 
 __EOF__
-	fi
+  fi
 
 }

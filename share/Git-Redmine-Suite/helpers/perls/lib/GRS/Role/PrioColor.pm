@@ -25,10 +25,10 @@ has prio_color => (
 );
 
 sub in_color {
-	my ($self, $name, $str) = @_;
-	return $str if ! is_interactive;
-	my $color = $self->prio_color->{lc($name)} // 0;
-	return "\033[".$color."m" . $str . "\033[0m";
+  my ($self, $name, $str) = @_;
+  return $str if ! is_interactive;
+  my $color = $self->prio_color->{lc($name)} // 0;
+  return "\033[".$color."m" . $str . "\033[0m";
 }
 
 sub in_bold {

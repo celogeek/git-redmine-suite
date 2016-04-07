@@ -31,7 +31,7 @@
 0.91  2014-01-14 17:09:21 GMT
     * Bug #191 : Improve editor detection (Celogeek San)
     * Bug #342 : Remove usage of LWP::Curl (Celogeek San)
-	* More remove
+  * More remove
 
 0.90  2013-10-19 23:38:51 GMT
     * Bug #342 : Remove usage of LWP::Curl (Celogeek San)
@@ -53,7 +53,7 @@
 
 0.84  2013-06-05 08:41:52 GMT
     * Feature #229 : List task without parent (Celogeek San)
-	git redmine task pending -e
+  git redmine task pending -e
 
 0.83  2013-06-03 08:42:21 GMT
     * Bug #228 : The "update X days ago" compute the date badly (Celogeek San)
@@ -250,9 +250,9 @@
     * Feature #83 - Change encode by utf8::all (Celogeek San)
     * Feature #86 - Uniformize task number (always #_NUMBER) (Celogeek San)
     * Feature #81 : Improve call structure (Celogeek San)
-	Fully rewrite from scratch
-	Create GRS Perl App and Script helpers
-	Improve all process
+  Fully rewrite from scratch
+  Create GRS Perl App and Script helpers
+  Improve all process
 
 0.29  2013-03-08 21:25:45 GMT
 

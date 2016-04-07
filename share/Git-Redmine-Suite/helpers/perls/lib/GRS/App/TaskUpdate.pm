@@ -28,9 +28,9 @@ sub app {
     $update{notes} = $self->notes if $self->notes;
     $update{done_ratio} = $self->progress if $self->progress;
     if (defined $self->cf_id && defined $self->cf_val) {
-    	$update{custom_fields} = [{id => $self->cf_id, value => $self->cf_val}];
-	}
-	return $self->API->issues->issue->update($self->task_id, %update);
+      $update{custom_fields} = [{id => $self->cf_id, value => $self->cf_val}];
+  }
+  return $self->API->issues->issue->update($self->task_id, %update);
 }
 
 1;

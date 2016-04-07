@@ -16,10 +16,10 @@ use LWP::UserAgent;
 use DateTime;
 
 option 'url' => (
-	is => 'ro',
-	required => 1,
-	doc => 'url of the profile',
-	format => 's',	
+  is => 'ro',
+  required => 1,
+  doc => 'url of the profile',
+  format => 's',  
 );
 
 option 'skip_if_exists' => (
@@ -37,12 +37,12 @@ sub app {
 
     my $content
         = LWP::UserAgent->new->get(
-        	$self->url
+          $self->url
         )->content;
 
     for my $c (split /[\r\n]/, $content) {
-    	$c =~ /^(.*?)\s+=\s+(.*)$/ or next;
-	    print $fh $c,"\n";
+      $c =~ /^(.*?)\s+=\s+(.*)$/ or next;
+      print $fh $c,"\n";
     }
     close $fh;
 

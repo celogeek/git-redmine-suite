@@ -100,9 +100,9 @@ export REDMINE_GIT_REPOS_ID REDMINE_GIT_REPOS_URL REDMINE_GIT_PR_ID REDMINE_GIT_
 export EDITOR=$(git var GIT_EDITOR)
 
 if [ -z "$EDITOR" ]; then
-	echo 'Can'"'"'t find a valid editor !'
-	echo 'Please setup the EDITOR vars manually'
-	exit 1
+  echo 'Can'"'"'t find a valid editor !'
+  echo 'Please setup the EDITOR vars manually'
+  exit 1
 fi
 
 REDMINE_PRIO_COLOR=$(git config redmine.priocolor)

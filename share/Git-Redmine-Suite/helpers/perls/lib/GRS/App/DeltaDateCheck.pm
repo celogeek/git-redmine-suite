@@ -10,17 +10,17 @@ use Carp;
 use feature 'say';
 
 option 'date' => (
-	is => 'ro',
-	required => 1,
-	doc => 'Date to test',
-	format => 'i',
+  is => 'ro',
+  required => 1,
+  doc => 'Date to test',
+  format => 'i',
 );
 
 option 'days' => (
-	is => 'ro',
-	required => 1,
-	doc => 'Number of days to add to your date before comparing to now',
-	format => 'i',
+  is => 'ro',
+  required => 1,
+  doc => 'Number of days to add to your date before comparing to now',
+  format => 'i',
 );
 
 sub app {

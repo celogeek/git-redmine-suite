@@ -12,14 +12,14 @@ use Moo::Role;
 use MooX::Options;
 
 option 'hours' => (
-	is => 'ro',
-	required => 1,
-	doc => 'hours to check',
-	format => 's',
+  is => 'ro',
+  required => 1,
+  doc => 'hours to check',
+  format => 's',
 );
 
 sub app {
-  	my ($self) = @_;  
+    my ($self) = @_;  
     return $self->hours =~ /^\d+(\.\d+)?$/
 
 }

@@ -23,8 +23,8 @@ sub cf_filter {
                 @{ $d->{custom_fields} };
 
             push @data_valid, $d if 
-            	defined $cf{$self->cf_id}
-            	&& $cf{$self->cf_id} eq $self->cf_val;
+              defined $cf{$self->cf_id}
+              && $cf{$self->cf_id} eq $self->cf_val;
 
         }
         else {

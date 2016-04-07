@@ -12,7 +12,7 @@ index e04888e..2c07dab 100644
          api.issue(:id => child.id) do
            api.tracker(:id => child.tracker_id, :name => child.tracker.name) unless child.tracker.nil?
            api.subject child.subject
-+	  render_api_custom_values child.custom_field_values, api
++    render_api_custom_values child.custom_field_values, api
            render_api_issue_children(child, api)
          end
        end
@@ -51,9 +51,9 @@ index d309af2..34d5e90 100644
        api.updated_on  project.updated_on
 +
 +      api.array :custom_fields do
-+	project.all_issue_custom_fields.each do |cf|
-+		api.custom_field(:id => cf.id, :name => cf.name)
-+	end
++  project.all_issue_custom_fields.each do |cf|
++    api.custom_field(:id => cf.id, :name => cf.name)
++  end
 +      end if include_in_api_response?('custom_fields')
 +
      end
