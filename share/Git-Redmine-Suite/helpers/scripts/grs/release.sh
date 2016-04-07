@@ -1,6 +1,19 @@
 function release_start {
   declare -a TASKS=($@)
 
+  set -e
+  git_refresh_local_repos
+  git_local_repos_is_clean
+  git checkout master
+  git merge origin/master
+  git_local_repos_is_sync
+  git checkout devel
+  git merge origin/devel
+  git_local_repos_is_sync
+  set +e
+
+  echo ""
+
   if [ ${#TASKS[@]} -eq 0 ]; then
     git redmine release pending
     if [ -z "$REDMINE_FORCE" ] && ! ask_question --question="Do you want to release these tasks ?"; then
@@ -14,8 +27,6 @@ function release_start {
     echo "Nothing to release !"
     exit 0
   fi
-
-  git_refresh_local_repos
 
   if [ -z "$VERSION" ]; then
       VERSION=$(next_version --version=$(((git describe --tags --match=v* --abbrev=0 origin/master 2>/dev/null) || echo "v0.00") | /usr/bin/perl -pe 's/^v//' | sort -n | tail -n1))
@@ -38,9 +49,7 @@ function release_start {
 
   BRNAME="redmine-release-v$VERSION"
 
-  git checkout devel
-  git merge origin/devel
-  git checkout -b "$BRNAME"
+  git checkout -b "$BRNAME" origin/devel
   
   git config "redmine.release.version" "$VERSION"
   git config "redmine.release.tasks" "${TASKS[*]}"
@@ -104,6 +113,9 @@ function release_abort {
       exit 1
   fi
 
+  git_refresh_local_repos || exit 1
+  git_local_repos_is_clean || exit 1
+
   if [ -z "$REDMINE_FORCE" ] && ! ask_question --question="Do you really want to abort the release $BRNAME ?"; then
     exit 1
   fi
@@ -124,6 +136,19 @@ function release_finish {
       exit 1
   fi
 
+  set -e
+  git checkout "$BRNAME"
+  git_refresh_local_repos
+  git_local_repos_is_clean
+  git checkout master
+  git merge origin/master
+  git_local_repos_is_sync
+  git checkout devel
+  git merge origin/devel
+  git_local_repos_is_sync
+  set +e
+
+
   if [ -z "$REDMINE_CHAIN_FINISH" ] && [ -z "$REDMINE_FORCE" ] && ! ask_question --question="Do you really want to finish the release of these tasks : ${TASKS[*]} ?"; then
     exit 1
   fi
@@ -131,17 +156,13 @@ function release_finish {
   echo "Finish the release ${TASKS[@]} ..."
 
   set -e
-  git_refresh_local_repos
   ADDITIONAL_MESSAGE=""
   REV_FROM=$(git rev-parse origin/master)
-  git checkout devel
-  git merge origin/devel
   git merge --no-ff "$BRNAME" -m "Merge $BRNAME"
   git push origin devel:devel
   git checkout master
-  git merge origin/master
   git merge --no-ff devel -m "Merge $BRNAME"
-  git tag -m "release v$V: ${TASKS[*]}" "v$VERSION"
+  git tag -fm "release v$V: ${TASKS[*]}" "v$VERSION"
   git push origin master:master
   git push origin "tags/v$VERSION"
   git checkout devel

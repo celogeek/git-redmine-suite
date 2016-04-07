@@ -206,7 +206,6 @@ You can take from the review task with :
   git tag "$TAG"
   git push origin tags/"$TAG"
   git checkout devel
-  git merge origin/devel
   git push origin :tags/"$PR"
   git tag -d "$PR"
   git branch -D "$BRNAME"
@@ -230,10 +229,14 @@ function review_finish {
   fi
   
   BRNAME=$(git config "redmine.review.$TASK.branch")
-  git checkout "$BRNAME" || exit 1
-  git_refresh_local_repos || exit 1
-  git_local_repos_is_clean || exit 1
-  git_local_repos_is_sync_from_devel || exit 1
+  set -e
+  git checkout "$BRNAME"
+  git_refresh_local_repos
+  git_local_repos_is_clean
+  git_local_repos_is_sync_from_devel
+  git checkout devel
+  git_local_repos_is_sync
+  set +e
 
   TASK_TITLE=$(git config "redmine.review.$TASK.title")
   TASK_DEV=$(redmine-get-task-developers --task_id="$TASK" --status_ids="$REDMINE_TASK_IN_PROGRESS")
@@ -253,8 +256,6 @@ function review_finish {
   REV_FROM=$(git rev-parse origin/devel)
 
   set -e
-  git checkout devel
-  git merge origin/devel
   git merge --no-ff "$BRNAME" -m "Merge $BRNAME"
   echo "    * $TASK_TITLE ($TASK_DEV)" > "$CHANGELOG".new
   touch "$CHANGELOG"

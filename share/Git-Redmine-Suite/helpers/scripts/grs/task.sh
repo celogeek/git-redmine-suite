@@ -164,8 +164,6 @@ function task_clear {
 
   echo "Cleaning local and remote dev for task $TASK..."
 
-  git checkout devel
-  git merge origin/devel
   git branch -D "$BRNAME"
   git push origin :"$BRNAME"
   git config --remove-section "redmine.task.$TASK"
@@ -268,7 +266,6 @@ function task_finish {
   git tag "$TAG"
   git push origin tags/"$TAG"
   git checkout devel
-  git merge origin/devel
   git config --unset "redmine.task.current"
   set +e
 

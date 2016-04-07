@@ -113,10 +113,13 @@ function hotfix_finish {
   CURRENT_TASK=$(git config redmine.${HOTFIX_PREFIX_TAG}.current)
   VERSION=$(git config redmine.${HOTFIX_PREFIX_TAG}.version)
   BRNAME=$(git config redmine.${HOTFIX_PREFIX_TAG}.branch)
-  git checkout "$BRNAME" || exit 1
-  git_refresh_local_repos || exit 1
-  git_local_repos_is_clean || exit 1
-  git_local_repos_is_sync || exit 1
+  
+  set -e
+  git checkout "$BRNAME"
+  git_refresh_local_repos
+  git_local_repos_is_clean
+  git_local_repos_is_sync
+  set +e
 
   if [ -z "$CURRENT_TASK" ]; then
     echo "No ${HOTFIX_PREFIX_TAG} started !"
