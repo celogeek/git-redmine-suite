@@ -11,7 +11,7 @@ function review_start {
   if [ -n "$CURRENT_TASK" ]
   then
       cat<<__EOF__
-This review is already in progress.
+You have already start the review of the task $CURRENT_TASK.
 You have to abort the review before and start it again.
 
     git redmine review abort
@@ -38,7 +38,7 @@ __EOF__
     exit 1
   fi
 
-  if [ -z "$REDMINE_FORCE" ] && [ -z "$REDMINE_CHAIN_FINISH" ] && ! ask_question --question="Do you really want to start this task ?"; then
+  if [ -z "$REDMINE_FORCE" ] && [ -z "$REDMINE_CHAIN_FINISH" ] && ! ask_question --question="Do you really want to start this review ?"; then
     exit 1
   fi
   
@@ -109,7 +109,7 @@ function review_abort {
   BRNAME=$(git config "redmine.review.$TASK.branch")
   PR=$(git config "redmine.review.$TASK.pr")
 
-  if [ -z "$REDMINE_FORCE" ] && ! ask_question --question="Do you really want to abort the review of this task : $TASK_TITLE - PR:$PR ?"; then
+  if [ -z "$REDMINE_FORCE" ] && ! ask_question --question="Do you really want to abort the review of this review : $TASK_TITLE - PR:$PR ?"; then
     exit 1
   fi
   
@@ -143,7 +143,7 @@ function review_reject {
   BRNAME=$(git config "redmine.review.$TASK.branch")
   PR=$(git config "redmine.review.$TASK.pr")
 
-  if [ -z "$REDMINE_FORCE" ] && ! ask_question --question="Do you really want to reject the review of this task : $TASK_TITLE - PR:$PR ?"; then
+  if [ -z "$REDMINE_FORCE" ] && ! ask_question --question="Do you really want to reject the review of this review : $TASK_TITLE - PR:$PR ?"; then
     exit 1
   fi
 
@@ -243,7 +243,7 @@ function review_finish {
   PR=$(git config "redmine.review.$TASK.pr")
   CHANGELOG=$(get_change_log)
 
-  if [ -z "$REDMINE_FORCE" ] && ! ask_question --question="Do you really want to finish the review of this task : $TASK_TITLE - PR:$PR ?"; then
+  if [ -z "$REDMINE_FORCE" ] && ! ask_question --question="Do you really want to finish the review of this review : $TASK_TITLE - PR:$PR ?"; then
     exit 1
   fi
 
