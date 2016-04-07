@@ -1,3 +1,5 @@
+    * Bug #509 : Fix bash env (Celogeek San)
+
 1.10  2016-04-07 08:04:49 GMT
     * Bug #251 : Check everything is commit before switching or finishing a task/review/release (Celogeek San)
 
