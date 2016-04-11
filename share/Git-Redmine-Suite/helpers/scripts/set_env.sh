@@ -89,7 +89,7 @@ fi
 export REDMINE_USER_ID
 
 if [ -z "$REDMINE_GIT_REPOS_ID" ] || [ -z "$REDMINE_GIT_PR_ID" ] || [ -z "$REDMINE_GIT_RELEASE_ID" ]; then
-    redmine-get-project-cf | grep "^git config" | /bin/bash
+    redmine-get-project-cf | grep "^git config" | /usr/bin/env bash
     REDMINE_GIT_REPOS_ID=$(git config redmine.git.repos)
     REDMINE_GIT_PR_ID=$(git config redmine.git.pr)
     REDMINE_GIT_RELEASE_ID=$(git config redmine.git.release)
@@ -100,8 +100,15 @@ export REDMINE_GIT_REPOS_ID REDMINE_GIT_REPOS_URL REDMINE_GIT_PR_ID REDMINE_GIT_
 export EDITOR=$(git var GIT_EDITOR)
 
 if [ -z "$EDITOR" ]; then
-  echo 'Can'"'"'t find a valid editor !'
-  echo 'Please setup the EDITOR vars manually'
+  echo "Can't find a valid editor !"
+  echo "Please setup the EDITOR vars manually"
+  exit 1
+fi
+
+if [ "$(basename "$EDITOR")" == "vi" ]; then
+  echo "\"vi\" doesnt return a proper error code"
+  echo "Please change your editor :"
+  echo "  * git config --global core.editor \$(which vim)"
   exit 1
 fi
 

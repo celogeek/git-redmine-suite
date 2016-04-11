@@ -11,7 +11,7 @@ function review_start {
   if [ -n "$CURRENT_TASK" ]
   then
       cat<<__EOF__
-This review is already in progress.
+You have already start the review of the task $CURRENT_TASK.
 You have to abort the review before and start it again.
 
     git redmine review abort
@@ -38,7 +38,7 @@ __EOF__
     exit 1
   fi
 
-  if [ -z "$REDMINE_FORCE" ] && [ -z "$REDMINE_CHAIN_FINISH" ] && ! ask_question --question="Do you really want to start this task ?"; then
+  if [ -z "$REDMINE_FORCE" ] && [ -z "$REDMINE_CHAIN_FINISH" ] && ! ask_question --question="Do you really want to start this review ?"; then
     exit 1
   fi
   
@@ -109,10 +109,10 @@ function review_abort {
   BRNAME=$(git config "redmine.review.$TASK.branch")
   PR=$(git config "redmine.review.$TASK.pr")
 
-  if [ -z "$REDMINE_FORCE" ] && ! ask_question --question="Do you really want to abort the review of this task : $TASK_TITLE - PR:$PR ?"; then
+  if [ -z "$REDMINE_FORCE" ] && ! ask_question --question="Do you really want to abort the review of this review : $TASK_TITLE - PR:$PR ?"; then
     exit 1
   fi
-  
+
   set -e
   git checkout devel
   git branch -D "$BRNAME"
@@ -120,6 +120,12 @@ function review_abort {
   git config --remove-section "redmine.review.$TASK"
   git config --unset redmine.review.current
 
+  if ! redmine-check-task --task_id "$TASK" --status_ids "$REDMINE_REVIEW_IN_PROGRESS" --assigned_to_id "$REDMINE_USER_ID"; then
+    if ! ask_question --question="The ticket has the wrong status, do you want to update it anyway ?"; then
+      exit 0
+    fi
+  fi
+  
   task=$TASK \
   status=$REDMINE_REVIEW_TODO \
   assigned_to=$REDMINE_USER_ID \
@@ -143,13 +149,11 @@ function review_reject {
   BRNAME=$(git config "redmine.review.$TASK.branch")
   PR=$(git config "redmine.review.$TASK.pr")
 
-  if [ -z "$REDMINE_FORCE" ] && ! ask_question --question="Do you really want to reject the review of this task : $TASK_TITLE - PR:$PR ?"; then
+  if [ -z "$REDMINE_FORCE" ] && ! ask_question --question="Do you really want to reject the review of this review : $TASK_TITLE - PR:$PR ?"; then
     exit 1
   fi
 
-  echo "Fetching last developer ..."
-  declare -a TASK_DEV=($(redmine-get-task-developers --task_id="$TASK" --status_ids="$REDMINE_TASK_IN_PROGRESS" --ids_only))
-
+  set -e
   if [ -z "$NO_MESSAGE" ] && [ -z "$MESSAGE" ]; then
 
   F=$(mktemp /tmp/redmine.XXXXXX)
@@ -165,6 +169,10 @@ __EOF__
   RET="
 "
   fi
+  set +e
+
+  echo "Fetching last developer ..."
+  declare -a TASK_DEV=($(redmine-get-task-developers --task_id="$TASK" --status_ids="$REDMINE_TASK_IN_PROGRESS" --ids_only))
 
   ADDITIONAL_MESSAGE=""
   if [ "$MESSAGE" != "$RET" ] && [ -n "$MESSAGE" ]; then
@@ -243,7 +251,7 @@ function review_finish {
   PR=$(git config "redmine.review.$TASK.pr")
   CHANGELOG=$(get_change_log)
 
-  if [ -z "$REDMINE_FORCE" ] && ! ask_question --question="Do you really want to finish the review of this task : $TASK_TITLE - PR:$PR ?"; then
+  if [ -z "$REDMINE_FORCE" ] && ! ask_question --question="Do you really want to finish the review of this review : $TASK_TITLE - PR:$PR ?"; then
     exit 1
   fi
 

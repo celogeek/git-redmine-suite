@@ -249,6 +249,24 @@ function task_finish {
     exit 1
   fi
 
+  set -e
+  if [ -z "$NO_MESSAGE" ] && [ -z "$MESSAGE" ]; then
+
+  F=$(mktemp /tmp/redmine.XXXXXX)
+  cat <<__EOF__ > "$F"
+
+###
+### Please indicate what the reviewer had to know to do properly his review.
+### 
+__EOF__
+  $EDITOR "$F"
+
+  MESSAGE=$(cat "$F" | grep -v ^"###")
+  RET="
+"
+  fi
+  set +e
+
   task=$CURRENT_TASK \
   status=$REDMINE_TASK_IN_PROGRESS \
   assigned_to=$REDMINE_USER_ID \
@@ -278,21 +296,6 @@ function task_finish {
       MSG_DEPS="Before reviewing this task, ensure you have already review : $DEPS"
   fi
 
-  if [ -z "$NO_MESSAGE" ] && [ -z "$MESSAGE" ]; then
-
-  F=$(mktemp /tmp/redmine.XXXXXX)
-  cat <<__EOF__ > "$F"
-
-###
-### Please indicate what the reviewer had to know to do properly his review.
-### 
-__EOF__
-  $EDITOR "$F"
-
-  MESSAGE=$(cat "$F" | grep -v ^"###")
-  RET="
-"
-  fi
 
   ADDITIONAL_MESSAGE=""
   if [ "$MESSAGE" != "$RET" ] && [ -n "$MESSAGE" ]; then
@@ -366,4 +369,30 @@ function task_info {
 
   echo "Information on the task $TASK : "
   redmine-get-task-info --task_id=$TASK --status_ids="$REDMINE_TASK_IN_PROGRESS" --with_extended_status
+}
+
+function task_abort {
+  TASK=$(git config redmine.task.current)
+
+  if [ -z "$TASK" ]; then
+    echo "No task started !"
+    exit 1
+  fi
+
+  git_refresh_local_repos || exit 1
+  git_local_repos_is_clean || exit 1
+  
+  TASK_TITLE=$(git config "redmine.task.$TASK.title")
+  BRNAME=$(git config "redmine.review.$TASK.branch")
+
+  if [ -z "$REDMINE_FORCE" ] && ! ask_question --question="Do you really want to abort the review of this task : $TASK_TITLE ?"; then
+    exit 1
+  fi
+
+  task_clear "$TASK"
+
+  task=$TASK \
+  status=$REDMINE_TASK_TODO \
+  assigned_to=$REDMINE_USER_ID \
+  task_update || exit 1
 }

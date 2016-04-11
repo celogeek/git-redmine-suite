@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 source "$(dirname "$0")/../share/Git-Redmine-Suite/helpers/scripts/help.sh"
 
-help_command "[-f] [-p]" "TASK_NUMBER"
+help_command "[-f]"
 
 source "$(dirname "$0")/../share/Git-Redmine-Suite/helpers/scripts/grs.sh"
 
-task_start "$1"
+task_abort
