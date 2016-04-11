@@ -249,6 +249,24 @@ function task_finish {
     exit 1
   fi
 
+  set -e
+  if [ -z "$NO_MESSAGE" ] && [ -z "$MESSAGE" ]; then
+
+  F=$(mktemp /tmp/redmine.XXXXXX)
+  cat <<__EOF__ > "$F"
+
+###
+### Please indicate what the reviewer had to know to do properly his review.
+### 
+__EOF__
+  $EDITOR "$F"
+
+  MESSAGE=$(cat "$F" | grep -v ^"###")
+  RET="
+"
+  fi
+  set +e
+
   task=$CURRENT_TASK \
   status=$REDMINE_TASK_IN_PROGRESS \
   assigned_to=$REDMINE_USER_ID \
@@ -278,21 +296,6 @@ function task_finish {
       MSG_DEPS="Before reviewing this task, ensure you have already review : $DEPS"
   fi
 
-  if [ -z "$NO_MESSAGE" ] && [ -z "$MESSAGE" ]; then
-
-  F=$(mktemp /tmp/redmine.XXXXXX)
-  cat <<__EOF__ > "$F"
-
-###
-### Please indicate what the reviewer had to know to do properly his review.
-### 
-__EOF__
-  $EDITOR "$F"
-
-  MESSAGE=$(cat "$F" | grep -v ^"###")
-  RET="
-"
-  fi
 
   ADDITIONAL_MESSAGE=""
   if [ "$MESSAGE" != "$RET" ] && [ -n "$MESSAGE" ]; then
