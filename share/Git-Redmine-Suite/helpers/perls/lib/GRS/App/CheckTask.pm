@@ -73,9 +73,10 @@ sub default_message {
 
     return <<__EOF__
 
-I can't update this task. It is assigned to "$assigned_to" and as the status "$status".
+Update ticket failed :
 
-Please ask your manager or an administrator to change the status in redmine.
+  * Assigned to : $assigned_to
+  * Status : $status
 
 __EOF__
 }
