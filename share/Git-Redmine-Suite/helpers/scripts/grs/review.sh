@@ -112,7 +112,7 @@ function review_abort {
   if [ -z "$REDMINE_FORCE" ] && ! ask_question --question="Do you really want to abort the review of this review : $TASK_TITLE - PR:$PR ?"; then
     exit 1
   fi
-  
+
   set -e
   git checkout devel
   git branch -D "$BRNAME"
@@ -120,6 +120,12 @@ function review_abort {
   git config --remove-section "redmine.review.$TASK"
   git config --unset redmine.review.current
 
+  if ! redmine-check-task --task_id "$TASK" --status_ids "$REDMINE_REVIEW_IN_PROGRESS" --assigned_to_id "$REDMINE_USER_ID"; then
+    if ! ask_question --question="The ticket has the wrong status, do you want to update it anyway ?"; then
+      exit 0
+    fi
+  fi
+  
   task=$TASK \
   status=$REDMINE_REVIEW_TODO \
   assigned_to=$REDMINE_USER_ID \
