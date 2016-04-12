@@ -6,24 +6,27 @@ function review_start {
     HELP=1 exec $0
   fi
 
-  CURRENT_TASK=$(git config redmine.review.current)
-
-  if [ -n "$CURRENT_TASK" ]
-  then
-      cat<<__EOF__
-You have already start the review of the task $CURRENT_TASK.
-You have to abort the review before and start it again.
-
-    git redmine review abort
-    git redmine review start $TASK
-
-__EOF__
-      exit 1
-  fi
-
   git_refresh_local_repos || exit 1
   git_local_repos_is_clean || exit 1
 
+  if git config redmine.review.$TASK.branch > /dev/null; then
+    review_continue "$TASK"
+  else
+    review_create "$TASK"
+  fi
+}
+
+function review_continue {
+  TASK=$1
+  BRNAME=$(git config redmine.review.$TASK.branch)
+  echo "Continue the review $TASK ..."
+  echo ""
+  git checkout "$BRNAME"
+  git config "redmine.review.current" "$TASK"
+}
+
+function review_create {
+  TASK=$1
   PR=$(redmine-get-task-pr --task_id=$TASK --cf_names=GIT_PR)
   if [ -z "$PR" ]
       then
