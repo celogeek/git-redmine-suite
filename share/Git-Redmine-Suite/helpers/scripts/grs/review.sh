@@ -122,6 +122,7 @@ function review_abort {
   set +e
   git config --remove-section "redmine.review.$TASK"
   git config --unset redmine.review.current
+  [ -z "$(git config --get-regexp ^'redmine\.review\.')" ] && git config --remove-section "redmine.review"
 
   if ! redmine-check-task --task_id "$TASK" --status_ids "$REDMINE_REVIEW_IN_PROGRESS" --assigned_to_id "$REDMINE_USER_ID"; then
     if ! ask_question --question="The ticket has the wrong status, do you want to update it anyway ?"; then
