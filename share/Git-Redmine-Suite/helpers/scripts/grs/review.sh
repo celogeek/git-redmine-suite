@@ -172,6 +172,7 @@ __EOF__
   RET="
 "
   fi
+  [ -e "$F" ] && unlink "$F"
   set +e
 
   echo "Fetching last developer ..."
@@ -188,7 +189,17 @@ $MESSAGE
 "
   fi
 
-  TAG=$(tag_pr --name="$BRNAME")
+  set -e
+  TAG=$(git rev-parse "$BRNAME")
+  git checkout "$BRNAME"
+  git push -f origin "$BRNAME":"$BRNAME"
+  git checkout devel
+  git branch -D "$BRNAME"
+  git config --remove-section "redmine.review.$TASK"
+  git config --unset "redmine.review.current"
+  set +e
+
+  echo ""
 
   task=$TASK \
   status=$REDMINE_TASK_TODO \
@@ -207,22 +218,6 @@ You can take from the review task with :
   cf_id=$REDMINE_GIT_PR_ID \
   cf_val=" " \
   task_update || exit 1
-
-  echo ""
-  [ -e "$F" ] && unlink "$F"
-
-  set -e
-  git checkout "$BRNAME"
-  git push -f origin "$BRNAME":"$BRNAME"
-  git tag "$TAG"
-  git push origin tags/"$TAG"
-  git checkout devel
-  git push origin :tags/"$PR"
-  git tag -d "$PR"
-  git branch -D "$BRNAME"
-  git config --remove-section "redmine.review.$TASK"
-  git config --unset "redmine.review.current"
-  set +e
 
 }
 
@@ -279,8 +274,6 @@ function review_finish {
   git add "$CHANGELOG"
   git commit -m "reflect changes" "$CHANGELOG" || true
   git push origin devel:devel
-  git push origin :tags/"$PR"
-  git tag -d "$PR"
   git branch -D "$BRNAME"
   set +e
   git rev-parse --verify -q origin/"$BRNAME" > /dev/null && git push origin :"$BRNAME"
@@ -290,7 +283,7 @@ function review_finish {
   REV_TO=$(git rev-parse origin/devel)
   DIFF_URL=$(get_full_diff_url "$REV_FROM" "$REV_TO")
   if [ -n "$DIFF_URL" ]; then
-    ADDITIONAL_MESSAGE="To view the diff : \"$BRNAME\":$DIFF_URL"
+    ADDITIONAL_MESSAGE="\"View the diff\":$DIFF_URL"
   fi
 
   task=$TASK \
@@ -303,13 +296,6 @@ function review_finish {
 " \
   task_update
   echo ""
-
-  echo "Removing old pr ..."
-  for tag in $(git tag | grep pr-.*-redmine-.*-$TASK-)
-  do
-      git push origin :tags/"$tag"
-      git tag -d "$tag"
-  done
 
   if [ -z "$REDMINE_FORCE" ] || [ -n "$REDMINE_TIME" ]; then
     if [ -z "$REDMINE_TIME" ]; then
