@@ -280,11 +280,7 @@ __EOF__
     exit 1
   fi
 
-  TAG=$(tag_pr --name="$BRNAME")
-
   set -e
-  git tag "$TAG"
-  git push origin tags/"$TAG"
   git checkout devel
   git config --unset "redmine.task.current"
   set +e
@@ -309,13 +305,13 @@ $MESSAGE
   fi
 
   REV_FROM=$(git rev-parse origin/devel)
-  REV_TO=$(git rev-parse tags/"$TAG")
+  REV_TO=$(git rev-parse "$BRNAME")
   DIFF_URL=$(get_full_diff_url "$REV_FROM" "$REV_TO")
 
   if [ -n "$DIFF_URL" ]; then
     ADDITIONAL_MESSAGE="$ADDITIONAL_MESSAGE
 
-To view the diff : \"$TAG\":$DIFF_URL
+\"View the diff\":$DIFF_URL
 
 "
   fi
@@ -324,7 +320,7 @@ To view the diff : \"$TAG\":$DIFF_URL
   status=$REDMINE_REVIEW_TODO \
   assigned_to=$ASSIGNED_TO_ID \
   cf_id=$REDMINE_GIT_PR_ID \
-  cf_val=$TAG \
+  cf_val=$REV_TO \
   notes="
 You can start a review with :
 <pre>
