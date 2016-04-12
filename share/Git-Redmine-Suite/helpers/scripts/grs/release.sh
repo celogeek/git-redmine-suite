@@ -173,7 +173,7 @@ function release_finish {
   REV_TO=$(git rev-parse origin/devel)
   DIFF_URL=$(get_full_diff_url "$REV_FROM" "$REV_TO")
   if [ -n "$DIFF_URL" ]; then
-    ADDITIONAL_MESSAGE="To view the diff : \"v$VERSION\":$DIFF_URL"
+    ADDITIONAL_MESSAGE="\"View the diff\":$DIFF_URL"
   fi
 
   echo ""
