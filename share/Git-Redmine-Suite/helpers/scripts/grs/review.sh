@@ -120,8 +120,7 @@ function review_abort {
   git checkout devel
   git branch -D "$BRNAME"
   set +e
-  git config --remove-section "redmine.review.$TASK"
-  git config --unset redmine.review.current
+  review_cleanup_config "$TASK"
 
   if ! redmine-check-task --task_id "$TASK" --status_ids "$REDMINE_REVIEW_IN_PROGRESS" --assigned_to_id "$REDMINE_USER_ID"; then
     if ! ask_question --question="The ticket has the wrong status, do you want to update it anyway ?"; then
@@ -172,6 +171,7 @@ __EOF__
   RET="
 "
   fi
+  [ -e "$F" ] && unlink "$F"
   set +e
 
   echo "Fetching last developer ..."
@@ -188,7 +188,16 @@ $MESSAGE
 "
   fi
 
-  TAG=$(tag_pr --name="$BRNAME")
+  set -e
+  TAG=$(git rev-parse "$BRNAME")
+  git checkout "$BRNAME"
+  git push -f origin "$BRNAME":"$BRNAME"
+  git checkout devel
+  git branch -D "$BRNAME"
+  review_cleanup_config "$TASK"
+  set +e
+
+  echo ""
 
   task=$TASK \
   status=$REDMINE_TASK_TODO \
@@ -207,22 +216,6 @@ You can take from the review task with :
   cf_id=$REDMINE_GIT_PR_ID \
   cf_val=" " \
   task_update || exit 1
-
-  echo ""
-  [ -e "$F" ] && unlink "$F"
-
-  set -e
-  git checkout "$BRNAME"
-  git push -f origin "$BRNAME":"$BRNAME"
-  git tag "$TAG"
-  git push origin tags/"$TAG"
-  git checkout devel
-  git push origin :tags/"$PR"
-  git tag -d "$PR"
-  git branch -D "$BRNAME"
-  git config --remove-section "redmine.review.$TASK"
-  git config --unset "redmine.review.current"
-  set +e
 
 }
 
@@ -279,18 +272,15 @@ function review_finish {
   git add "$CHANGELOG"
   git commit -m "reflect changes" "$CHANGELOG" || true
   git push origin devel:devel
-  git push origin :tags/"$PR"
-  git tag -d "$PR"
   git branch -D "$BRNAME"
   set +e
   git rev-parse --verify -q origin/"$BRNAME" > /dev/null && git push origin :"$BRNAME"
-  git config --remove-section "redmine.review.$TASK"
-  git config --unset "redmine.review.current"
+  review_cleanup_config "$TASK"
 
   REV_TO=$(git rev-parse origin/devel)
   DIFF_URL=$(get_full_diff_url "$REV_FROM" "$REV_TO")
   if [ -n "$DIFF_URL" ]; then
-    ADDITIONAL_MESSAGE="To view the diff : \"$BRNAME\":$DIFF_URL"
+    ADDITIONAL_MESSAGE="\"View the diff\":$DIFF_URL"
   fi
 
   task=$TASK \
@@ -303,13 +293,6 @@ function review_finish {
 " \
   task_update
   echo ""
-
-  echo "Removing old pr ..."
-  for tag in $(git tag | grep pr-.*-redmine-.*-$TASK-)
-  do
-      git push origin :tags/"$tag"
-      git tag -d "$tag"
-  done
 
   if [ -z "$REDMINE_FORCE" ] || [ -n "$REDMINE_TIME" ]; then
     if [ -z "$REDMINE_TIME" ]; then
@@ -325,4 +308,12 @@ Impossible to add a time entry :
 __EOF__
   fi
 
+}
+
+function review_cleanup_config {
+  TASK=$1
+  git config --remove-section "redmine.review.$TASK"
+  git config --unset redmine.review.current
+  [ -z "$(git config --get-regexp ^'redmine\.review\.')" ] && git config --remove-section "redmine.review"
+  return 0
 }
