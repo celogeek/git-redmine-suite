@@ -120,9 +120,7 @@ function review_abort {
   git checkout devel
   git branch -D "$BRNAME"
   set +e
-  git config --remove-section "redmine.review.$TASK"
-  git config --unset redmine.review.current
-  [ -z "$(git config --get-regexp ^'redmine\.review\.')" ] && git config --remove-section "redmine.review"
+  review_cleanup_config "$TASK"
 
   if ! redmine-check-task --task_id "$TASK" --status_ids "$REDMINE_REVIEW_IN_PROGRESS" --assigned_to_id "$REDMINE_USER_ID"; then
     if ! ask_question --question="The ticket has the wrong status, do you want to update it anyway ?"; then
@@ -196,8 +194,7 @@ $MESSAGE
   git push -f origin "$BRNAME":"$BRNAME"
   git checkout devel
   git branch -D "$BRNAME"
-  git config --remove-section "redmine.review.$TASK"
-  git config --unset "redmine.review.current"
+  review_cleanup_config "$TASK"
   set +e
 
   echo ""
@@ -278,8 +275,7 @@ function review_finish {
   git branch -D "$BRNAME"
   set +e
   git rev-parse --verify -q origin/"$BRNAME" > /dev/null && git push origin :"$BRNAME"
-  git config --remove-section "redmine.review.$TASK"
-  git config --unset "redmine.review.current"
+  review_cleanup_config "$TASK"
 
   REV_TO=$(git rev-parse origin/devel)
   DIFF_URL=$(get_full_diff_url "$REV_FROM" "$REV_TO")
@@ -312,4 +308,12 @@ Impossible to add a time entry :
 __EOF__
   fi
 
+}
+
+function review_cleanup_config {
+  TASK=$1
+  git config --remove-section "redmine.review.$TASK"
+  git config --unset redmine.review.current
+  [ -z "$(git config --get-regexp ^'redmine\.review\.')" ] && git config --remove-section "redmine.review"
+  return 0
 }
