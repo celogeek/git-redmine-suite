@@ -1,3 +1,7 @@
+1.23  2016-04-13 15:48:47 GMT
+    * Bug #232 : Change the review / release message (Celogeek San)
+      fix review message
+
 1.22  2016-04-12 12:36:44 GMT
     * Feature #512 : do not use tag (Celogeek San)
 

@@ -41,7 +41,7 @@ function review_create {
     exit 1
   fi
 
-  if [ -z "$REDMINE_FORCE" ] && [ -z "$REDMINE_CHAIN_FINISH" ] && ! ask_question --question="Do you really want to start this review ?"; then
+  if [ -z "$REDMINE_FORCE" ] && [ -z "$REDMINE_CHAIN_FINISH" ] && ! ask_question --question="Do you really want to start the review of this task ?"; then
     exit 1
   fi
   
@@ -112,7 +112,7 @@ function review_abort {
   BRNAME=$(git config "redmine.review.$TASK.branch")
   PR=$(git config "redmine.review.$TASK.pr")
 
-  if [ -z "$REDMINE_FORCE" ] && ! ask_question --question="Do you really want to abort the review of this review : $TASK_TITLE - PR:$PR ?"; then
+  if [ -z "$REDMINE_FORCE" ] && ! ask_question --question="Do you really want to abort the review of this task : $TASK_TITLE - PR:$PR ?"; then
     exit 1
   fi
 
@@ -151,7 +151,7 @@ function review_reject {
   BRNAME=$(git config "redmine.review.$TASK.branch")
   PR=$(git config "redmine.review.$TASK.pr")
 
-  if [ -z "$REDMINE_FORCE" ] && ! ask_question --question="Do you really want to reject the review of this review : $TASK_TITLE - PR:$PR ?"; then
+  if [ -z "$REDMINE_FORCE" ] && ! ask_question --question="Do you really want to reject the review of this task : $TASK_TITLE - PR:$PR ?"; then
     exit 1
   fi
 
@@ -247,7 +247,7 @@ function review_finish {
   PR=$(git config "redmine.review.$TASK.pr")
   CHANGELOG=$(get_change_log)
 
-  if [ -z "$REDMINE_FORCE" ] && ! ask_question --question="Do you really want to finish the review of this review : $TASK_TITLE - PR:$PR ?"; then
+  if [ -z "$REDMINE_FORCE" ] && ! ask_question --question="Do you really want to finish the review of this task : $TASK_TITLE - PR:$PR ?"; then
     exit 1
   fi
 
