@@ -145,7 +145,6 @@ function review_reject {
 
   git_refresh_local_repos || exit 1
   git_local_repos_is_clean || exit 1
-  git_local_repos_is_sync_from_devel || exit 1
 
   TASK_TITLE=$(git config "redmine.review.$TASK.title")
   BRNAME=$(git config "redmine.review.$TASK.branch")
