@@ -141,6 +141,7 @@ sub app {
 sub _issue_add {
     my ( $self, $issue, %options ) = @_;
 
+    return if !defined $issue;
     my $task_id      = $issue->{id};
     my $tracker_name = $issue->{tracker}->{name};
     $self->_max_tracker( length($tracker_name) )
